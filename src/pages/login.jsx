@@ -1,22 +1,50 @@
-import React, { useState } from "react"; 
-import LoginImg from "../../src/assets/Login.png"
+import React, { useState } from "react";
+import axios from "axios";
+import LoginImg from "../../src/assets/Login.png";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(email, password);
+
+    let data = JSON.stringify({
+      username: username,
+      password: password,
+    });
+
+    let config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: "http://127.0.0.1:8000/api/users/login/",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
     <div className="grid grid-cols-2 ">
       {/* Image section */}
       <section>
-        <img src={LoginImg} alt="Login" className=" w-full object-cover h-screen"/>
+        <img
+          src={LoginImg}
+          alt="Login"
+          className=" w-full object-cover h-screen"
+        />
       </section>
-    {/* form Section */}
+      {/* form Section */}
       <section className="bg-gray-50">
         <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
           <div className="w-full bg-white rounded-lg shadow">
@@ -27,21 +55,21 @@ const Login = () => {
               <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
                 <div>
                   <label
-                    htmlFor="email"
+                    htmlFor="username"
                     className="block mb-2 text-sm font-medium text-gray-900"
                   >
-                    Your email
+                    Your username
                   </label>
                   <input
-                    type="email"
-                    name="email"
-                    id="email"
-                    value={email}
+                    type="username"
+                    name="username"
+                    id="username"
+                    value={username}
                     onChange={(e) => {
-                      setEmail(e.target.value);
+                      setUsername(e.target.value);
                     }}
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                    placeholder="abc@gmail.com"
+                    placeholder="Woooo"
                     required=""
                   />
                 </div>
