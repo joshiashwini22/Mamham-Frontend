@@ -3,14 +3,14 @@ import axios from "axios";
 import LoginImg from "../../src/assets/Login.png";
 
 const Login = () => {
-  const [username, setUsername] = useState("");
+  const [email, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     let data = JSON.stringify({
-      username: username,
+      email: email,
       password: password,
     });
 
@@ -55,16 +55,16 @@ const Login = () => {
               <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
                 <div>
                   <label
-                    htmlFor="username"
+                    htmlFor="email"
                     className="block mb-2 text-sm font-medium text-gray-900"
                   >
-                    Your username
+                    Your email
                   </label>
                   <input
-                    type="username"
-                    name="username"
-                    id="username"
-                    value={username}
+                    type="email"
+                    name="email"
+                    id="email"
+                    value={email}
                     onChange={(e) => {
                       setUsername(e.target.value);
                     }}
