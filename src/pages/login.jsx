@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import axios from "axios";
 import LoginImg from "../../src/assets/Login.png";
+import {useNavigate} from 'react-router-dom';
 
 const Login = () => {
   const [email, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -28,6 +30,7 @@ const Login = () => {
       .request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
+        navigate('/');
       })
       .catch((error) => {
         console.log(error);
@@ -95,7 +98,7 @@ const Login = () => {
                 </div>
                 <button
                   type="submit"
-                  className="w-full text-black bg-[#FE724C] hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                  className="w-full text-black bg-[#93040B] hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                 >
                   Sign in
                 </button>
