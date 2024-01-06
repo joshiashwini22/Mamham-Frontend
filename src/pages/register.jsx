@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import RegisterImg from "../../src/assets/Register.png";
+import RegisterImg from "../../src/assets/images/Register.png";
 
 const Register = () => {
   const [email, setEmail] = useState("");
