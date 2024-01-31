@@ -17,12 +17,12 @@ function HomePage() {
         <div className="absolute inset-0 flex items-center justify-end">
           <div className="text-white text-center">
             <div className="text-center mt-8">
-              <span className="text-700 block text-7xl font-poppins py-4 " style={{color: '#E7E0D2'}}>Aja K Khane...</span>
-              <p className="text-orange-500 font-poppins block text-4xl">One Stop for Ghar ko Khana</p>
+              <span className="text-700 block text-7xl py-4 " style={{color: '#E7E0D2'}}>Aja K Khane...</span>
+              <p className="text-orange-500 block text-4xl">One Stop for Ghar ko Khana</p>
             </div>
             <div className="flex justify-center mt-8 mx-8">
-              <div className="bg-red-700 text-white font-poppins text-l px-8 py-4 mx-8 rounded text-center">Subscription Plans</div>
-              <div className="bg-red-700 text-white font-poppins text-l px-8 py-4 mx-8 rounded text-center">Customize your Meal</div>
+              <button className="bg-red-700 hover:bg-red-700 px-8 py-4 mx-8 hover:scale-105 transition-all duration-300 transform rounded-lg font-semibold" style={{color: '#E7E0D2'}}>Subscription Plans</button>
+              <button className="bg-red-700 hover:bg-red-700 px-8 py-4 mx-8 hover:scale-105 transition-all duration-300 transform rounded-lg font-semibold" style={{color: '#E7E0D2'}}>Customize your Meal</button>
             </div>
           </div>
         </div>
@@ -34,3 +34,4 @@ function HomePage() {
 }
 
 export default HomePage
+
