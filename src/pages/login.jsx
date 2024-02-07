@@ -1,15 +1,23 @@
 import React, { useState } from "react";
 import axios from "axios";
 import LoginImg from "../../src/assets/images/Login.png";
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-  const [email, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate()
+  const [error, setError] = useState("");
+
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Check if email or password is empty
+    if (!email || !password) {
+      setError("Please enter both email and password.");
+      return;
+    }
 
     let data = JSON.stringify({
       email: email,
@@ -19,7 +27,7 @@ const Login = () => {
     let config = {
       method: "post",
       maxBodyLength: Infinity,
-      url: "http://127.0.0.1:8000/api/users/login/",
+      url: "http://127.0.0.1:8000/api/authentication/login/",
       headers: {
         "Content-Type": "application/json",
       },
@@ -34,7 +42,11 @@ const Login = () => {
       })
       .catch((error) => {
         console.log(error);
+        setError("Invalid email or password. Please try again.");
       });
+  };
+  const handleInputChange = () => {
+    setError("");
   };
 
   return (
@@ -56,6 +68,7 @@ const Login = () => {
                 Sign in to your account
               </h1>
               <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+                {error && <div className="text-red-500">{error}</div>}
                 <div>
                   <label
                     htmlFor="email"
@@ -69,7 +82,8 @@ const Login = () => {
                     id="email"
                     value={email}
                     onChange={(e) => {
-                      setUsername(e.target.value);
+                      setEmail(e.target.value);
+                      handleInputChange();
                     }}
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                     placeholder="Woooo"
@@ -90,6 +104,7 @@ const Login = () => {
                     value={password}
                     onChange={(e) => {
                       setPassword(e.target.value);
+                      handleInputChange();
                     }}
                     placeholder="••••••••"
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"

@@ -1,6 +1,6 @@
 import React from 'react'
-import Navbar from '../../common/client/navbar'
-import MainImg from "../../../src/assets/images/main.png";
+import Navbar from './navbar'
+import MainImg from "../../src/assets/images/main.png";
 
 function HomePage() {
   return (

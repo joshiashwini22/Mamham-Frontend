@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Header from "../../common/admin/header";
-import Sidebar from "../../common/admin/sidebar";
+import Header from "../../header";
+import Sidebar from "../../sidebar";
 
 const Dishes = () => {
   const [dishes, setDishes] = useState([]);

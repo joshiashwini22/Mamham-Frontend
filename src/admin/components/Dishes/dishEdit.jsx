@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Header from "../../common/admin/header";
-import Sidebar from "../../common/admin/sidebar";
+import Header from "../../header";
+import Sidebar from "../../sidebar";
 import axios from 'axios';
 
 const DishEdit = ({ dishId, onCancel, onEdit }) => {
