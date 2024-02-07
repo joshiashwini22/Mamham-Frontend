@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import Header from "../../header";
 import Sidebar from "../../sidebar";
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
-const DishEdit = ({ dishId, onCancel, onEdit }) => {
+
+const DishEdit = ({onEdit }) => {
+  const {id} = useParams();
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [description, setDescription] = useState('');
@@ -13,11 +16,11 @@ const DishEdit = ({ dishId, onCancel, onEdit }) => {
     // Fetch the current dish data when the component mounts
     const fetchData = async () => {
       try {
-        let url = "http://127.0.0.1:8000/api/customization/dishes/" + dishId ;
+        let url = `http://127.0.0.1:8000/api/customization/dishes/${id}` ;
         const response = await axios.get(url);
         const { name, price, description, image } = response.data;
         setName(name);
-        console.log(dishId);
+        console.log(id);
         setPrice(price);
         setDescription(description);
         setImage(image);
@@ -27,7 +30,8 @@ const DishEdit = ({ dishId, onCancel, onEdit }) => {
     };
 
     fetchData();
-  }, [dishId]);
+  }, [id]);
+  
 
   const handleImageChange = (e) => {
     // Update the state with the selected image file
@@ -43,7 +47,7 @@ const DishEdit = ({ dishId, onCancel, onEdit }) => {
       formData.append('description', description);
       formData.append('image', image);
 
-      const response = await axios.put('http://127.0.0.1:8000/api/customization/dishes/${dishId}/', formData, {
+      const response = await axios.put(`http://127.0.0.1:8000/api/customization/dishes/${id}/`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -63,10 +67,12 @@ const DishEdit = ({ dishId, onCancel, onEdit }) => {
     <>
     <Header />
     <Sidebar />
+    
     <section className="bg-white dark:bg-gray-900">
+      
       <div className="py-8 px-4 mx-auto max-w-2xl lg:py-16">
         <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">
-          Update Dish
+          Update Dish - 
         </h2>
         <form>
           <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">

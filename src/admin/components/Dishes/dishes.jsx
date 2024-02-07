@@ -2,12 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Header from "../../header";
 import Sidebar from "../../sidebar";
+import { useNavigate } from "react-router-dom";
 
 const Dishes = () => {
   const [dishes, setDishes] = useState([]);
-
-  
-
+  const navigate = useNavigate();
   
   useEffect(() => {
     const fetchData = async () => {
@@ -24,6 +23,20 @@ const Dishes = () => {
     fetchData();
   }, [dishes]);
 
+  const handleDelete = async (dishId) => {
+    try {
+      await axios.delete(`http://127.0.0.1:8000/api/customization/dishes/${dishId}`);
+      // Filter out the deleted dish from the state
+      setDishes(dishes.filter(dish => dish.id !== dishId));
+    } catch (error) {
+      console.error('Error deleting dish:', error);
+    }
+  };
+
+  const handleEdit = (dishId) => {
+    // Navigate to the edit page with the dishId parameter
+    navigate(`/dishes-update/${dishId}`);
+  };
   return (
     <>
     <Header/>
@@ -95,19 +108,19 @@ const Dishes = () => {
               <td>{dish.description}</td>
               <td>{dish.image}</td>
               <td class="px-6 py-4">
-                  <a
-                    href="/dishes-update"
-                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-4"
-                  >
-                    Edit
-                  </a>
-                  <a
-                    href="/"
-                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                  >
-                    Delete
-                  </a>
-                </td>
+                <button
+                  onClick={() => handleEdit(dish.id)} // Pass dish id to handleDelete function
+                  className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(dish.id)} // Pass dish id to handleDelete function
+                  className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                >
+                  Delete
+                </button>
+              </td>
             </tr>
           ))}
             </tbody>

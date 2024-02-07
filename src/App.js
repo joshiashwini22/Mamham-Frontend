@@ -35,7 +35,7 @@ const App = () => {
         <Route path="/plans" element={<Plans />} />
         <Route path="/dashboard" element={<Dashboard/>} />
         <Route path="/dishes-create" element={<DishCreate/>} />
-        <Route path="/dishes-update" element={<DishEdit/>} />
+        <Route path="/dishes-update/:id" element={<DishEdit/>} />
         <Route path="/custom" element={<Custom />} />
         <Route path="/ourmenu" element={<OurMenu />} />
         <Route path="/ourplans" element={<OurPlans />} />
