@@ -46,6 +46,7 @@ const DishEdit = ({onEdit }) => {
       formData.append('price', price);
       formData.append('description', description);
       formData.append('image', image);
+      
 
       const response = await axios.put(`http://127.0.0.1:8000/api/customization/dishes/${id}/`, formData, {
         headers: {
@@ -142,6 +143,9 @@ const DishEdit = ({onEdit }) => {
                 onChange={handleImageChange}
                 className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
               />
+              {image && (
+                <img src={image} alt="Dish" className="mt-2 max-w-full h-auto" />
+              )}
             </div>
           </div>
           <button
