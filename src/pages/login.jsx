@@ -38,6 +38,12 @@ const Login = () => {
       .request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
+        // Initialize the access & refresh token in localstorage.      
+        localStorage.clear();
+        localStorage.setItem('access_token', response.data.access);
+        localStorage.setItem('refresh_token', response.data.refresh);
+        axios.defaults.headers.common["Authorization"] =
+        "Bearer " + response.data.access;
         navigate('/');
       })
       .catch((error) => {

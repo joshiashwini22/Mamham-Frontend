@@ -1,8 +1,9 @@
 import React from "react";
 import "./App.css";
-import { Route, Routes, BrowserRouter as Router, Outlet } from "react-router-dom";
+import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
 import HomePage from "./customer/homePage";
 import Login from "./pages/login";
+//import Logout from "./customer/components/logout";
 // import NotFound from "./pages/notFound";
 import Register from "./pages/register";
 import Dashboard from "./admin/dashboard";
@@ -25,6 +26,7 @@ const App = () => {
       <Routes>
         <Route exact path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
+        {/* <Route path="/logout" element={<Logout />} /> */}
         <Route path="/register" element={<Register />} />
         <Route path="/dishes" element={<Dishes />} />
         <Route path="*" element={<Error />} />

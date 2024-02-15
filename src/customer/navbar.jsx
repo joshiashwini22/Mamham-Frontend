@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState, useEffect} from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
 import Logo from "../assets/images/Logo.png";
 import Button from "../common/button";
 
 function Navbar() {
+  const [isAuth, setIsAuth] = useState(false)
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -11,9 +12,20 @@ function Navbar() {
     navigate('/login');
   };
 
+  const handleLogoutClick = () => {
+    navigate('/logout');
+  };
+
   const isActive = (href) => {
     return location.pathname === href ? 'text-black rounded md:bg-transparent md:p-0 md:dark:text-red-500' : '';
   };
+
+  useEffect(() => {
+    if(localStorage.getItem('access_token') !== null){
+      setIsAuth(true);
+      console.log(isAuth)
+    }   
+  },[isAuth]);
 
   return (
     <>
@@ -74,7 +86,10 @@ function Navbar() {
             </ul>
           </div>
           <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+            {isAuth ?
+            <Button purpose="Logout" onClick={handleLogoutClick} />:
             <Button purpose="Login" onClick={handleLoginClick} />
+          }
           </div>
         </div>
       </nav>

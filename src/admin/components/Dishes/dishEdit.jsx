@@ -11,6 +11,8 @@ const DishEdit = ({onEdit }) => {
   const [price, setPrice] = useState('');
   const [description, setDescription] = useState('');
   const [image, setImage] = useState(null);
+  const [imageUrl, setImageUrl] = useState('');
+
 
   useEffect(() => {
     // Fetch the current dish data when the component mounts
@@ -23,7 +25,7 @@ const DishEdit = ({onEdit }) => {
         console.log(id);
         setPrice(price);
         setDescription(description);
-        setImage(image);
+        setImageUrl(image);
       } catch (error) {
         console.error('Error fetching dish data:', error);
       }
@@ -38,15 +40,17 @@ const DishEdit = ({onEdit }) => {
     setImage(e.target.files[0]);
   };
 
-  const handleEditDish = async () => {
+  const handleEditDish = async (e) => {
+    e.preventDefault()
     try {
       // Create a FormData object and append text and file data
       const formData = new FormData();
       formData.append('name', name);
       formData.append('price', price);
       formData.append('description', description);
+      if(image){
       formData.append('image', image);
-      
+      }
 
       const response = await axios.put(`http://127.0.0.1:8000/api/customization/dishes/${id}/`, formData, {
         headers: {
@@ -144,7 +148,7 @@ const DishEdit = ({onEdit }) => {
                 className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
               />
               {image && (
-                <img src={image} alt="Dish" className="mt-2 max-w-full h-auto" />
+                <img src={URL.createObjectURL(image)} alt="Dish" className="mt-2 max-w-full h-auto" />
               )}
             </div>
           </div>
