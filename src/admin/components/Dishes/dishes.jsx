@@ -106,7 +106,7 @@ const Dishes = () => {
               <td>{dish.name}</td>
               <td>{dish.price}</td>
               <td>{dish.description}</td>
-              <td>{dish.image}</td>
+              <td><img src={dish.image} alt="Dish" className="mt-2 w-24 h-24 object-fit rounded-lg" /></td>
               <td class="px-6 py-4">
                 <button
                   onClick={() => handleEdit(dish.id)} // Pass dish id to handleDelete function
