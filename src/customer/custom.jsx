@@ -2,6 +2,7 @@ import React from "react";
 import Navbar from "./navbar";
 import DishSelection from "./components/dishSelection";
 
+
 function Custom() {
   const categories = ["Base", "Lentil", "Veggie", "Protein", "Pickle"];
 
