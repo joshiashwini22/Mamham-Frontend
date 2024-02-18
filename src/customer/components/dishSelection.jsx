@@ -1,48 +1,116 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import LoginImg from "../../assets/images/Login.png";
 
-const DishSelection = ({ category }) => {
+const DishSelection = ({ category, onAddSelectedDish }) => {
   const [dishes, setDishes] = useState([]);
-  const [selectedDishId, setSelectedDishId] = useState(null); // Track the selected dish ID
-  const portion = ["1", "2"];
+  const [selectedDishId, setSelectedDishId] = useState(null);
+  const [selectedPortion, setSelectedPortion] = useState(null);
+  const [cartItems, setCartItems] = useState([]);
+  const portionOptions = ["1", "2"];
+  const defaultImage = LoginImg;
 
   useEffect(() => {
-    // Fetch dishes data from the backend 
+    // Fetch dishes data from the backend
     const fetchDishes = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:8000/api/customization/dishes/category/${category}/`);
+        const response = await axios.get(
+          `http://127.0.0.1:8000/api/customization/dishes/category/${category}/`
+        );
         setDishes(response.data);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
 
     fetchDishes();
   }, [category]);
 
-  const handleSelectDish = (dishId) => {
-    setSelectedDishId(dishId); // Set the selected dish ID
+  const handleSelectDish = (index) => {
+    console.log("Selected index:", index);
+    const selectedDishId = dishes[index]?.id; // Get the ID of the dish at the specified index
+    console.log("Selected dish ID:", selectedDishId);
+    setSelectedDishId(selectedDishId); // Set the selected dish ID
+  };
+
+  const handleSelectPortion = (portion) => {
+    setSelectedPortion(portion); // Set the selected portion
+  };
+
+  const handleAddToCart = () => {
+    if (selectedDishId && selectedPortion) {
+      // Find the selected dish by its ID
+      const selectedDish = dishes.find((dish) => dish.id === selectedDishId);
+      if (selectedDish) {
+        // Add the selected dish and portion to the cart
+        const newItem = {
+
+          id: selectedDishId,
+          name: selectedDish.name,
+          image: selectedDish.image,
+          price: selectedDish.price,
+          portion: selectedPortion
+
+        };
+        console.log(newItem);
+        setCartItems([...cartItems, newItem]);
+        onAddSelectedDish(newItem)
+        console.log(
+          `Added dish ${selectedDish.image}  ${selectedDish.name} ${selectedDishId} with portion ${selectedPortion} to the cart`
+        );
+      } else {
+        console.error("Selected dish not found");
+      }
+    } else {
+      console.error("Please select a dish and portion before adding to cart");
+    }
   };
 
   return (
     <div>
       <div className="flex items-center space-x-4 mx-6">
-        <label htmlFor={category} className="mb-3 font-semibold w-28">{category}</label>
-        <select id={category} className="mb-3 py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" onChange={(e) => handleSelectDish(e.target.value)}>
+        <label htmlFor={category} className="mb-3 font-semibold w-28">
+          {category}
+        </label>
+        <select
+          id={category}
+          className="mb-3 py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+          onChange={(e) => handleSelectDish(e.target.selectedIndex - 1)}
+        >
           <option>Select a dish</option>
-          {dishes.map(dish => (
-            <option key={dish.id} value={dish.id}>{dish.name}</option>
+          {dishes.map((dish, index) => (
+            <option key={dish.id}>{dish.name}</option>
           ))}
         </select>
-        <select className="mb-3 py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-          <option>Portion</option>
-          {portion.map((portion) => (
-            <option key={portion} category={portion}>{portion}</option>
+        <select
+          className="mb-3 py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+          onChange={(e) => handleSelectPortion(e.target.value)}
+        >
+          <option>Select portion</option>
+          {portionOptions.map((portion) => (
+            <option key={portion} value={portion}>
+              {portion}
+            </option>
           ))}
         </select>
+        <button
+          className="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none"
+          onClick={handleAddToCart}
+        >
+          Add to Cart
+        </button>
       </div>
-      <DishImagePreview dishId={selectedDishId} defaultImage={LoginImg} />
+      {/* <DishImagePreview dishId={selectedDishId} defaultImage={defaultImage} />
+      <div className="mt-4">
+        <h2 className="font-semibold text-lg">Cart</h2>
+        <ul>
+          {cartItems.map((item) => (
+            <li key={item.id}>
+              {item.name} - Portion: {item.portion}
+            </li>
+          ))}
+        </ul>
+      </div> */}
     </div>
   );
 };
@@ -55,15 +123,17 @@ const DishImagePreview = ({ dishId, defaultImage }) => {
     const fetchDish = async () => {
       try {
         if (dishId) {
-          const response = await axios.get(`http://127.0.0.1:8000/api/customization/dishes/${dishId}/`);
+          const response = await axios.get(
+            `http://127.0.0.1:8000/api/customization/dishes/${dishId}/`
+          );
           setSelectedDish(response.data);
         } else {
           setSelectedDish(null); // Set selectedDish to null if dishId is null
         }
         setError(null); // Clear any previous errors
       } catch (error) {
-        console.error('Error fetching dish:', error);
-        setError('Error fetching dish image');
+        console.error("Error fetching dish:", error);
+        setError("Error fetching dish image");
       }
     };
 
@@ -73,7 +143,11 @@ const DishImagePreview = ({ dishId, defaultImage }) => {
   return (
     <div className="flex justify-center mt-4">
       {error ? (
-        <img src={defaultImage} alt="Default Dish" className="w-48 h-48 object-cover rounded-lg" />
+        <img
+          src={defaultImage}
+          alt="Default Dish"
+          className="w-48 h-48 object-cover rounded-lg"
+        />
       ) : (
         <img
           src={selectedDish ? selectedDish.image : defaultImage}
