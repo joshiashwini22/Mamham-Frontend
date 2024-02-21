@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import LoginImg from "../../assets/images/Login.png";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 
 const DishSelection = ({ category, onAddSelectedDish }) => {
   const [dishes, setDishes] = useState([]);
@@ -68,13 +70,13 @@ const DishSelection = ({ category, onAddSelectedDish }) => {
 
   return (
     <div>
-      <div className="flex items-center space-x-4 mx-6">
-        <label htmlFor={category} className="mb-3 font-semibold w-28">
+      <div className="flex items-center mx-6 text-sm">
+        <label htmlFor={category} className="mb-3 mr-3 font-semibold w-20 flex items-center">
           {category}
         </label>
         <select
           id={category}
-          className="mb-3 py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+          className="mb-3 py-2 mr-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm flex items-center" // Added flex and items-center classes
           onChange={(e) => handleSelectDish(e.target.selectedIndex - 1)}
         >
           <option>Select a dish</option>
@@ -83,7 +85,7 @@ const DishSelection = ({ category, onAddSelectedDish }) => {
           ))}
         </select>
         <select
-          className="mb-3 py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+          className="mb-3 py-2 mr-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
           onChange={(e) => handleSelectPortion(e.target.value)}
         >
           <option>Select portion</option>
@@ -94,12 +96,13 @@ const DishSelection = ({ category, onAddSelectedDish }) => {
           ))}
         </select>
         <button
-          className="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none"
+          className="py-2 px-4 bg-white rounded hover:bg-red-100 focus:outline-none"
           onClick={handleAddToCart}
         >
-          Add to Cart
+          <FontAwesomeIcon icon={faShoppingCart} className="text-red-500" />
         </button>
       </div>
+  
       {/* <DishImagePreview dishId={selectedDishId} defaultImage={defaultImage} />
       <div className="mt-4">
         <h2 className="font-semibold text-lg">Cart</h2>
@@ -113,6 +116,7 @@ const DishSelection = ({ category, onAddSelectedDish }) => {
       </div> */}
     </div>
   );
+  
 };
 
 const DishImagePreview = ({ dishId, defaultImage }) => {

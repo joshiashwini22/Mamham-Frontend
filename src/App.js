@@ -1,10 +1,9 @@
 import React from "react";
-import "./App.css";
-import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
+import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import AdminRoute from "./utils/adminRoute";
 import HomePage from "./customer/homePage";
 import Login from "./pages/login";
-//import Logout from "./customer/components/logout";
-// import NotFound from "./pages/notFound";
 import Register from "./pages/register";
 import Dashboard from "./admin/dashboard";
 import Dishes from "./admin/components/Dishes/dishes";
@@ -23,27 +22,29 @@ import OurPlans from "./customer/ourPlans";
 const App = () => {
   return (
     <Router>
-      <Routes>
-        <Route exact path="/" element={<HomePage />} />
-        <Route path="/login" element={<Login />} />
-        {/* <Route path="/logout" element={<Logout />} /> */}
-        <Route path="/register" element={<Register />} />
-        <Route path="/dishes" element={<Dishes />} />
-        <Route path="*" element={<Error />} />
-        <Route path="/menu" element={<Menu />} />
-        <Route path="/weeklyMenu" element={<WeeklyMenu />} />
-        <Route path="/subscription" element={<Subscription />} />
-        <Route path="/customOrder" element={<CustomOrder />} />
-        <Route path="/plans" element={<Plans />} />
-        <Route path="/dashboard" element={<Dashboard/>} />
-        <Route path="/dishes-create" element={<DishCreate/>} />
-        <Route path="/dishes-update/:id" element={<DishEdit/>} />
-        <Route path="/custom" element={<Custom />} />
-        <Route path="/ourmenu" element={<OurMenu />} />
-        <Route path="/ourplans" element={<OurPlans />} />
-
-      </Routes>
+      {/* Wrap your routes with the AuthProvider */}
+      <AuthProvider>
+        <Routes>
+          <Route exact path="/" element={<HomePage />} />
+          <Route path="*" element={<Error />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/custom" element={<Custom />} />
+          <Route path="/ourmenu" element={<OurMenu />} />
+          <Route path="/ourplans" element={<OurPlans />} />
+          <Route path="/weeklyMenu" element={<WeeklyMenu />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dishes" element={<Dishes />} />
+          <Route path="/dishes-create" element={<DishCreate />} />
+          <Route path="/dishes-update/:id" element={<DishEdit />} />
+          <Route path="/subscription" element={<Subscription />} />
+          <Route path="/customOrder" element={<CustomOrder />} />
+          <Route path="/plans" element={<Plans />} />
+          <Route path="/menu" element={<Menu />} />
+        </Routes>
+      </AuthProvider>
     </Router>
   );
 };
+
 export default App;

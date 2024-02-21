@@ -1,16 +1,16 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { useAuth } from "../context/AuthContext";
 import LoginImg from "../../src/assets/images/Login.png";
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Check if email or password is empty
@@ -19,38 +19,13 @@ const Login = () => {
       return;
     }
 
-    let data = JSON.stringify({
-      email: email,
-      password: password,
-    });
-
-    let config = {
-      method: "post",
-      maxBodyLength: Infinity,
-      url: "http://127.0.0.1:8000/api/authentication/login/",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data: data,
-    };
-
-    axios
-      .request(config)
-      .then((response) => {
-        console.log(JSON.stringify(response.data));
-        // Initialize the access & refresh token in localstorage.      
-        localStorage.clear();
-        localStorage.setItem('access_token', response.data.access);
-        localStorage.setItem('refresh_token', response.data.refresh);
-        axios.defaults.headers.common["Authorization"] =
-        "Bearer " + response.data.access;
-        navigate('/');
-      })
-      .catch((error) => {
-        console.log(error);
-        setError("Invalid email or password. Please try again.");
-      });
+    try {
+      await login(email, password);
+    } catch (error) {
+      setError(error.message);
+    }
   };
+
   const handleInputChange = () => {
     setError("");
   };
@@ -140,4 +115,5 @@ const Login = () => {
     </div>
   );
 };
+
 export default Login;

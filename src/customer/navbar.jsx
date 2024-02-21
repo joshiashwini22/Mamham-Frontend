@@ -1,19 +1,23 @@
-import React, { useState, useEffect} from "react";
+import React, { useContext, useState, useEffect} from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
 import Logo from "../assets/images/Logo.png";
 import Button from "../common/button";
+import { useAuth } from "../context/AuthContext";
 
 function Navbar() {
   const [isAuth, setIsAuth] = useState(false)
   const location = useLocation();
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   const handleLoginClick = () => {
     navigate('/login');
   };
 
   const handleLogoutClick = () => {
-    navigate('/logout');
+    logout(); // Call the logout function
+    setIsAuth(false); // Update local state to reflect the user's authentication status
+
   };
 
   const isActive = (href) => {
@@ -29,7 +33,7 @@ function Navbar() {
 
   return (
     <>
-      <nav className="bg-white fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
+      <nav className="bg-white w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
           <a
             href="/"
