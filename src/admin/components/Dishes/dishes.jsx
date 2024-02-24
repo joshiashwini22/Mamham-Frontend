@@ -1,133 +1,126 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Header from "../../header";
 import Sidebar from "../../sidebar";
 import { useNavigate } from "react-router-dom";
+import useFetch from "../../../common/useFetch";
 
 const Dishes = () => {
-  const [dishes, setDishes] = useState([]);
   const navigate = useNavigate();
-  
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('http://127.0.0.1:8000/api/customization/dishes/');
-        setDishes(response.data);
-        console.log(response.data);
-        
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchData();
-  }, [dishes]);
+  const { data: dishes, loading, error, deleteItem } = useFetch('http://127.0.0.1:8000/api/customization/dishes');
 
   const handleDelete = async (dishId) => {
     try {
-      await axios.delete(`http://127.0.0.1:8000/api/customization/dishes/${dishId}`);
-      // Filter out the deleted dish from the state
-      setDishes(dishes.filter(dish => dish.id !== dishId));
+      await deleteItem(dishId);
     } catch (error) {
       console.error('Error deleting dish:', error);
     }
   };
 
   const handleEdit = (dishId) => {
-    // Navigate to the edit page with the dishId parameter
     navigate(`/dishes-update/${dishId}`);
   };
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+
   return (
     <>
-    <Header/>
-    <Sidebar/>
-    <div class="p-4 sm:ml-64">
-      <div class="p-4 border-2 border-[#93040B]  rounded-lg dark:border-[#93040B] mt-14">
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-          <div class="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
-            <div>
-              <a
-                href="/dishes-create"
-                class="flex items-center p-2 text-[#93040B] rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-              >
-                <button
-                  id="dropdownRadioButton"
-                  data-dropdown-toggle="dropdownRadio"
-                  class="inline-flex items-center text-[#93040B] bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-[#93040B] dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-                  type="button"
+      <Header />
+      <Sidebar />
+      <div className="p-4 sm:ml-64">
+        <div className="p-4 border-2 border-[#93040B]  rounded-lg dark:border-[#93040B] mt-14">
+          <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <div className="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
+              <div>
+                <a
+                  href="/dishes-create"
+                  className="flex items-center p-2 text-[#93040B] rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                 >
-                  Add
-                </button>
-              </a>
-              
+                  <button
+                    id="dropdownRadioButton"
+                    data-dropdown-toggle="dropdownRadio"
+                    className="inline-flex items-center text-[#93040B] bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-[#93040B] dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                    type="button"
+                  >
+                    Add
+                  </button>
+                </a>
+              </div>
             </div>
-          </div>
-          <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 border border-gray-300">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-              <tr>
-                <th scope="col" class="p-4">
-                  <div class="flex items-center">
-                    <input
-                      id="checkbox-all-search"
-                      type="checkbox"
-                      class="w-4 h-4 text-[#93040B] bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                    />
-                    <label for="checkbox-all-search" class="sr-only">
-                      checkbox
-                    </label>
-                  </div>
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  Name
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  Price
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  Description
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  File
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-            {dishes.map((dish) => (
-            <tr key={dish.id}>
-              <th scope="col" class="p-4">
-                    <div class="flex items-center">
-                        <input id="checkbox-all-search" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label for="checkbox-all-search" class="sr-only">checkbox</label>
+            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 border border-gray-300">
+              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                  <th scope="col" className="p-4">
+                    <div className="flex items-center">
+                      <input
+                        id="checkbox-all-search"
+                        type="checkbox"
+                        className="w-4 h-4 text-[#93040B] bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                      />
+                      <label htmlFor="checkbox-all-search" className="sr-only">
+                        checkbox
+                      </label>
                     </div>
-                </th>
-              <td>{dish.name}</td>
-              <td>{dish.price}</td>
-              <td>{dish.description}</td>
-              <td><img src={dish.image} alt="Dish" className="mt-2 w-24 h-24 object-fit rounded-lg" /></td>
-              <td class="px-6 py-4">
-                <button
-                  onClick={() => handleEdit(dish.id)} // Pass dish id to handleDelete function
-                  className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(dish.id)} // Pass dish id to handleDelete function
-                  className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-            </tbody>
-          </table>
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Name
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Price
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Description
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    File
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {dishes.map((dish) => (
+                  <tr key={dish.id}>
+                    <th scope="col" className="p-4">
+                      <div className="flex items-center">
+                        <input
+                          id="checkbox-all-search"
+                          type="checkbox"
+                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                        />
+                        <label htmlFor="checkbox-all-search" className="sr-only">
+                          checkbox
+                        </label>
+                      </div>
+                    </th>
+                    <td>{dish.name}</td>
+                    <td>{dish.price}</td>
+                    <td>{dish.description}</td>
+                    <td>
+                      <img src={dish.image} alt="Dish" className="mt-2 w-24 h-24 object-fit rounded-lg" />
+                    </td>
+                    <td className="px-6 py-4">
+                      <button
+                        onClick={() => handleEdit(dish.id)}
+                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(dish.id)}
+                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-    </div>
     </>
   );
 };

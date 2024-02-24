@@ -84,11 +84,22 @@ function Custom() {
 }
 
 const Cart = ({ selectedDishes, onRemoveSelectedDish, calculateTotal }) => {
+  const [address, setAddress] = useState("");
+  const [paymentOption, setPaymentOption] = useState("cod");
+
+  const handleAddressChange = (e) => {
+    setAddress(e.target.value);
+  };
+
+  const handlePaymentChange = (e) => {
+    setPaymentOption(e.target.value);
+  };
+
   return (
     <div className="p-5">
       <span className="text-red-600 text-xl font-bold block mb-4">
-          Your Cart
-        </span>
+        Your Cart
+      </span>
       {selectedDishes.length > 0 ? (
         <span className="text-green-600 text-lg block mb-4">
           Here is your list
@@ -123,7 +134,7 @@ const Cart = ({ selectedDishes, onRemoveSelectedDish, calculateTotal }) => {
           <span className="text-xs">Rs. {(dish.price * dish.portion).toFixed(2)}</span>
           <button
             onClick={() => onRemoveSelectedDish(index)}
-            className="text-red-600 font-medium text-xs font-"
+            className="text-red-600 font-medium text-xs"
           >
             Remove
           </button>
@@ -135,6 +146,39 @@ const Cart = ({ selectedDishes, onRemoveSelectedDish, calculateTotal }) => {
           <span className="text-xs">${calculateTotal().toFixed(2)}</span>
         </div>
       )}
+
+      {/* Address Input */}
+      <div className="mt-4">
+        <label className="block mb-2 text-gray-700" htmlFor="address">
+          Address:
+        </label>
+        <input
+          type="text"
+          id="address"
+          name="address"
+          value={address}
+          onChange={handleAddressChange}
+          className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
+          placeholder="Enter your address"
+        />
+      </div>
+
+      {/* Payment Option Dropdown */}
+      <div className="mt-4">
+        <label className="block mb-2 text-gray-700" htmlFor="payment">
+          Payment Option:
+        </label>
+        <select
+          id="payment"
+          name="payment"
+          value={paymentOption}
+          onChange={handlePaymentChange}
+          className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
+        >
+          <option value="cod">Cash on Delivery</option>
+          <option value="online">Online Payment</option>
+        </select>
+      </div>
     </div>
   );
 };
