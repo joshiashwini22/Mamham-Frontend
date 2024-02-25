@@ -1,8 +1,10 @@
 import React from 'react'
 import Navbar from './navbar'
 import MainImg from "../../src/assets/images/main.png";
+import { useNavigate } from 'react-router-dom';
 
 function HomePage() {
+  const navigate = useNavigate()
   return (
     <>
       <Navbar/>
@@ -21,9 +23,10 @@ function HomePage() {
               <p className="text-orange-500 block text-4xl">One Stop for Ghar ko Khana</p>
             </div>
             <div className="flex justify-center mt-8 mx-8">
-              <button className="bg-red-700 hover:bg-red-700 px-8 py-4 mx-8 hover:scale-105 transition-all duration-300 transform rounded-lg font-semibold" style={{color: '#E7E0D2'}}>Subscription Plans</button>
-              <button className="bg-red-700 hover:bg-red-700 px-8 py-4 mx-8 hover:scale-105 transition-all duration-300 transform rounded-lg font-semibold" style={{color: '#E7E0D2'}}>Customize your Meal</button>
-            </div>
+      <button className="bg-red-700 hover:bg-red-700 px-8 py-4 mx-8 hover:scale-105 transition-all duration-300 transform rounded-lg font-semibold" style={{color: '#E7E0D2'}} onClick={() => navigate('/ourplans')}>Subscription Plans</button>
+      
+      <button className="bg-red-700 hover:bg-red-700 px-8 py-4 mx-8 hover:scale-105 transition-all duration-300 transform rounded-lg font-semibold" style={{color: '#E7E0D2'}} onClick={() => navigate('/custom')}>Customize your Meal</button>
+    </div>
           </div>
         </div>
       </div>
