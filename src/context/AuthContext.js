@@ -40,7 +40,9 @@ export const AuthProvider = ({ children }) => {
       });
       const { access } = response.data.token;
       localStorage.setItem("access_token", access);
+      localStorage.setItem("role", response.data.token.user.is_staff);
       axios.defaults.headers.common["Authorization"] = "Bearer " + access;
+      axios.defaults.headers.common["Role"] = response.data.token.user.is_staff ? "admin" : "user"; 
       setUser(response.data.token.user);
       if (response.data.token.user.is_staff) {
         navigate('/dashboard');

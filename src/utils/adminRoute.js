@@ -1,22 +1,17 @@
-import React from "react";
-import { Route, Navigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import React from 'react';
+import { Route, useNavigate } from 'react-router-dom';
 
-const AdminRoute = ({ element: Element, ...rest }) => {
-  const { user } = useAuth();
+const AdminRoute = ({ component: Component, ...rest }) => {
+  const admin = localStorage.getItem('role') === 'admin';
+  const navigate = useNavigate();
 
-  // Check if user is authenticated and an admin
-  const isAuthenticated = user !== null;
-  const isAdmin = isAuthenticated && user.is_staff;
+  if (!admin) {
+    navigate('/login'); // Redirect to login page if not admin
+    return null; // Return null to prevent rendering of protected component
+  }
+  
 
-  return (
-    <Route
-      {...rest}
-      element={
-        isAdmin ? <Element /> : <Navigate to="/" replace /> // Redirect to homepage if not an admin
-      }
-    />
-  );
+  return <Route {...rest} element={<Component />} />;
 };
 
 export default AdminRoute;
