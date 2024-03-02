@@ -9,7 +9,7 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [userInfo, setUserInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
         if (accessToken) {
           axios.defaults.headers.common["Authorization"] = "Bearer " + accessToken;
           const response = await axios.get("http://127.0.0.1:8000/api/authentication/user/");
-          setUser(response.data.user);
+          setUserInfo(response.data.userinfo);
         }
       } catch (error) {
         console.error("Error checking authentication:", error);
@@ -38,13 +38,20 @@ export const AuthProvider = ({ children }) => {
         email,
         password
       });
+  
+      // Log the response data to check if the role is set correctly
+      console.log("Login response data:", response.data);
+  
+      
       const { access } = response.data.token;
       localStorage.setItem("access_token", access);
-      localStorage.setItem("role", response.data.token.user.is_staff);
+      localStorage.setItem("role", response.data.token.userinfo.is_staff);
+      localStorage.setItem("token", JSON.stringify(response.data.token.userinfo));
+
       axios.defaults.headers.common["Authorization"] = "Bearer " + access;
-      axios.defaults.headers.common["Role"] = response.data.token.user.is_staff ? "admin" : "user"; 
-      setUser(response.data.token.user);
-      if (response.data.token.user.is_staff) {
+      axios.defaults.headers.common["Role"] = response.data.token.userinfo.is_staff ? "admin" : "user"; 
+      setUserInfo(response.data.token.userinfo);
+      if (response.data.token.userinfo.is_staff) {
         navigate('/dashboard');
       } else {
         navigate('/');
@@ -54,16 +61,27 @@ export const AuthProvider = ({ children }) => {
       throw new Error("Invalid email or password. Please try again.");
     }
   };
+  
 
   const logout = () => {
     localStorage.removeItem("access_token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("token");
     delete axios.defaults.headers.common["Authorization"];
-    setUser(null);
+    delete axios.defaults.headers.common["Role"];
+    setUserInfo(null);
     navigate('/login');
   };
 
+  // Function to check if the user is an admin
+const isAdmin = () => {
+  const role = localStorage.getItem("role");
+  return role === "true"; // Convert string to boolean
+};
+  
+
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: user !== null, login, logout, loading }}>
+    <AuthContext.Provider value={{ userInfo, isAuthenticated: userInfo !== null, login, logout, loading, isAdmin }}>
       {loading ? null : children}
     </AuthContext.Provider>
   );

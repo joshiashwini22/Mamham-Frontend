@@ -5,6 +5,8 @@ import DishSelection from "./components/dishSelection";
 function Custom() {
   const categories = ["Base", "Lentil", "Veggie", "Protein", "Pickle"];
   const [selectedDishes, setSelectedDishes] = useState([]);
+  const [address, setAddress] = useState("");
+  const [paymentOption, setPaymentOption] = useState("");
 
   // Load selected dishes from localStorage on component mount
   useEffect(() => {
@@ -46,6 +48,18 @@ function Custom() {
     return selectedDishes.reduce((total, dish) => total + (dish.price * dish.portion), 0);
   };
 
+  const handleAddressChange = (e) => {
+    setAddress(e.target.value);
+  };
+
+  const handlePaymentChange = (e) => {
+    setPaymentOption(e.target.value);
+  };
+
+  useEffect(() => {
+    console.log(paymentOption);
+  }, [paymentOption]); // Log paymentOption whenever it changes
+
   return (
     <>
       <Navbar/>
@@ -74,6 +88,10 @@ function Custom() {
                 selectedDishes={selectedDishes}
                 onRemoveSelectedDish={removeSelectedDish}
                 calculateTotal={calculateTotal}
+                address={address}
+                paymentOption={paymentOption}
+                onAddressChange={handleAddressChange}
+                onPaymentChange={handlePaymentChange}
               />
             </div>
           </div>
@@ -83,16 +101,10 @@ function Custom() {
   );
 }
 
-const Cart = ({ selectedDishes, onRemoveSelectedDish, calculateTotal }) => {
-  const [address, setAddress] = useState("");
-  const [paymentOption, setPaymentOption] = useState("cod");
+const Cart = ({ selectedDishes, onRemoveSelectedDish, calculateTotal, address, paymentOption, onAddressChange, onPaymentChange }) => {
 
-  const handleAddressChange = (e) => {
-    setAddress(e.target.value);
-  };
-
-  const handlePaymentChange = (e) => {
-    setPaymentOption(e.target.value);
+  const handlePlaceOrder = () => {
+    console.log("Order placed!");
   };
 
   return (
@@ -157,7 +169,7 @@ const Cart = ({ selectedDishes, onRemoveSelectedDish, calculateTotal }) => {
           id="address"
           name="address"
           value={address}
-          onChange={handleAddressChange}
+          onChange={onAddressChange}
           className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
           placeholder="Enter your address"
         />
@@ -171,17 +183,26 @@ const Cart = ({ selectedDishes, onRemoveSelectedDish, calculateTotal }) => {
         <select
           id="payment"
           name="payment"
-          value={paymentOption}
-          onChange={handlePaymentChange}
+          onChange={onPaymentChange}
           className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
+          value={paymentOption} // Set the value attribute to ensure the selected option is displayed
         >
+          <option>Select a dish</option>
           <option value="cod">Cash on Delivery</option>
           <option value="online">Online Payment</option>
         </select>
       </div>
+      {/* Place Order Button */}
+      {selectedDishes.length > 0 && (
+        <button
+          onClick={handlePlaceOrder}
+          className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Place Order
+        </button>
+      )}
     </div>
   );
 };
-
 
 export default Custom;
