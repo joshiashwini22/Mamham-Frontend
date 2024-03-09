@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
     checkAuth();
   }, []);
 
-  const login = async (email, password) => {
+  const login = async (email, password, isCheckoutLogin = false) => {
     try {
       const response = await axios.post("http://127.0.0.1:8000/api/authentication/login/", {
         email,
@@ -42,16 +42,18 @@ export const AuthProvider = ({ children }) => {
       // Log the response data to check if the role is set correctly
       console.log("Login response data:", response.data);
   
-      
       const { access } = response.data.token;
       localStorage.setItem("access_token", access);
       localStorage.setItem("role", response.data.token.userinfo.is_staff);
       localStorage.setItem("token", JSON.stringify(response.data.token.userinfo));
-
+  
       axios.defaults.headers.common["Authorization"] = "Bearer " + access;
-      axios.defaults.headers.common["Role"] = response.data.token.userinfo.is_staff ? "admin" : "user"; 
+      axios.defaults.headers.common["Role"] = response.data.token.userinfo.is_staff ? "admin" : "user";
       setUserInfo(response.data.token.userinfo);
-      if (response.data.token.userinfo.is_staff) {
+  
+      if (isCheckoutLogin) {
+        navigate('/checkout');
+      } else if (response.data.token.userinfo.is_staff) {
         navigate('/dashboard');
       } else {
         navigate('/');
@@ -62,11 +64,13 @@ export const AuthProvider = ({ children }) => {
     }
   };
   
+  
 
   const logout = () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("role");
     localStorage.removeItem("token");
+    localStorage.removeItem("selectedDishes");
     delete axios.defaults.headers.common["Authorization"];
     delete axios.defaults.headers.common["Role"];
     setUserInfo(null);

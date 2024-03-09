@@ -16,8 +16,11 @@ import WeeklyMenu from "./admin/components/weeklyMenu";
 import Menu from "./admin/components/Menu/menu";
 import Plans from "./admin/components/Plans/plans";
 import Custom from "./customer/custom";
+import Checkout from "./customer/checkout";
 import OurMenu from "./customer/ourMenu";
 import OurPlans from "./customer/ourPlans";
+import Popup from "./customer/components/popup";
+import DeliveryAddress from "./pages/deliveryAddress";
 
 const App = () => {
   return (
@@ -30,6 +33,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/custom" element={<Custom />} />
+          <Route path="/checkout" element={<Checkout />} />
           <Route path="/ourmenu" element={<OurMenu />} />
           <Route path="/ourplans" element={<OurPlans />} />
           <Route path="/weeklyMenu" element={<WeeklyMenu />} />
@@ -41,6 +45,9 @@ const App = () => {
           <Route path="/customOrder" element={<CustomOrder />} />
           <Route path="/plans" element={<Plans />} />
           <Route path="/menu" element={<Menu />} />
+          <Route path="/popup" element={<Popup />} />
+          <Route path="/deliveryaddress" element={<DeliveryAddress />} />
+
         </Routes>
       </AuthProvider>
     </Router>

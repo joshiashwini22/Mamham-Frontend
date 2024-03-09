@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import LoginImg from "../../src/assets/images/Login.png";
 import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
+const Login = ({ onLogin }) => {
   const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,7 +20,12 @@ const Login = () => {
     }
 
     try {
+      // Call the login function from AuthContext
       await login(email, password);
+      
+      // Invoke the callback function with appropriate parameters
+      console.log(onLogin)
+      onLogin(false); // Pass false since it's not a checkout login
     } catch (error) {
       setError(error.message);
     }

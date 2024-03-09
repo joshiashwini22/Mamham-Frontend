@@ -64,6 +64,7 @@ const DishEdit = ({onEdit }) => {
       if (onEdit) {
         onEdit(response.data);
       }
+      alert("Edited")
     } catch (error) {
       console.error('Error updating dish:', error);
     }

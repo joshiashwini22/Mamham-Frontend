@@ -38,6 +38,10 @@
   }
 }
 
-.text-gray-700 {
+.card{
+  background: #FFFFFF;
+  border: 1px solid #E7E7E7;
+  margin-bottom: 1rem;
+  height: 5px;
+  position: relative;
 }
-
