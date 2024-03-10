@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import Navbar from "./navbar";
 import Popup from "./components/popup";
 import DeliveryAddress from "../pages/deliveryAddress";
+import Button from "../common/button";
+import axios from "axios";
 
 const CheckoutPage = () => {
   const [deliveryOption, setDeliveryOption] = useState("asap");
@@ -11,7 +13,9 @@ const CheckoutPage = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState("");
-  const [dishSelection, setDishSelection] = useState("[]");
+  const [dishSelection, setDishSelection] = useState([]);
+  const [dishList, setDishList] = useState([]);
+  const [total, setTotal] = useState(0);
 
   useEffect(() => {
     // Retrieve addreess from the token stored in local storage
@@ -24,14 +28,26 @@ const CheckoutPage = () => {
       }
       console.log(addresses);
     }
-    const selectedDishes = localStorage.getItem("selectedDishes")
-    if(selectedDishes){
-      const dishes = JSON.parse(selectedDishes)
-      setDishSelection(dishes)
-      console.log(dishSelection)
+    const selectedDishes = localStorage.getItem("selectedDishes");
+    console.log(selectedDishes)
+    if (selectedDishes) {
+      const dishes = JSON.parse(selectedDishes);
+      let selectedDishesTotal = 0;
+      setDishSelection(dishes);
+      setDishList(
+        dishes.map((dish) => {
+          selectedDishesTotal += dish.price * dish.portion;
+          return {
+            dish: dish.id,
+            quantity: dish.portion,
+          };
+        })
+      );
+      console.log(selectedDishesTotal)
+      setTotal(selectedDishesTotal);
+      console.log(dishSelection);
     }
   }, []);
-
 
   useEffect(() => {
     const now = new Date();
@@ -151,6 +167,52 @@ const CheckoutPage = () => {
 
     // Update addresses in local storage
     localStorage.setItem("addresses", JSON.stringify(updatedAddresses));
+  };
+  const handlePlaceOrder = async () => {
+    try {
+      // Format scheduled date
+      const formattedScheduledDate = new Date(scheduledDate)
+        .toISOString()
+        .split("T")[0];
+
+      // Format scheduled time
+      const formattedScheduledTime = new Date(`1970-01-01T${scheduledTime}:00`)
+        .toISOString()
+        .split("T")[1]
+        .split(".")[0];
+
+      // Prepare order data
+      const orderData = {
+        customer: 5,
+        delivery_address: 3,
+        delivery_date: formattedScheduledDate,
+        delivery_time: formattedScheduledTime,
+        total: total,
+        remarks: "kn", // Add remarks if needed
+        payment_method: "Cash On Delivery", // Add payment method
+        dish_lists: dishList, // Pass selected dishes
+      };
+
+      // Place order to backend
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/customization/custom-order/",
+        orderData
+      );
+      console.log("Order placed:", response.data.order);
+
+      // Clear selected dishes from local storage
+      localStorage.removeItem("selectedDishes");
+    } catch (error) {
+      console.error("Error placing order:", error);
+    }
+  };
+
+  // Function to calculate total price of selected dishes
+  const calculateTotalPrice = () => {
+    return dishSelection.reduce(
+      (total, dish) => total + dish.price * dish.portion,
+      0
+    );
   };
 
   return (
@@ -294,7 +356,7 @@ const CheckoutPage = () => {
                         type="radio"
                         id="cash"
                         name="paymentOption"
-                        value="cash"
+                        value="Cash On Delivery"
                         // Implement the checked state for cash option
                         // onChange event to handle the selection
                         className="mr-2"
@@ -306,7 +368,7 @@ const CheckoutPage = () => {
                         type="radio"
                         id="khalti"
                         name="paymentOption"
-                        value="khalti"
+                        value="Khalti"
                         // Implement the checked state for Khalti option
                         // onChange event to handle the selection
                         className="mr-2"
@@ -332,9 +394,9 @@ const CheckoutPage = () => {
 
                 {/* Buttons */}
                 <div className="flex justify-between">
-                  <button type="button" className="btn btn--primary" disabled>
-                    Place Order
-                  </button>
+                  <div className="flex justify-between">
+                    <Button onClick={handlePlaceOrder} purpose="Place Order" />
+                  </div>
                 </div>
               </div>
 
@@ -346,18 +408,22 @@ const CheckoutPage = () => {
                       My Bag
                     </div>
                     <div className="card-block p-8">
-                    {dishSelection.map((dish, index) => (
-                      <div key={index} className="mb-4">
-                        {/* Dish Name */}
-                        <div className="font-bold">{dish.name}</div>
-                        {/* Quantity and Price */}
-                        <div>{dish.portion}x {dish.name} - ${dish.price}</div>
-                        {/* Total Price for the dish */}
-                        <div className="font-bold">Total: ${(dish.price * dish.portion).toFixed(2)}</div>
-                      </div>
-                    ))}
-                    {/* Total Price for all selected dishes */}
-                    <div className="font-bold">Total Price: $</div>
+                      {dishSelection.map((dish, index) => (
+                        <div key={index} className="mb-4">
+                          {/* Dish Name */}
+                          <div className="font-bold">{dish.name}</div>
+                          {/* Quantity and Price */}
+                          <div>
+                            {dish.portion}x {dish.name} - ${dish.price}
+                          </div>
+                          {/* Total Price for the dish */}
+                          <div className="font-bold">
+                            Total: ${(dish.price * dish.portion).toFixed(2)}
+                          </div>
+                        </div>
+                      ))}
+                      {/* Total Price for all selected dishes */}
+                      <div className="font-bold">Total Price: $</div>
                     </div>
                   </div>
                 </div>

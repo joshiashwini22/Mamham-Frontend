@@ -21,6 +21,7 @@ import OurMenu from "./customer/ourMenu";
 import OurPlans from "./customer/ourPlans";
 import Popup from "./customer/components/popup";
 import DeliveryAddress from "./pages/deliveryAddress";
+import MyOrders from "./customer/myOrders";
 
 const App = () => {
   return (
@@ -47,6 +48,7 @@ const App = () => {
           <Route path="/menu" element={<Menu />} />
           <Route path="/popup" element={<Popup />} />
           <Route path="/deliveryaddress" element={<DeliveryAddress />} />
+          <Route path="/orderDetails" element={<MyOrders />} />
 
         </Routes>
       </AuthProvider>

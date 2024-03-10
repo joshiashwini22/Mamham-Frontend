@@ -1,34 +1,35 @@
-import React, { useContext, useState, useEffect} from "react";
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useContext, useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import Logo from "../assets/images/Logo.png";
 import Button from "../common/button";
 import { useAuth } from "../context/AuthContext";
 
 function Navbar() {
-  const [isAuth, setIsAuth] = useState(false)
+  const [isAuth, setIsAuth] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { logout } = useAuth();
 
   const handleLoginClick = () => {
-    navigate('/login');
+    navigate("/login");
   };
 
   const handleLogoutClick = () => {
     logout(); // Call the logout function
     setIsAuth(false); // Update local state to reflect the user's authentication status
-
   };
 
   const isActive = (href) => {
-    return location.pathname === href ? 'text-black rounded md:bg-transparent md:p-0 md:dark:text-red-500' : '';
+    return location.pathname === href
+      ? "text-black rounded md:bg-transparent md:p-0 md:dark:text-red-500"
+      : "";
   };
 
   useEffect(() => {
-    if(localStorage.getItem('access_token') !== null){
+    if (localStorage.getItem("access_token") !== null) {
       setIsAuth(true);
-    }   
-  },[isAuth]);
+    }
+  }, [isAuth]);
 
   return (
     <>
@@ -48,7 +49,9 @@ function Navbar() {
               <li>
                 <a
                   href="/"
-                  className={`block py-2 px-3 hover:bg-gray-100 md:hover:bg-transparent md:p-0 md:dark:hover:text-red-500 dark:text-black dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700  ${isActive('/')}`}
+                  className={`block py-2 px-3 hover:bg-gray-100 md:hover:bg-transparent md:p-0 md:dark:hover:text-red-500 dark:text-black dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700  ${isActive(
+                    "/"
+                  )}`}
                   aria-current="page"
                 >
                   Home
@@ -57,7 +60,9 @@ function Navbar() {
               <li>
                 <a
                   href="/custom"
-                  className={`block py-2 px-3 hover:bg-gray-100 md:hover:bg-transparent md:p-0 md:dark:hover:text-red-500 dark:text-black dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 ${isActive('/custom')}`}
+                  className={`block py-2 px-3 hover:bg-gray-100 md:hover:bg-transparent md:p-0 md:dark:hover:text-red-500 dark:text-black dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 ${isActive(
+                    "/custom"
+                  )}`}
                 >
                   Custom
                 </a>
@@ -65,7 +70,9 @@ function Navbar() {
               <li>
                 <a
                   href="/ourplans"
-                  className={`block py-2 px-3 hover:bg-gray-100 md:hover:bg-transparent md:p-0 md:dark:hover:text-red-500 dark:text-black dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 ${isActive('/ourplans')}`}
+                  className={`block py-2 px-3 hover:bg-gray-100 md:hover:bg-transparent md:p-0 md:dark:hover:text-red-500 dark:text-black dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 ${isActive(
+                    "/ourplans"
+                  )}`}
                 >
                   Our Plans
                 </a>
@@ -73,7 +80,9 @@ function Navbar() {
               <li>
                 <a
                   href="/ourmenu"
-                  className={`block py-2 px-3 hover:bg-gray-100 md:hover:bg-transparent md:p-0 md:dark:hover:text-red-500 dark:text-black dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 ${isActive('/ourmenu')}`}
+                  className={`block py-2 px-3 hover:bg-gray-100 md:hover:bg-transparent md:p-0 md:dark:hover:text-red-500 dark:text-black dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 ${isActive(
+                    "/ourmenu"
+                  )}`}
                 >
                   Our Menu
                 </a>
@@ -81,7 +90,9 @@ function Navbar() {
               <li>
                 <a
                   href="#"
-                  className={`block py-2 px-3 hover:bg-gray-100 md:hover:bg-transparent md:p-0 md:dark:hover:text-red-500 dark:text-black dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 ${isActive('/howitworks')}`}
+                  className={`block py-2 px-3 hover:bg-gray-100 md:hover:bg-transparent md:p-0 md:dark:hover:text-red-500 dark:text-black dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 ${isActive(
+                    "/howitworks"
+                  )}`}
                 >
                   How it Works
                 </a>
@@ -89,10 +100,33 @@ function Navbar() {
             </ul>
           </div>
           <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-            {isAuth ?
-            <Button purpose="Logout" onClick={handleLogoutClick} />:
-            <Button purpose="Login" onClick={handleLoginClick} />
-          }
+            {isAuth ? (
+              <>
+                <a href="/orderDetails" className="text-black">
+                  My Orders
+                </a>{" "}
+                {/* My Orders Link */}
+                <button
+                  id="dropdownNotificationButton"
+                  data-dropdown-toggle="dropdownNotification"
+                  class="relative inline-flex items-center text-sm font-medium text-center text-gray-500 focus:outline-none dark:hover:text-white dark:text-gray-400"
+                  type="button"
+                >
+                  <svg
+                    class="w-5 h-5"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 14 20"
+                  >
+                    <path d="M12.133 10.632v-1.8A5.406 5.406 0 0 0 7.979 3.57.946.946 0 0 0 8 3.464V1.1a1 1 0 0 0-2 0v2.364a.946.946 0 0 0 .021.106 5.406 5.406 0 0 0-4.154 5.262v1.8C1.867 13.018 0 13.614 0 14.807 0 15.4 0 16 .538 16h12.924C14 16 14 15.4 14 14.807c0-1.193-1.867-1.789-1.867-4.175ZM3.823 17a3.453 3.453 0 0 0 6.354 0H3.823Z" />
+                  </svg>
+                </button>
+                <Button purpose="Logout" onClick={handleLogoutClick} />
+              </>
+            ) : (
+              <Button purpose="Login" onClick={handleLoginClick} />
+            )}
           </div>
         </div>
       </nav>
