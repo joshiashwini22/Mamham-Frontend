@@ -4,8 +4,11 @@ import Popup from "./components/popup";
 import DeliveryAddress from "../pages/deliveryAddress";
 import Button from "../common/button";
 import axios from "axios";
+import initiateKhaltiPayment from "./components/khaltiPayment";
 
 const CheckoutPage = () => {
+  const [selectedPaymentOption, setSelectedPaymentOption] =
+    useState("Cash On Delivery");
   const [deliveryOption, setDeliveryOption] = useState("asap");
   const [scheduledDate, setScheduledDate] = useState("");
   const [scheduledTime, setScheduledTime] = useState("");
@@ -16,12 +19,19 @@ const CheckoutPage = () => {
   const [dishSelection, setDishSelection] = useState([]);
   const [dishList, setDishList] = useState([]);
   const [total, setTotal] = useState(0);
+  const [customerId, setCustomerId] = useState("");
+  const [remark, setRemark] = useState("");
 
   useEffect(() => {
     // Retrieve addreess from the token stored in local storage
     const token = localStorage.getItem("token");
     if (token) {
-      const { profile } = JSON.parse(token);
+      const { profile } = JSON.parse(token); // Destructure profile from parsedToken
+      if (profile) {
+        const { id: customerId } = profile; // Extract customer ID from profile
+        setCustomerId(customerId); // Set customer ID in state
+        console.log("Customer ID:", customerId);
+      }
       const { addresses } = profile;
       if (addresses && addresses.length > 0) {
         setAddresses(addresses);
@@ -29,7 +39,7 @@ const CheckoutPage = () => {
       console.log(addresses);
     }
     const selectedDishes = localStorage.getItem("selectedDishes");
-    console.log(selectedDishes)
+    console.log(selectedDishes);
     if (selectedDishes) {
       const dishes = JSON.parse(selectedDishes);
       let selectedDishesTotal = 0;
@@ -43,9 +53,9 @@ const CheckoutPage = () => {
           };
         })
       );
-      console.log(selectedDishesTotal)
+      console.log(selectedDishesTotal);
       setTotal(selectedDishesTotal);
-      console.log(dishSelection);
+      // console.log(dishSelection);
     }
   }, []);
 
@@ -157,6 +167,7 @@ const CheckoutPage = () => {
 
     // Update token with new address
     const token = localStorage.getItem("token");
+
     if (token) {
       const parsedToken = JSON.parse(token);
       parsedToken.profile.addresses = updatedAddresses;
@@ -170,6 +181,52 @@ const CheckoutPage = () => {
   };
   const handlePlaceOrder = async () => {
     try {
+      //Payment
+      let paymentStatus = "";
+      let paidStatus = false;
+
+      if (selectedPaymentOption === "Khalti") {
+        // const payload = {
+        //     return_url: "https://example.com/payment/",
+        //     website_url: "https://example.com/",
+        //     amount: 1300,
+        //     purchase_order_id: "test12",
+        //     purchase_order_name: "test",
+        //     customer_info: {
+        //       name: "Khalti Bahadur",
+        //       email: "example@gmail.com",
+        //       phone: "9800000123"
+        //     },
+        //     amount_breakdown: [
+        //       {
+        //         label: "Mark Price",
+        //         amount: 1000
+        //       },
+        //       {
+        //         label: "VAT",
+        //         amount: 300
+        //       }
+        //     ],
+        //     product_details: [
+        //       {
+        //         identity: "1234567890",
+        //         name: "Khalti logo",
+        //         total_price: 1300,
+        //         quantity: 1,
+        //         unit_price: 1300
+        //       }
+        //     ]
+        // }
+        // Call a function to initiate Khalti payment
+        // const khaltiPaymentStatus = await initiateKhaltiPayment(payload);
+        // paymentStatus = khaltiPaymentStatus ? "Khalti" : "Cash On Delivery";
+        // paidStatus = khaltiPaymentStatus;
+        paymentStatus ="Khalti";
+
+        
+      } else {
+        paymentStatus = "Cash On Delivery";
+      }
       // Format scheduled date
       const formattedScheduledDate = new Date(scheduledDate)
         .toISOString()
@@ -183,17 +240,24 @@ const CheckoutPage = () => {
 
       // Prepare order data
       const orderData = {
-        customer: 5,
-        delivery_address: 3,
+        customer: customerId,
+        delivery_address: selectedAddress.id,
         delivery_date: formattedScheduledDate,
         delivery_time: formattedScheduledTime,
         total: total,
-        remarks: "kn", // Add remarks if needed
-        payment_method: "Cash On Delivery", // Add payment method
+        remarks: remark,
+        payment_method: paymentStatus,
         dish_lists: dishList, // Pass selected dishes
       };
 
-      // Place order to backend
+      console.log(orderData);
+      // Place order to backend only if payment is successful
+      // if (paymentStatus === "Khalti" && !paidStatus) {
+      //   alert("Payment not completed. Please complete the payment.");
+      //   return;
+      // }
+
+      //Place order to backend
       const response = await axios.post(
         "http://127.0.0.1:8000/api/customization/custom-order/",
         orderData
@@ -201,7 +265,7 @@ const CheckoutPage = () => {
       console.log("Order placed:", response.data.order);
 
       // Clear selected dishes from local storage
-      localStorage.removeItem("selectedDishes");
+      // localStorage.removeItem("selectedDishes");
     } catch (error) {
       console.error("Error placing order:", error);
     }
@@ -357,8 +421,10 @@ const CheckoutPage = () => {
                         id="cash"
                         name="paymentOption"
                         value="Cash On Delivery"
-                        // Implement the checked state for cash option
-                        // onChange event to handle the selection
+                        checked={selectedPaymentOption === "Cash On Delivery"}
+                        onChange={() =>
+                          setSelectedPaymentOption("Cash On Delivery")
+                        }
                         className="mr-2"
                       />
                       <label htmlFor="cash">Cash on Delivery</label>
@@ -369,8 +435,8 @@ const CheckoutPage = () => {
                         id="khalti"
                         name="paymentOption"
                         value="Khalti"
-                        // Implement the checked state for Khalti option
-                        // onChange event to handle the selection
+                        checked={selectedPaymentOption === "Khalti"}
+                        onChange={() => setSelectedPaymentOption("Khalti")}
                         className="mr-2"
                       />
                       <label htmlFor="khalti">Khalti</label>
@@ -388,6 +454,8 @@ const CheckoutPage = () => {
                     <textarea
                       className="form-control h-24 p-2 border border-gray-300 rounded-md w-full"
                       placeholder="Please mention if there are special instructions for the delivery person. (e.g., Beware of Dogs)"
+                      value={remark}
+                      onChange={(e) => setRemark(e.target.value)}
                     ></textarea>
                   </div>
                 </div>
