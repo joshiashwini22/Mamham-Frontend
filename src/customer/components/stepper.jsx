@@ -79,7 +79,7 @@ const Stepper = ({ steps, currentStep }) => {
           >
             {/* Display number */}
             {step.completed ? (
-              <span className="text-white font-bold text-xl">&#10003</span>
+              <span className="text-white font-bold text-xl">&#10003;</span>
             ) : (
               index + 1
             )}
