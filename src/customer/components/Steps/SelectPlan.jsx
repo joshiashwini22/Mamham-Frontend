@@ -23,7 +23,27 @@ const SelectPlan = ({ onDataValidChange }) => {
     if (!userData.selectedAddons) {
       setUserData({ ...userData, selectedAddons: [] });
     }
-  }, []);
+    if (!userData.numberOfDays) {
+      setUserData({
+        ...userData,
+        numberOfDays: 7,
+      });
+    }
+  }, [setUserData, userData]);
+
+  // useEffect to save userData to localStorage
+  useEffect(() => {
+    localStorage.setItem("userData", JSON.stringify(userData));
+  }, [userData]);
+
+  // useEffect to initialize state with localStorage data
+  useEffect(() => {
+    const storedUserData = localStorage.getItem("userData");
+    if (storedUserData) {
+      setUserData(JSON.parse(storedUserData));
+    }
+  }, [setUserData]);
+
   const [minDate, setMinDate] = useState("");
   const [selectedDays, setSelectedDays] = useState(7);
 
@@ -93,7 +113,7 @@ const SelectPlan = ({ onDataValidChange }) => {
   useEffect(() => {
     if (addons && addons.length > 0) {
       const selectedAddonPrices = addons
-        .filter((addon) => userData.selectedAddons.includes(addon.id))
+        .filter((addon) => (userData.selectedAddons || []).includes(addon.id))
         .map((addon) => parseFloat(addon.price));
 
       // Initialize totalAddonPrice
@@ -131,7 +151,7 @@ const SelectPlan = ({ onDataValidChange }) => {
       userData.numberOfDays !== ""
     );
   };
-  console.log(isDataValid())
+  console.log(isDataValid());
   // Notify the parent component of the validation status change
   useEffect(() => {
     onDataValidChange(isDataValid());
@@ -227,7 +247,9 @@ const SelectPlan = ({ onDataValidChange }) => {
                         type="checkbox"
                         name="selectedAddons"
                         value={addon.id}
-                        checked={userData.selectedAddons.includes(addon.id)}
+                        checked={(userData.selectedAddons || []).includes(
+                          addon.id
+                        )}
                         onChange={() => handleSelectAddon(addon.id)}
                         className="absolute top-2 left-2 appearance-none checked:bg-green-500 h-6 w-6 rounded-full border border-gray-300 focus:outline-none"
                       />
@@ -285,7 +307,9 @@ const SelectPlan = ({ onDataValidChange }) => {
               <span>Rs. {addonPricing}</span>
             </div>
             <div>
-              <span className="text-l mx-5">Plan Total for {selectedDays} Days Plan:</span>
+              <span className="text-l mx-5">
+                Plan Total for {selectedDays} Days Plan:
+              </span>
               <span>Rs. {calculatePlanTotal()}</span>
             </div>
           </div>

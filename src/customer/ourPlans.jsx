@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Navbar from './navbar'
 import { StepperContext } from '../context/StepperContext'
 import Stepper from './components/stepper'
@@ -10,10 +10,25 @@ import Payment from './components/Steps/Payment'
 
 const OurPlans = () => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [userData, setUserData] = useState('');
+  const [reloadOnce, setReloadOnce] = useState(false);
+
+  useEffect(() => {
+    const registrationCompleted = localStorage.getItem('registrationCompleted');
+    if (registrationCompleted === 'true' && !reloadOnce) {
+      localStorage.removeItem('registrationCompleted');
+      setReloadOnce(true);
+      window.location.reload();
+    }
+  }, [reloadOnce]);
+
+  const [userData, setUserData] = useState(() => {
+    const storedData = localStorage.getItem("userData");
+    return storedData ? JSON.parse(storedData) : '';
+  });
   const [finalData, setFinalData] = useState([]);
   const [isSelectPlanValid, setIsSelectPlanValid] = useState(false); // State to track validation status
 
+  
   // Handler to receive validation status change from SelectPlan component
   const handleSelectPlanDataValidChange = (isValid) => {
     setIsSelectPlanValid(isValid);
@@ -25,6 +40,7 @@ const OurPlans = () => {
     "Delivery",
     "Payment"
   ];
+  
   const displaySteps = (step) => {
     switch(step) {
       case 1:
@@ -45,34 +61,26 @@ const OurPlans = () => {
     //Checkin if steps are withing bounds
     newStep > 0 && newStep <= steps.length && setCurrentStep(newStep);
   }
+  
   return (
     <>
-    <div  className="bg-gray-200">
-      <Navbar/> 
-      OurPlans
-      <div className="md:w-3/4 mx-auto shadow-xl rounded-2xl pb-2 bg-white h-screen">
-        {/* Stepper */}
-        <Stepper
-        steps={steps}
-        currentStep={currentStep}
-        />
-        {/* Display Components */}
-        <div className="my-5 px-10">
-          <StepperContext.Provider value={{
-            userData,
-            setUserData,
-            finalData,
-            setFinalData
-          }}>
-            {displaySteps(currentStep)}
-          </StepperContext.Provider>
+      <div className="bg-gray-200">
+        <Navbar/>
+        <div className="md:w-3/4 mx-auto shadow-xl rounded-2xl pb-2 bg-white h-screen">
+          {/* Stepper */}
+          <Stepper steps={steps} currentStep={currentStep}/>
+          {/* Display Components */}
+          <div className="my-5 px-10">
+            <StepperContext.Provider value={{ userData, setUserData, finalData, setFinalData }}>
+              {displaySteps(currentStep)}
+            </StepperContext.Provider>
+          </div>
+          {/* navigation controls */}
+          {currentStep !== steps.length && 
+            <StepperControl handleClick={handleClick} currentStep={currentStep} steps={steps} isDataValid={isSelectPlanValid}/>
+          }
         </div>
-        {/* navigation controls */}
-        {currentStep !== steps.length && 
-        <StepperControl handleClick={handleClick} currentStep={currentStep} steps={steps} isDataValid={isSelectPlanValid}/>
-      }
       </div>
-    </div>
     </>
   )
 }

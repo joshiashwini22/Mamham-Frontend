@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import RegisterImg from "../../src/assets/images/Register.png";
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 const Register = () => {
@@ -18,6 +20,7 @@ const Register = () => {
     e.preventDefault();
 
     if (!email || !username || !password || !firstName || !lastName || !phoneNumber) {
+      toast.error("Please fill in all the fields.")
       setError("Please fill in all fields.");
       return;
     }
@@ -45,11 +48,13 @@ const Register = () => {
       .request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
+        toast.success("Your account is Registered!")
         navigate(-1);
       })
       .catch((error) => {
         console.log(error);
         setError("Registration failed. Please try again.");
+        toast.error("Registration failed. Please try again.");
       });
   };
   const handleInputChange = () => {
@@ -219,6 +224,7 @@ const Register = () => {
           />
         </section>
       </div>
+      <ToastContainer/>
     </>
   );
 };
