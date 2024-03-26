@@ -1,10 +1,14 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 
 const DeliverySubscription = () => {
+  const [addresses, setAddresses] = useState([]);
+  const [selectedAddress, setSelectedAddress] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
+
   useEffect(() => {
-    localStorage.setItem('registrationCompleted', 'true');
-    
-  },[]);
+    const token = localStorage.getItem("token");
+  }, []);
+
   return (
     <div>DeliverySubscription</div>
   )

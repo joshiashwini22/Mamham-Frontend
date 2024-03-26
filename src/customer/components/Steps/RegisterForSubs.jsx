@@ -3,9 +3,15 @@ import Login from '../../../pages/login';
 import { AuthProvider, useAuth  } from '../../../context/AuthContext'; // Update the import path accordingly
 import DeliverySubscription from './DeliverySubscription';
 
-const RegisterForSubs = () => {
+const RegisterForSubs = ({onLoginSuccess}) => {
   const { isAuthenticated } = useAuth();
 
+  const handleLoginSuccess = () => {
+    console.log('Login successful');
+    localStorage.setItem('registrationCompleted', 'true');
+    onLoginSuccess(); 
+  };
+  
   return (
     <div>
       {isAuthenticated ? (
@@ -13,7 +19,7 @@ const RegisterForSubs = () => {
           <DeliverySubscription/>
         </div>
       ) : (
-        <Login context="subscription" />
+        <Login context="subscription" onLogin={handleLoginSuccess}/>
       )}
     </div>
   );

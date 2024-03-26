@@ -25,7 +25,7 @@ const Login = ({ onLogin, context }) => {
       await login(email, password);
 
       // Invoke the callback function with appropriate parameters
-      console.log(onLogin);
+      console.log(onLogin());
 
       // Get the role from localStorage and convert it to a boolean value
       const role = localStorage.getItem("role") === "true";
