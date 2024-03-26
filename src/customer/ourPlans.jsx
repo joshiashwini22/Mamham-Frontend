@@ -5,7 +5,7 @@ import Stepper from './components/stepper'
 import StepperControl from './components/stepperControl'
 import SelectPlan from './components/Steps/SelectPlan'
 import RegisteForSubs from './components/Steps/RegisterForSubs'
-import Delivery from './components/Steps/Delivery'
+import DeliverySubscription from './components/Steps/DeliverySubscription'
 import Payment from './components/Steps/Payment'
 
 const OurPlans = () => {
@@ -32,7 +32,7 @@ const OurPlans = () => {
       case 2:
         return <RegisteForSubs/>
       case 3:
-        return <Delivery/>  
+        return <DeliverySubscription/>  
       case 4:
         return <Payment/>
     }

@@ -5,6 +5,8 @@ import DishSelection from "./components/dishSelection";
 import { useAuth } from "../context/AuthContext";
 import Popup from "./components/popup";
 import Login from "../pages/login";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Custom() {
   const categories = ["Base", "Lentil", "Veggie", "Protein", "Pickle"];
@@ -15,6 +17,7 @@ function Custom() {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
 
+  //Obtain selected dishes from local storage when page is loadwd
   useEffect(() => {
     const storedSelectedDishes = localStorage.getItem("selectedDishes");
     if (storedSelectedDishes) {
@@ -30,18 +33,22 @@ function Custom() {
       updatedSelectedDishes[existingIndex].portion = +updatedSelectedDishes[existingIndex].portion + +dish.portion;
       setSelectedDishes(updatedSelectedDishes);
       localStorage.setItem("selectedDishes", JSON.stringify(updatedSelectedDishes));
+      toast.success('Dish added successfully!');
     } else {
       const updatedSelectedDishes = [...selectedDishes, dish];
       setSelectedDishes(updatedSelectedDishes);
       localStorage.setItem("selectedDishes", JSON.stringify(updatedSelectedDishes));
+      toast.success('Dish added successfully!');
     }
   };
 
-  const removeSelectedDish = (index) => {
+  const removeSelectedDish = (index, dishName) => {
     const updatedSelectedDishes = [...selectedDishes];
     updatedSelectedDishes.splice(index, 1);
     setSelectedDishes(updatedSelectedDishes);
     localStorage.setItem("selectedDishes", JSON.stringify(updatedSelectedDishes));
+    toast.info(`${dishName} removed!`);
+
   };
 
   const calculateTotal = () => {
@@ -60,15 +67,11 @@ function Custom() {
     console.log(paymentOption);
   }, [paymentOption]);
 
-  const handleProceedToCheckout = (isCheckoutLogin = false) => {
+  const handleProceedToCheckout = () => {
     if (!isAuthenticated) {
       setShowLoginPopup(true);
     } else {
-      if (isCheckoutLogin) {
-        navigate("/checkout");
-      } else {
-        navigate("/checkout", { state: { isCheckoutLogin: true } });
-      }
+      navigate("/checkout");
     }
   };
 
@@ -109,7 +112,7 @@ function Custom() {
         </div>
       </div>
       {showLoginPopup && (
-        <Popup onClose={() => setShowLoginPopup(false)} content={<Login onLogin={handleCheckoutAfterLogin} />} />
+        <Popup onClose={() => setShowLoginPopup(false)} content={<Login onLogin={handleCheckoutAfterLogin} context="custom" />} />
         )}
 </div>
     </>
@@ -144,7 +147,7 @@ const Cart = ({ selectedDishes, onRemoveSelectedDish, calculateTotal, address, p
           <span className="text-xs">Rs. {dish.price}</span>
           <span className="text-xs">{dish.portion}</span>
           <span className="text-xs">Rs. {(dish.price * dish.portion).toFixed(2)}</span>
-          <button onClick={() => onRemoveSelectedDish(index)} className="text-red-600 font-medium text-xs">
+          <button onClick={() => onRemoveSelectedDish(index, dish.name)} className="text-red-600 font-medium text-xs">
             Remove
           </button>
         </div>
@@ -160,6 +163,7 @@ const Cart = ({ selectedDishes, onRemoveSelectedDish, calculateTotal, address, p
           Proceed To Checkout
         </button>
       )}
+      <ToastContainer/>
     </div>
   );
 };

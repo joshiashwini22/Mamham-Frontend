@@ -22,6 +22,8 @@ import OurPlans from "./customer/ourPlans";
 import Popup from "./customer/components/popup";
 import DeliveryAddress from "./pages/deliveryAddress";
 import MyOrders from "./customer/myOrders";
+import DeliverySubscription from "./customer/components/Steps/DeliverySubscription";
+
 
 const App = () => {
   return (
@@ -45,6 +47,7 @@ const App = () => {
           <Route path="/subscription" element={<Subscription />} />
           <Route path="/customOrder" element={<CustomOrder />} />
           <Route path="/plans" element={<Plans />} />
+          <Route path="/plans/deliveryselection" element={<DeliverySubscription/>} />
           <Route path="/menu" element={<Menu />} />
           <Route path="/popup" element={<Popup />} />
           <Route path="/deliveryaddress" element={<DeliveryAddress />} />

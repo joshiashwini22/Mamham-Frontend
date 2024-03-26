@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import LoginImg from "../../src/assets/images/Login.png";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+import DeliverySubscription from "../customer/components/Steps/DeliverySubscription";
 
-const Login = ({ onLogin }) => {
+const Login = ({ onLogin, context }) => {
   const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,10 +23,24 @@ const Login = ({ onLogin }) => {
     try {
       // Call the login function from AuthContext
       await login(email, password);
-      
+
       // Invoke the callback function with appropriate parameters
-      console.log(onLogin)
-      onLogin(false); // Pass false since it's not a checkout login
+      console.log(onLogin);
+
+      // Get the role from localStorage and convert it to a boolean value
+      const role = localStorage.getItem("role") === "true";
+
+      if (role) {
+        navigate("/dashboard");
+      } else {
+        if (context === "subscription") {
+          <DeliverySubscription/>
+        } else if (context === "custom") {
+          navigate("/checkout");
+        } else {
+          navigate(-1);
+        }
+      }
     } catch (error) {
       setError(error.message);
     }

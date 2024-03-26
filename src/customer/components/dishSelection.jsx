@@ -3,6 +3,8 @@ import axios from "axios";
 import LoginImg from "../../assets/images/Login.png";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const DishSelection = ({ category, onAddSelectedDish }) => {
   const [dishes, setDishes] = useState([]);
@@ -39,7 +41,17 @@ const DishSelection = ({ category, onAddSelectedDish }) => {
     setSelectedPortion(portion); // Set the selected portion
   };
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e) => {
+    e.preventDefault()
+    if (!selectedDishId || !selectedPortion) {
+      if (!selectedDishId) {
+        toast.error('Please select a dish.');
+      }
+      if (!selectedPortion) {
+        toast.error('Please specify the portion.');
+      }
+      return;
+    }
     if (selectedDishId && selectedPortion) {
       // Find the selected dish by its ID
       const selectedDish = dishes.find((dish) => dish.id === selectedDishId);
@@ -114,6 +126,7 @@ const DishSelection = ({ category, onAddSelectedDish }) => {
           ))}
         </ul>
       </div> */}
+      <ToastContainer/>
     </div>
   );
   

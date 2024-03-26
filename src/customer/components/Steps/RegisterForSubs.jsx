@@ -1,9 +1,22 @@
-import React from 'react'
+import React, { useContext } from 'react';
+import Login from '../../../pages/login';
+import { AuthProvider, useAuth  } from '../../../context/AuthContext'; // Update the import path accordingly
+import DeliverySubscription from './DeliverySubscription';
 
 const RegisterForSubs = () => {
-  return (
-    <div>RegisterForSubs</div>
-  )
-}
+  const { isAuthenticated } = useAuth();
 
-export default RegisterForSubs
+  return (
+    <div>
+      {isAuthenticated ? (
+        <div>
+          <DeliverySubscription/>
+        </div>
+      ) : (
+        <Login context="subscription" />
+      )}
+    </div>
+  );
+};
+
+export default RegisterForSubs;

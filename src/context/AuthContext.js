@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
     checkAuth();
   }, []);
 
-  const login = async (email, password, isCheckoutLogin = false) => {
+  const login = async (email, password) => {
     try {
       const response = await axios.post("http://127.0.0.1:8000/api/authentication/login/", {
         email,
@@ -51,13 +51,9 @@ export const AuthProvider = ({ children }) => {
       axios.defaults.headers.common["Role"] = response.data.token.userinfo.is_staff ? "admin" : "user";
       setUserInfo(response.data.token.userinfo);
   
-      if (isCheckoutLogin) {
-        navigate('/checkout');
-      } else if (response.data.token.userinfo.is_staff) {
-        navigate('/dashboard');
-      } else {
-        navigate('/');
-      }
+      
+
+      
     } catch (error) {
       console.error("Login error:", error);
       throw new Error("Invalid email or password. Please try again.");

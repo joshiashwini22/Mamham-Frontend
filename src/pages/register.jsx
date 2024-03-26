@@ -45,7 +45,7 @@ const Register = () => {
       .request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
-        navigate('/login');
+        navigate(-1);
       })
       .catch((error) => {
         console.log(error);
