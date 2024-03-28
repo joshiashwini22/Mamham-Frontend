@@ -17,15 +17,19 @@ import Menu from "./admin/components/Menu/menu";
 import Plans from "./admin/components/Plans/plans";
 import Custom from "./customer/custom";
 import Checkout from "./customer/checkout";
-import OurMenu from "./customer/ourMenu";
+import OurMenu from "./pages/ourMenu";
 import OurPlans from "./customer/ourPlans";
 import Popup from "./customer/components/popup";
-import DeliveryAddress from "./pages/deliveryAddress";
+import DeliveryAddress from "./customer/components/deliveryAddress";
 import MyOrders from "./customer/myOrders";
 import DeliverySubscription from "./customer/components/Steps/DeliverySubscription";
+import {getCustomerIdFromStorage} from "./utils/utils"
 
 
 const App = () => {
+  const customerId = getCustomerIdFromStorage(); // Retrieve customer ID from local storage
+  const myordersUrl = customerId ? `/myorders/${customerId}` : '/myorders'; // Construct URL
+
   return (
     <Router>
       {/* Wrap your routes with the AuthProvider */}
@@ -51,7 +55,7 @@ const App = () => {
           <Route path="/menu" element={<Menu />} />
           <Route path="/popup" element={<Popup />} />
           <Route path="/deliveryaddress" element={<DeliveryAddress />} />
-          <Route path="/orderDetails" element={<MyOrders />} />
+          <Route path={myordersUrl} element={<MyOrders />} />
 
         </Routes>
       </AuthProvider>

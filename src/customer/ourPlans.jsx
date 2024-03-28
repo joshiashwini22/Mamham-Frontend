@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react'
-import Navbar from './navbar'
-import { StepperContext } from '../context/StepperContext'
-import Stepper from './components/stepper'
-import StepperControl from './components/stepperControl'
-import SelectPlan from './components/Steps/SelectPlan'
-import RegisteForSubs from './components/Steps/RegisterForSubs'
-import DeliverySubscription from './components/Steps/DeliverySubscription'
-import Payment from './components/Steps/Payment'
+import React, { useState, useEffect } from 'react';
+import Navbar from './navbar';
+import { StepperContext } from '../context/StepperContext';
+import Stepper from './components/stepper';
+import StepperControl from './components/stepperControl';
+import SelectPlan from './components/Steps/SelectPlan';
+import RegisteForSubs from './components/Steps/RegisterForSubs';
+import DeliverySubscription from './components/Steps/DeliverySubscription';
+import Payment from './components/Steps/Payment';
 
 const OurPlans = () => {
   const [reloadOnce, setReloadOnce] = useState(false);
@@ -16,6 +16,7 @@ const OurPlans = () => {
   });
   const [finalData, setFinalData] = useState([]);
   const [isSelectPlanValid, setIsSelectPlanValid] = useState(false);
+  const [isValidAddress, setIsValidAddress] = useState(false); // New state for valid address
   const [currentStep, setCurrentStep] = useState(() => {
     const storedStep = localStorage.getItem("currentStep");
     return storedStep ? parseInt(storedStep) : 1;
@@ -37,12 +38,20 @@ const OurPlans = () => {
   const handleLoginSuccess = () => {
     localStorage.setItem('registrationCompleted', 'true');
     window.location.reload();
-    setCurrentStep(currentStep );
+    setCurrentStep(currentStep);
   };
 
   const handleSelectPlanDataValidChange = (isValid) => {
     setIsSelectPlanValid(isValid);
   };
+
+  // Function to handle validity of delivery address
+  const handleDeliveryDataValidChange = () => {
+    const addressId = localStorage.getItem("subscriptionDeliveryAddress"); // Retrieve addressId from local storage
+    const isValidAddress = !!addressId; // Check if addressId exists
+    setIsValidAddress(isValidAddress); // Set isValidAddress state based on addressId existence
+  };
+  
 
   const steps = [
     "Select Plan",
@@ -50,39 +59,39 @@ const OurPlans = () => {
     "Delivery",
     "Payment"
   ];
-  
+
   const displaySteps = (step) => {
-    switch(step) {
+    switch (step) {
       case 1:
-        return <SelectPlan onDataValidChange={handleSelectPlanDataValidChange}/>
+        return <SelectPlan onDataValidChange={handleSelectPlanDataValidChange} />;
       case 2:
-        return <RegisteForSubs onLoginSuccess={handleLoginSuccess} setCurrentStep={setCurrentStep} />
+        return <RegisteForSubs onLoginSuccess={handleLoginSuccess} setCurrentStep={setCurrentStep} />;
       case 3:
-        return <DeliverySubscription/>  
+        return <DeliverySubscription />;
       case 4:
-        return <Payment/>
+        return <Payment />;
     }
-  }
+  };
 
   const handleClick = (direction) => {
     let newStep = currentStep;
     direction === "next" ? newStep++ : newStep--;
     newStep > 0 && newStep <= steps.length && setCurrentStep(newStep);
-  }
-  
+  };
+
   return (
     <>
       <div className="bg-gray-200">
-        <Navbar/>
+        <Navbar />
         <div className="md:w-3/4 mx-auto shadow-xl rounded-2xl pb-2 bg-white h-screen">
-          <Stepper steps={steps} currentStep={currentStep}/>
+          <Stepper steps={steps} currentStep={currentStep} />
           <div className="my-5 px-10">
             <StepperContext.Provider value={{ userData, setUserData, finalData, setFinalData }}>
               {displaySteps(currentStep)}
             </StepperContext.Provider>
           </div>
-          {currentStep !== steps.length && 
-            <StepperControl handleClick={handleClick} currentStep={currentStep} steps={steps} isDataValid={isSelectPlanValid}/>
+          {currentStep !== steps.length &&
+            <StepperControl handleClick={handleClick} currentStep={currentStep} steps={steps} isDataValid={currentStep === 1 ? isSelectPlanValid : isValidAddress}/>
           }
         </div>
       </div>

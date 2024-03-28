@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "./navbar";
 import Popup from "./components/popup";
-import DeliveryAddress from "../pages/deliveryAddress";
+import DeliveryAddress from "./components/deliveryAddress";
 import Button from "../common/button";
 import axios from "axios";
 import initiateKhaltiPayment from "./components/khaltiPayment";
@@ -23,41 +23,38 @@ const CheckoutPage = () => {
   const [remark, setRemark] = useState("");
 
   useEffect(() => {
-    // Retrieve addreess from the token stored in local storage
     const token = localStorage.getItem("token");
     if (token) {
-      const { profile } = JSON.parse(token); // Destructure profile from parsedToken
+      const parsedToken = JSON.parse(token);
+      const profile = parsedToken.profile;
       if (profile) {
-        const { id: customerId } = profile; // Extract customer ID from profile
-        setCustomerId(customerId); // Set customer ID in state
-        console.log("Customer ID:", customerId);
+        const { addresses } = profile;
+        if (addresses && addresses.length > 0) {
+          setAddresses(addresses);
+        }
+        console.log(addresses);
       }
-      const { addresses } = profile;
-      if (addresses && addresses.length > 0) {
-        setAddresses(addresses);
+      const selectedDishes = localStorage.getItem("selectedDishes");
+      console.log(selectedDishes);
+      if (selectedDishes) {
+        const dishes = JSON.parse(selectedDishes);
+        let selectedDishesTotal = 0;
+        setDishSelection(dishes);
+        setDishList(
+          dishes.map((dish) => {
+            selectedDishesTotal += dish.price * dish.portion;
+            return {
+              dish: dish.id,
+              quantity: dish.portion,
+            };
+          })
+        );
+        console.log(selectedDishesTotal);
+        setTotal(selectedDishesTotal);
       }
-      console.log(addresses);
-    }
-    const selectedDishes = localStorage.getItem("selectedDishes");
-    console.log(selectedDishes);
-    if (selectedDishes) {
-      const dishes = JSON.parse(selectedDishes);
-      let selectedDishesTotal = 0;
-      setDishSelection(dishes);
-      setDishList(
-        dishes.map((dish) => {
-          selectedDishesTotal += dish.price * dish.portion;
-          return {
-            dish: dish.id,
-            quantity: dish.portion,
-          };
-        })
-      );
-      console.log(selectedDishesTotal);
-      setTotal(selectedDishesTotal);
-      // console.log(dishSelection);
     }
   }, []);
+  
 
   useEffect(() => {
     const now = new Date();
@@ -186,41 +183,7 @@ const CheckoutPage = () => {
       let paidStatus = false;
 
       if (selectedPaymentOption === "Khalti") {
-        // const payload = {
-        //     return_url: "https://example.com/payment/",
-        //     website_url: "https://example.com/",
-        //     amount: 1300,
-        //     purchase_order_id: "test12",
-        //     purchase_order_name: "test",
-        //     customer_info: {
-        //       name: "Khalti Bahadur",
-        //       email: "example@gmail.com",
-        //       phone: "9800000123"
-        //     },
-        //     amount_breakdown: [
-        //       {
-        //         label: "Mark Price",
-        //         amount: 1000
-        //       },
-        //       {
-        //         label: "VAT",
-        //         amount: 300
-        //       }
-        //     ],
-        //     product_details: [
-        //       {
-        //         identity: "1234567890",
-        //         name: "Khalti logo",
-        //         total_price: 1300,
-        //         quantity: 1,
-        //         unit_price: 1300
-        //       }
-        //     ]
-        // }
-        // Call a function to initiate Khalti payment
-        // const khaltiPaymentStatus = await initiateKhaltiPayment(payload);
-        // paymentStatus = khaltiPaymentStatus ? "Khalti" : "Cash On Delivery";
-        // paidStatus = khaltiPaymentStatus;
+        
         paymentStatus ="Khalti";
 
         
@@ -258,11 +221,31 @@ const CheckoutPage = () => {
       // }
 
       //Place order to backend
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/customization/custom-order/",
-        orderData
-      );
-      console.log("Order placed:", response.data.order);
+      //Payment
+      
+
+      if (selectedPaymentOption === "Khalti") {
+        
+        const khaltiresponse = await axios.post(
+          "http://127.0.0.1:8000/api/authentication.initiatekhalti/",
+          orderData
+        );
+        if (khaltiresponse) {
+          //redirect ani payment successful bhayesi place order
+        }
+        else {
+          //toast
+        }
+
+        
+      } else {
+        const response = await axios.post(
+          "http://127.0.0.1:8000/api/customization/custom-order/",
+          orderData
+          
+          );
+          console.log("Order placed:", response.data.order);
+      }
 
       // Clear selected dishes from local storage
       // localStorage.removeItem("selectedDishes");

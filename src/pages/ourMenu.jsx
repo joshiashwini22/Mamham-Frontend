@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Navbar from "./navbar";
+import Navbar from "../customer/navbar";
 import useFetch from "../common/useFetch";
 
 const OurMenu = () => {

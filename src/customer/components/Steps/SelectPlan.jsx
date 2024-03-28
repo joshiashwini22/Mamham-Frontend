@@ -155,7 +155,10 @@ const SelectPlan = ({ onDataValidChange }) => {
   // Notify the parent component of the validation status change
   useEffect(() => {
     onDataValidChange(isDataValid());
-  }, [userData, onDataValidChange]);
+  }, [userData, onDataValidChange, isDataValid]);
+  console.log(typeof isDataValid()); // Should log "function"
+  console.log(typeof isDataValid); // Should log "function"
+
 
   return (
     <div className="m-2 p-2 border">

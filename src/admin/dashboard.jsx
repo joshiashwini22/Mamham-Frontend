@@ -16,6 +16,7 @@ const Dashboard = () => {
       navigate("/login");
     }
   }, [isAdmin, navigate]);
+  
 
   return (
     <div className="p-4 sm:ml-64">

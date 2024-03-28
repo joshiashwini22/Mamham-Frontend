@@ -1,127 +1,124 @@
-import React from 'react'
+import React, { useState } from 'react';
+import useFetch from '../../../common/useFetch';
+import { getCustomerIdFromStorage } from '../../../utils/utils';
 
 const CustomOrder = () => {
-  return (
-    <div className="p-4 sm:ml-64">
-    <div className="p-4 border-2 border-gray-200  rounded-lg dark:border-gray-700 mt-14">
-       
- 
- <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-     <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-             <tr>
-                 <th scope="col" className="px-6 py-3">
-                     Product name
-                 </th>
-                 <th scope="col" className="px-6 py-3">
-                     Color
-                 </th>
-                 <th scope="col" className="px-6 py-3">
-                     Category
-                 </th>
-                 <th scope="col" className="px-6 py-3">
-                     Price
-                 </th>
-                 <th scope="col" className="px-6 py-3">
-                     Action
-                 </th>
-             </tr>
-         </thead>
-         <tbody>
-             <tr className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                     Apple MacBook Pro 17"
-                 </th>
-                 <td className="px-6 py-4">
-                     Silver
-                 </td>
-                 <td className="px-6 py-4">
-                     Laptop
-                 </td>
-                 <td className="px-6 py-4">
-                     $2999
-                 </td>
-                 <td className="px-6 py-4">
-                     <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                 </td>
-             </tr>
-             <tr className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                     Microsoft Surface Pro
-                 </th>
-                 <td className="px-6 py-4">
-                     White
-                 </td>
-                 <td className="px-6 py-4">
-                     Laptop PC
-                 </td>
-                 <td className="px-6 py-4">
-                     $1999
-                 </td>
-                 <td className="px-6 py-4">
-                     <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                 </td>
-             </tr>
-             <tr className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                     Magic Mouse 2
-                 </th>
-                 <td className="px-6 py-4">
-                     Black
-                 </td>
-                 <td className="px-6 py-4">
-                     Accessories
-                 </td>
-                 <td className="px-6 py-4">
-                     $99
-                 </td>
-                 <td className="px-6 py-4">
-                     <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                 </td>
-             </tr>
-             <tr className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                     Google Pixel Phone
-                 </th>
-                 <td className="px-6 py-4">
-                     Gray
-                 </td>
-                 <td className="px-6 py-4">
-                     Phone
-                 </td>
-                 <td className="px-6 py-4">
-                     $799
-                 </td>
-                 <td className="px-6 py-4">
-                     <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                 </td>
-             </tr>
-             <tr>
-                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                     Apple Watch 5
-                 </th>
-                 <td className="px-6 py-4">
-                     Red
-                 </td>
-                 <td className="px-6 py-4">
-                     Wearables
-                 </td>
-                 <td className="px-6 py-4">
-                     $999
-                 </td>
-                 <td className="px-6 py-4">
-                     <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                 </td>
-             </tr>
-         </tbody>
-     </table>
- </div>
- 
-       
-    </div>
- </div>
- 
-  )
-}
+  const [filters, setFilters] = useState({
+    deliveryDate: '',
+    deliveryTime: '',
+    status: '',
+    orderId: '',
+  });
 
-export default CustomOrder
+  const { data: custom, loading: customLoading, error: customError } = useFetch(
+    `http://127.0.0.1:8000/api/customization/custom-order/?delivery_date=${filters.deliveryDate}&delivery_time=${filters.deliveryTime}&status=${filters.status}&order_id=${filters.orderId}`
+  );
+  console.log(custom);
+
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters({ ...filters, [name]: value });
+  };
+
+  return (
+    <div className="bg-gray-200">
+      <section className="bg-white min-h-screen py-12 lg:mx-[180px]">
+        <div className="container">
+          <div className="flex flex-col items-center mx-44 py-5">
+            <span className="text-red-600 text-4xl font-bold block mb-4">My Orders</span>
+          </div>
+          <div className="flex justify-end mb-4 mx-4 space-x-4">
+            <input
+              type="text"
+              name="orderId"
+              placeholder="Search by Order ID"
+              value={filters.orderId}
+              onChange={handleFilterChange}
+              className="border rounded-md px-2 py-1"
+            />
+            <input
+              type="date"
+              name="deliveryDate"
+              value={filters.deliveryDate}
+              onChange={handleFilterChange}
+              className="border rounded-md px-2 py-1"
+            />
+            <input
+              type="time"
+              name="deliveryTime"
+              value={filters.deliveryTime}
+              onChange={handleFilterChange}
+              className="border rounded-md px-2 py-1"
+            />
+            <select
+              name="status"
+              value={filters.status}
+              onChange={handleFilterChange}
+              className="border rounded-md px-2 py-1"
+            >
+              <option value="">Select Status</option>
+              <option value="Pending">Pending</option>
+              <option value="Approved">Approved</option>
+              <option value="Preparing">Preparing</option>
+              <option value="On the Way">On the Way</option>
+              <option value="Completed">Completed</option>
+            </select>
+          </div>
+          <table className="table-auto">
+            <thead>
+              <tr>
+                <th className="px-4 py-2">Order ID</th>
+                <th className="px-4 py-2">Customer</th>
+                <th className="px-4 py-2">Delivery Address</th>
+                <th className="px-4 py-2">Delivery Date</th>
+                <th className="px-4 py-2">Delivery Time</th>
+                <th className="px-4 py-2">Total</th>
+                <th className="px-4 py-2">Remarks</th>
+                <th className="px-4 py-2">Status</th>
+                <th className="px-4 py-2">Payment Method</th>
+                <th className="px-4 py-2">Paid</th>
+                <th className="px-4 py-2">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {customLoading ? (
+                <tr>
+                  <td colSpan="11">Loading...</td>
+                </tr>
+              ) : customError ? (
+                <tr>
+                  <td colSpan="11">Error: {customError.message}</td>
+                </tr>
+              ) : custom && custom.length > 0 ? (
+                custom.map(order => (
+                  <tr key={order.id}>
+                    <td className="border px-4 py-2">{order.id}</td>
+                    <td className="border px-4 py-2">{order.customer}</td>
+                    <td className="border px-4 py-2">{order.delivery_address}</td>
+                    <td className="border px-4 py-2">{order.delivery_date}</td>
+                    <td className="border px-4 py-2">{order.delivery_time}</td>
+                    <td className="border px-4 py-2">{order.total}</td>
+                    <td className="border px-4 py-2">{order.remarks}</td>
+                    <td className="border px-4 py-2">{order.status}</td>
+                    <td className="border px-4 py-2">{order.payment_method}</td>
+                    <td className="border px-4 py-2">{order.isPaid ? 'Yes' : 'No'}</td>
+                    <td className="border px-4 py-2">
+                      <button className="bg-blue-500 text-white px-2 py-1 rounded-md mr-2">Edit</button>
+                      <button className="bg-red-500 text-white px-2 py-1 rounded-md">Delete</button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="11">No orders found</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default CustomOrder;

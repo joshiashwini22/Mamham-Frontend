@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Logo from "../assets/images/Logo.png";
 import Button from "../common/button";
 import { useAuth } from "../context/AuthContext";
+import {getCustomerIdFromStorage} from "../utils/utils";
 
 function Navbar() {
   const [isAuth, setIsAuth] = useState(false);
@@ -30,6 +31,7 @@ function Navbar() {
       setIsAuth(true);
     }
   }, [isAuth]);
+
 
   return (
     <>
@@ -102,7 +104,7 @@ function Navbar() {
           <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
             {isAuth ? (
               <>
-                <a href="/orderDetails" className="text-black">
+                <a href={`/myorders/${getCustomerIdFromStorage()}`} className="text-black">
                   My Orders
                 </a>{" "}
                 {/* My Orders Link */}

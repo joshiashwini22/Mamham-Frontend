@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const StepperControl = ({ handleClick, currentStep, steps, isDataValid }) => {
     const handleNextClick = (e) => {
         e.preventDefault(); // Prevent the default button behavior
-
+        console.log(isDataValid)
         if (isDataValid) {
             handleClick("next");
         } else {
