@@ -13,7 +13,7 @@ import Error from "./common/error";
 import Subscription from "./admin/components/Subscription/subscription";
 import CustomOrder from "./admin/components/CustomOrder/customOrder";
 import WeeklyMenu from "./admin/components/weeklyMenu";
-import Menu from "./admin/components/Menu/menu";
+import Meal from "./admin/components/Meals/meal";
 import Plans from "./admin/components/Plans/plans";
 import Custom from "./customer/custom";
 import Checkout from "./customer/checkout";
@@ -24,6 +24,10 @@ import DeliveryAddress from "./customer/components/deliveryAddress";
 import MyOrders from "./customer/myOrders";
 import DeliverySubscription from "./customer/components/Steps/DeliverySubscription";
 import {getCustomerIdFromStorage} from "./utils/utils"
+import PlanEdit from "./admin/components/Plans/planEdit";
+import PlanCreate from "./admin/components/Plans/planCreate";
+import MealCreate from "./admin/components/Meals/mealCreate";
+import MealEdit from "./admin/components/Meals/mealEdit";
 
 
 const App = () => {
@@ -51,8 +55,12 @@ const App = () => {
           <Route path="/subscription" element={<Subscription />} />
           <Route path="/customOrder" element={<CustomOrder />} />
           <Route path="/plans" element={<Plans />} />
+          <Route path="/plans-create" element={<PlanCreate/>} />
+          <Route path="/plans-update/:id" element={<PlanEdit/>} />
           <Route path="/plans/deliveryselection" element={<DeliverySubscription/>} />
-          <Route path="/menu" element={<Menu />} />
+          <Route path="/meals" element={<Meal />} />
+          <Route path="/meals-create" element={<MealCreate/>} />
+          <Route path="/meals-update/:id" element={<MealEdit/>} />
           <Route path="/popup" element={<Popup />} />
           <Route path="/deliveryaddress" element={<DeliveryAddress />} />
           <Route path={myordersUrl} element={<MyOrders />} />

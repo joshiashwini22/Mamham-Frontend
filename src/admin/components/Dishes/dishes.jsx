@@ -1,18 +1,26 @@
 import React, { useState, useEffect } from "react";
-import Header from "../../header";
 import Sidebar from "../../sidebar";
 import { useNavigate } from "react-router-dom";
 import useFetch from "../../../common/useFetch";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Dishes = () => {
   const navigate = useNavigate();
-  const { data: dishes, loading, error, deleteItem } = useFetch('http://127.0.0.1:8000/api/customization/dishes');
+  const {
+    data: dishes,
+    loading,
+    error,
+    deleteItem,
+  } = useFetch("http://127.0.0.1:8000/api/customization/dishes");
 
   const handleDelete = async (dishId) => {
     try {
       await deleteItem(dishId);
+    toast.success("The dish is deleted.")
+
     } catch (error) {
-      console.error('Error deleting dish:', error);
+      console.error("Error deleting dish:", error);
     }
   };
 
@@ -25,103 +33,91 @@ const Dishes = () => {
 
   return (
     <>
-      <Header />
       <Sidebar />
-      <div className="bg-gray-200 sm:ml-64">
-      <section className="bg-white min-h-screen py-12 lg:mx-[180px]">
-        <div className="relative overflow-x-auto container">
-
-        
-            <div className="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
+      <div className="bg-white sm:ml-64">
+        <section className="bg-white min-h-screen py-12 lg:mx-[10px]">
+          <div className="relative overflow-x-auto container">
+            <div className="flex flex-col sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-center pb-4">
               <div>
+                <span className="text-red-700 text-4xl font-bold block mb-4 ">
+                  Dishes
+                </span>
                 <a
                   href="/dishes-create"
-                  className="flex items-center p-2 text-[#93040B] rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                  className="flex items-center p-2 text-red-700 rounded-lg dark:text-white"
                 >
                   <button
                     id="dropdownRadioButton"
                     data-dropdown-toggle="dropdownRadio"
-                    className="inline-flex items-center text-[#93040B] bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-[#93040B] dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                    className="p-4 rounded inline-flex items-center bg-red-700 text-white border border-gray-300"
                     type="button"
                   >
-                    Add
+                    + Add
                   </button>
                 </a>
               </div>
             </div>
-            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 border border-gray-300">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                  <th scope="col" className="p-4">
-                    <div className="flex items-center">
-                      <input
-                        id="checkbox-all-search"
-                        type="checkbox"
-                        className="w-4 h-4 text-[#93040B] bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                      />
-                      <label htmlFor="checkbox-all-search" className="sr-only">
-                        checkbox
-                      </label>
-                    </div>
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Name
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Price
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Description
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    File
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {dishes.map((dish) => (
-                  <tr key={dish.id}>
-                    <th scope="col" className="p-4">
-                      <div className="flex items-center">
-                        <input
-                          id="checkbox-all-search"
-                          type="checkbox"
-                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                        />
-                        <label htmlFor="checkbox-all-search" className="sr-only">
-                          checkbox
-                        </label>
-                      </div>
-                    </th>
-                    <td>{dish.name}</td>
-                    <td>{dish.price}</td>
-                    <td>{dish.description}</td>
-                    <td>
-                      <img src={dish.image} alt="Dish" className="mt-2 w-24 h-24 object-fit rounded-lg" />
-                    </td>
-                    <td className="px-6 py-4">
-                      <button
-                        onClick={() => handleEdit(dish.id)}
-                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(dish.id)}
-                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                      >
-                        Delete
-                      </button>
-                    </td>
+            <div className="flex justify-center">
+              <table className="table-auto">
+                <thead>
+                  <tr>
+                    <th scope="col" className="px-4 py-2">Name</th>
+                    <th scope="col" className="px-4 py-2">Price</th>
+                    <th scope="col" className="px-4 py-2">Category</th>
+                    <th scope="col" className="px-4 py-2">Description</th>
+                    <th scope="col" className="px-4 py-2">Image</th>
+                    <th scope="col" className="px-4 py-2">Action</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {loading? ( <tr>
+                      <td colSpan="11">Loading...</td>
+                    </tr>): error ? (
+                      <tr>
+                      <td colSpan="11">Error: {error.message}</td>
+                    </tr>
+                    ) :dishes && dishes.length > 0 ? (
+                    dishes.map((dish) => (
+                    <tr key={dish.id}>
+                      
+                      <td className="border px-4 py-2">{dish.name}</td>
+                      <td className="border px-4 py-2">{dish.price}</td>
+                      <td className="border px-4 py-2">{dish.category}</td>
+                      <td className="border px-4 py-2">{dish.description}</td>
+                      <td className="border px-4 py-2">
+                        <img
+                          src={dish.image}
+                          alt="Dish"
+                          className="mt-2 w-24 h-24 object-fit rounded-lg"
+                        />
+                      </td>
+                      <td className="border px-4 py-2">
+                        <button
+                          onClick={() => handleEdit(dish.id)}
+                          className="bg-blue-500 text-white px-2 py-1 rounded-md mr-2"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDelete(dish.id)}
+                          className="bg-red-500 text-white px-2 py-1 rounded-md"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                  ): (
+                    <tr>
+                      <td colSpan="11">No orders found</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         </section>
+        <ToastContainer/>
       </div>
     </>
   );

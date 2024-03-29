@@ -4,31 +4,25 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const DishCreate = ({ onDishCreated }) => {
+const MealCreate = ({ onMealCreated }) => {
   const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState("");
 
-  // Define dish options
-  const dishOptions = ["Base", "Lentil", "Veggie", "Protein", "Pickle"];
-
+  
   const handleImageChange = (e) => {
     setImage(e.target.files[0]);
   };
 
-  const handleCreateDish = async () => {
+  const handleCreateMeal = async () => {
     try {
       const formData = new FormData();
       formData.append("name", name);
-      formData.append("price", price);
       formData.append("description", description);
       formData.append("image", image);
-      formData.append("category", selectedCategory);
 
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/customization/dishes/",
+        "http://127.0.0.1:8000/api/subscription/meals/",
         formData,
         {
           headers: {
@@ -38,21 +32,19 @@ const DishCreate = ({ onDishCreated }) => {
       );
 
       // Show toast
-      toast.success("Dish created successfully!");
+      toast.success("Meal created successfully!");
 
-      if (onDishCreated) {
-        onDishCreated(response.data);
+      if (onMealCreated) {
+        onMealCreated(response.data);
       }
 
       // Reset the form
       setName("");
-      setPrice("");
       setDescription("");
       setImage(null);
-      setSelectedCategory("");
     } catch (error) {
-      console.error("Error creating dish:", error);
-      toast.error("Error creating dish. Please provide all values.");
+      console.error("Error creating meal:", error);
+      toast.error("Error creating meal. Please provide all values.");
     }
   };
 
@@ -62,7 +54,7 @@ const DishCreate = ({ onDishCreated }) => {
       <section className="bg-white">
         <div className="py-8 px-4 mx-auto max-w-2xl lg:py-16">
           <h2 className="mb-4 text-xl font-bold text-red-700">
-            Create a New Dish
+            Create a New Meal
           </h2>
           <form>
             <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
@@ -83,46 +75,6 @@ const DishCreate = ({ onDishCreated }) => {
                   placeholder="Name"
                   required
                 />
-              </div>
-              <div className="w-full">
-                <label
-                  htmlFor="price"
-                  className="block mb-2 text-sm font-medium text-gray-900"
-                >
-                  Price per unit
-                </label>
-                <input
-                  type="number"
-                  name="price"
-                  id="price"
-                  value={price}
-                  onChange={(e) => setPrice(e.target.value)}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:border-primary-600 block w-full p-2.5"
-                  placeholder="Price"
-                  required
-                />
-              </div>
-              <div className="w-full">
-                <label
-                  htmlFor="category"
-                  className="block mb-2 text-sm font-medium text-gray-900"
-                >
-                  Category
-                </label>
-                <select
-                  id="category"
-                  name="category"
-                  value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:border-primary-600 block w-full p-2.5"
-                >
-                  <option value="">Select category</option>
-                  {dishOptions.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
               </div>
               <div className="w-full">
                 <label
@@ -158,10 +110,10 @@ const DishCreate = ({ onDishCreated }) => {
             </div>
             <button
               type="button"
-              onClick={handleCreateDish}
+              onClick={handleCreateMeal}
               className="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center border border-gray-300 text-blue bg-red-700 rounded-lg focus:ring-2 focus:ring-primary-600 hover:bg-primary-800"
             >
-              Add
+            Add
             </button>
           </form>
         </div>
@@ -171,4 +123,4 @@ const DishCreate = ({ onDishCreated }) => {
   );
 };
 
-export default DishCreate;
+export default MealCreate;

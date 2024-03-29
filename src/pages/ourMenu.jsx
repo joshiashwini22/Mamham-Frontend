@@ -5,8 +5,14 @@ import useFetch from "../common/useFetch";
 const OurMenu = () => {
   const [filters, setFilters] = useState({
     selectedStartDate: new Date().toISOString().split('T')[0], // Default to current date in YYYY-MM-DD format
-    selectedPlan: '3',
+    selectedPlan: '1',
   });
+
+  const {
+    data: plans,
+    planLoading,
+    planError,
+  } = useFetch(`http://127.0.0.1:8000/api/subscription/plans/`)
 
   const [selectedPlan, setSelectedPlan] = useState("Regular");
   const [selectedWeek, setSelectedWeek] = useState("");
@@ -77,15 +83,22 @@ const OurMenu = () => {
             </div>
           </div>
           <div className="flex justify-center mb-6">
-            <select
+          <select
               value={selectedPlan}
               onChange={handlePlanChange}
               className="mr-4 bg-white border border-gray-300 rounded-md px-4 py-2"
             >
-              <option value="1">Regular Diet</option>
-              <option value="2">Weight Loss</option>
-              <option value="3">Keto Meal</option>
-              <option value="4">Gain Muscle</option>
+              {planLoading ? (
+                <option>Loading...</option>
+              ) : planError ? (
+                <option>Error: {planError.message}</option>
+              ) : (
+                plans.map((plan) => (
+                  <option key={plan.id} value={plan.id}>
+                    {plan.name}
+                  </option>
+                ))
+              )}
             </select>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
