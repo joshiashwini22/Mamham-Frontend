@@ -29,6 +29,9 @@ const SelectPlan = ({ onDataValidChange }) => {
         numberOfDays: 7,
       });
     }
+    if (!userData.selectedOption) {
+      setUserData({ ...userData, selectedOption: "NonVeg" });
+    }
   }, [setUserData, userData]);
 
   // useEffect to save userData to localStorage
@@ -145,6 +148,7 @@ const SelectPlan = ({ onDataValidChange }) => {
   const isDataValid = () => {
     return (
       userData.selectedPlan &&
+      userData.selectedOption &&
       userData.startDate &&
       userData.startTime &&
       userData.numberOfDays &&
@@ -169,7 +173,7 @@ const SelectPlan = ({ onDataValidChange }) => {
             plans.map((plan) => (
               <button
                 key={plan.id}
-                role="checkbox"
+                role="radio"
                 aria-checked={userData.selectedPlan === plan.id}
                 className="flex flex-col items-center p-4 border rounded-lg bg-white relative m-4"
                 onClick={() => handleSelectPlan(plan.id)}
@@ -195,6 +199,35 @@ const SelectPlan = ({ onDataValidChange }) => {
                 <h2 className="text-l">{plan.name}</h2>
               </button>
             ))}
+          <div className="flex flex-col">
+            <span className="text-m mr-5 mb-3">Options:</span>
+            <div className="flex flex-wrap justify-between">
+                  <div className="m-4">
+                    <label className="flex flex-col items-center p-4 border rounded-lg bg-white relative">
+                      <input
+                        type="radio"
+                        name="selectedOption"
+                        value="NonVeg"
+                        onChange={handleInputChange}
+                        className="absolute top-2 left-2 appearance-none checked:bg-green-500 h-6 w-6 rounded-full border border-gray-300 focus:outline-none"
+                      />
+                      <h2 className="text-l ml-5">Non Vegitarian</h2>
+                    </label>
+                  </div>
+                  <div className="m-4">
+                    <label className="flex flex-col items-center p-4 border rounded-lg bg-white relative">
+                      <input
+                        type="radio"
+                        name="selectedOption"
+                        value="Veg"
+                        onChange={handleInputChange}
+                        className="absolute top-2 left-2 appearance-none checked:bg-green-500 h-6 w-6 rounded-full border border-gray-300 focus:outline-none"
+                      />
+                      <h2 className="text-l ml-5">Vegitarian</h2>
+                    </label>
+                  </div>
+            </div>
+          </div>
         </div>
         {/* Other Section */}
         <div className="w-1/2 p-4">

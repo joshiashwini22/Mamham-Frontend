@@ -3,6 +3,11 @@ import Navbar from "../customer/navbar";
 import useFetch from "../common/useFetch";
 
 const OurMenu = () => {
+  const [filters, setFilters] = useState({
+    selectedStartDate: new Date().toISOString().split('T')[0], // Default to current date in YYYY-MM-DD format
+    selectedPlan: '3',
+  });
+
   const [selectedPlan, setSelectedPlan] = useState("Regular");
   const [selectedWeek, setSelectedWeek] = useState("");
   const [menuItems, setMenuItems] = useState([]);
@@ -10,7 +15,7 @@ const OurMenu = () => {
     data: weeklyMenu,
     loading,
     error,
-  } = useFetch("http://127.0.0.1:8000/api/subscription/weekly-menu/");
+  } = useFetch(`http://127.0.0.1:8000/api/subscription/weekly-menu/?week_start_date=${filters.selectedStartDate}&plan_id=${filters.selectedPlan}`);
 
   useEffect(() => {
     if (!loading && !error) {
@@ -19,7 +24,9 @@ const OurMenu = () => {
   }, [weeklyMenu, loading, error]);
 
   const handlePlanChange = (e) => {
-    setSelectedPlan(e.target.value);
+    const selectedPlanValue = e.target.value;
+    setSelectedPlan(selectedPlanValue);
+    setFilters({ ...filters, selectedPlan: selectedPlanValue });
   };
 
   const weekList = Array.from({ length: 6 }, (_, index) => {
@@ -36,32 +43,11 @@ const OurMenu = () => {
 
   const handleWeekChange = (index) => {
     setSelectedWeek(index);
-  };
-
-  useEffect(() => {
-    filterMenu();
-  }, [selectedWeek, selectedPlan]);
-
-  const filterMenu = () => {
-    let filteredMenu = weeklyMenu;
-    
-    if (selectedWeek !== "") {
-      const weekStartDate = weekList[selectedWeek].startDate;
-      const weekEndDate = weekList[selectedWeek].endDate;
-      filteredMenu = filteredMenu.filter((item) => {
-        const startDate = new Date(item.week_start_date);
-        const endDate = new Date(item.week_end_date);
-        return startDate >= weekStartDate && endDate <= weekEndDate;
-      });
-    }
-  
-    if (selectedPlan) {
-      filteredMenu = filteredMenu.filter(
-        (item) => item.plan.name === selectedPlan
-      );
-    }
-  
-    setMenuItems(filteredMenu);
+    const startDate = weekList[index].startDate;
+    const selectedStartDate = new Date(
+      Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate())
+    ).toISOString().split('T')[0];
+    setFilters({ ...filters, selectedStartDate });
   };
   
 
@@ -96,10 +82,10 @@ const OurMenu = () => {
               onChange={handlePlanChange}
               className="mr-4 bg-white border border-gray-300 rounded-md px-4 py-2"
             >
-              <option value="Regular">Regular Diet</option>
-              <option value="WeightLoss">Weight Loss</option>
-              <option value="Keto">Keto Meal</option>
-              <option value="MuscleGain">Gain Muscle</option>
+              <option value="1">Regular Diet</option>
+              <option value="2">Weight Loss</option>
+              <option value="3">Keto Meal</option>
+              <option value="4">Gain Muscle</option>
             </select>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -109,35 +95,24 @@ const OurMenu = () => {
               <p>Error: {error.message}</p>
             ) : (
               menuItems.map((menuItem) => (
-                <div
-                  key={menuItem.id}
-                  className="bg-white rounded-lg shadow-md overflow-hidden"
-                >
-                  <div className="p-4">
-                    <h3 className="text-xl font-semibold mb-2">
-                      {menuItem.plan.name}
-                    </h3>
-                    {menuItem.meals.length > 0 ? (
-                      <div>
-                        {menuItem.meals.map((meal) => (
-                          <div key={meal.id}>
-                            <img
-                              src={meal.image}
-                              alt={meal.name}
-                              className="w-full h-40 object-cover mb-2 rounded-lg"
-                            />
-                            <h4 className="text-lg font-semibold">
-                              {meal.name}
-                            </h4>
-                            <p className="text-gray-700">{meal.description}</p>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p>No meals available for this week</p>
-                    )}
+                menuItem.meals.map((meal, mealIndex) => (
+                  <div
+                    key={mealIndex}
+                    className="bg-white rounded-lg shadow-md overflow-hidden m-4"
+                  >
+                    <div className="p-4 m-4 ">
+                      <img
+                        src={meal.image}
+                        alt={meal.name}
+                        className="w-full h-40 object-cover mb-2 rounded-lg"
+                      />
+                      <h4 className="text-lg font-semibold">
+                        {meal.name}
+                      </h4>
+                      <p className="text-gray-700">{meal.description}</p>
+                    </div>
                   </div>
-                </div>
+                ))
               ))
             )}
           </div>

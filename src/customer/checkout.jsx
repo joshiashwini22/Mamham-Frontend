@@ -183,7 +183,41 @@ const CheckoutPage = () => {
       let paidStatus = false;
 
       if (selectedPaymentOption === "Khalti") {
-        
+        // const payload = {
+        //     return_url: "https://example.com/payment/",
+        //     website_url: "https://example.com/",
+        //     amount: 1300,
+        //     purchase_order_id: "test12",
+        //     purchase_order_name: "test",
+        //     customer_info: {
+        //       name: "Khalti Bahadur",
+        //       email: "example@gmail.com",
+        //       phone: "9800000123"
+        //     },
+        //     amount_breakdown: [
+        //       {
+        //         label: "Mark Price",
+        //         amount: 1000
+        //       },
+        //       {
+        //         label: "VAT",
+        //         amount: 300
+        //       }
+        //     ],
+        //     product_details: [
+        //       {
+        //         identity: "1234567890",
+        //         name: "Khalti logo",
+        //         total_price: 1300,
+        //         quantity: 1,
+        //         unit_price: 1300
+        //       }
+        //     ]
+        // }
+        // Call a function to initiate Khalti payment
+        // const khaltiPaymentStatus = await initiateKhaltiPayment(payload);
+        // paymentStatus = khaltiPaymentStatus ? "Khalti" : "Cash On Delivery";
+        // paidStatus = khaltiPaymentStatus;
         paymentStatus ="Khalti";
 
         
@@ -221,31 +255,13 @@ const CheckoutPage = () => {
       // }
 
       //Place order to backend
-      //Payment
-      
-
-      if (selectedPaymentOption === "Khalti") {
-        
-        const khaltiresponse = await axios.post(
-          "http://127.0.0.1:8000/api/authentication.initiatekhalti/",
-          orderData
-        );
-        if (khaltiresponse) {
-          //redirect ani payment successful bhayesi place order
-        }
-        else {
-          //toast
-        }
-
-        
-      } else {
-        const response = await axios.post(
-          "http://127.0.0.1:8000/api/customization/custom-order/",
-          orderData
-          
-          );
-          console.log("Order placed:", response.data.order);
-      }
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/customization/custom-order/",
+        orderData
+      );
+      console.log("Order placed:", response.data);
+      console.log(response.data.online_payment_response.payment_url)
+      window.location.replace(response.data.online_payment_response.payment_url)
 
       // Clear selected dishes from local storage
       // localStorage.removeItem("selectedDishes");

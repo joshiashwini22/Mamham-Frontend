@@ -27,9 +27,11 @@ const Dishes = () => {
     <>
       <Header />
       <Sidebar />
-      <div className="p-4 sm:ml-64">
-        <div className="p-4 border-2 border-[#93040B]  rounded-lg dark:border-[#93040B] mt-14">
-          <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+      <div className="bg-gray-200 sm:ml-64">
+      <section className="bg-white min-h-screen py-12 lg:mx-[180px]">
+        <div className="relative overflow-x-auto container">
+
+        
             <div className="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
               <div>
                 <a
@@ -119,7 +121,7 @@ const Dishes = () => {
               </tbody>
             </table>
           </div>
-        </div>
+        </section>
       </div>
     </>
   );

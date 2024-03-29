@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import useFetch from '../../../common/useFetch';
 import { getCustomerIdFromStorage } from '../../../utils/utils';
+import Header from '../../header';
+import Sidebar from '../../sidebar';
 
 const CustomOrder = () => {
   const [filters, setFilters] = useState({
@@ -13,19 +15,21 @@ const CustomOrder = () => {
   const { data: custom, loading: customLoading, error: customError } = useFetch(
     `http://127.0.0.1:8000/api/customization/custom-order/?delivery_date=${filters.deliveryDate}&delivery_time=${filters.deliveryTime}&status=${filters.status}&order_id=${filters.orderId}`
   );
-  console.log(custom);
+  console.log(`http://127.0.0.1:8000/api/customization/custom-order/?delivery_date=${filters.deliveryDate}&delivery_time=${filters.deliveryTime}&status=${filters.status}&order_id=${filters.orderId}`);
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilters({ ...filters, [name]: value });
   };
-
+  console.log(filters)
   return (
     <div className="bg-gray-200">
+      <Header/>
+      <Sidebar/>
       <section className="bg-white min-h-screen py-12 lg:mx-[180px]">
-        <div className="container">
+        <div className="relative overflow-x-auto container">
           <div className="flex flex-col items-center mx-44 py-5">
-            <span className="text-red-600 text-4xl font-bold block mb-4">My Orders</span>
+            <span className="text-red-600 text-4xl font-bold block mb-4">All Orders</span>
           </div>
           <div className="flex justify-end mb-4 mx-4 space-x-4">
             <input

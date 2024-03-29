@@ -1,18 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import Navbar from './navbar';
-import { StepperContext } from '../context/StepperContext';
-import Stepper from './components/stepper';
-import StepperControl from './components/stepperControl';
-import SelectPlan from './components/Steps/SelectPlan';
-import RegisteForSubs from './components/Steps/RegisterForSubs';
-import DeliverySubscription from './components/Steps/DeliverySubscription';
-import Payment from './components/Steps/Payment';
+import React, { useState, useEffect } from "react";
+import Navbar from "./navbar";
+import { StepperContext } from "../context/StepperContext";
+import Stepper from "./components/stepper";
+import StepperControl from "./components/stepperControl";
+import SelectPlan from "./components/Steps/SelectPlan";
+import RegisteForSubs from "./components/Steps/RegisterForSubs";
+import DeliverySubscription from "./components/Steps/DeliverySubscription";
+import Payment from "./components/Steps/Payment";
 
 const OurPlans = () => {
+  const [buttonTask, setButtonTask] = useState("");
+
   const [reloadOnce, setReloadOnce] = useState(false);
   const [userData, setUserData] = useState(() => {
     const storedData = localStorage.getItem("userData");
-    return storedData ? JSON.parse(storedData) : '';
+    return storedData ? JSON.parse(storedData) : "";
   });
   const [finalData, setFinalData] = useState([]);
   const [isSelectPlanValid, setIsSelectPlanValid] = useState(false);
@@ -23,9 +25,9 @@ const OurPlans = () => {
   });
 
   useEffect(() => {
-    const registrationCompleted = localStorage.getItem('registrationCompleted');
-    if (registrationCompleted === 'true' && !reloadOnce) {
-      localStorage.removeItem('registrationCompleted');
+    const registrationCompleted = localStorage.getItem("registrationCompleted");
+    if (registrationCompleted === "true" && !reloadOnce) {
+      localStorage.removeItem("registrationCompleted");
       setReloadOnce(true);
       setCurrentStep(currentStep + 1);
     }
@@ -36,7 +38,7 @@ const OurPlans = () => {
   }, [currentStep]);
 
   const handleLoginSuccess = () => {
-    localStorage.setItem('registrationCompleted', 'true');
+    localStorage.setItem("registrationCompleted", "true");
     window.location.reload();
     setCurrentStep(currentStep);
   };
@@ -45,29 +47,42 @@ const OurPlans = () => {
     setIsSelectPlanValid(isValid);
   };
 
-  // Function to handle validity of delivery address
-  const handleDeliveryDataValidChange = () => {
-    const addressId = localStorage.getItem("subscriptionDeliveryAddress"); // Retrieve addressId from local storage
-    const isValidAddress = !!addressId; // Check if addressId exists
-    setIsValidAddress(isValidAddress); // Set isValidAddress state based on addressId existence
+  const handleDeliveryDataValidChange = (isValid) => {
+    setIsValidAddress(isValid);
   };
-  
 
-  const steps = [
-    "Select Plan",
-    "Register",
-    "Delivery",
-    "Payment"
-  ];
+  // Function to handle validity of delivery address
+  // const handleDeliveryDataValidChange = (isDataValid) => {
+  //   const addressId = localStorage.getItem("subscriptionDeliveryAddress"); // Retrieve addressId from local storage
+  //   const isValidAddress = !!addressId; // Check if addressId exists
+  //   console.log(isValidAddress);
+  //   console.log(isDataValid);
+  //   console.log(addressId);
+  //   setIsValidAddress(isDataValid); // Set isValidAddress state based on addressId existence
+  // };
+
+  const steps = ["Select Plan", "Register", "Delivery", "Payment"];
 
   const displaySteps = (step) => {
     switch (step) {
       case 1:
-        return <SelectPlan onDataValidChange={handleSelectPlanDataValidChange} />;
+        return (
+          <SelectPlan onDataValidChange={handleSelectPlanDataValidChange} />
+        );
       case 2:
-        return <RegisteForSubs onLoginSuccess={handleLoginSuccess} setCurrentStep={setCurrentStep} />;
+        return (
+          <RegisteForSubs
+            onLoginSuccess={handleLoginSuccess}
+            setCurrentStep={setCurrentStep}
+            setDirection={buttonTask}
+          />
+        );
       case 3:
-        return <DeliverySubscription />;
+        return (
+          <DeliverySubscription
+            onAddressValidChange={handleDeliveryDataValidChange}
+          />
+        );
       case 4:
         return <Payment />;
     }
@@ -77,6 +92,7 @@ const OurPlans = () => {
     let newStep = currentStep;
     direction === "next" ? newStep++ : newStep--;
     newStep > 0 && newStep <= steps.length && setCurrentStep(newStep);
+    setButtonTask(direction)
   };
 
   return (
@@ -86,17 +102,26 @@ const OurPlans = () => {
         <div className="md:w-3/4 mx-auto shadow-xl rounded-2xl pb-2 bg-white h-screen">
           <Stepper steps={steps} currentStep={currentStep} />
           <div className="my-5 px-10">
-            <StepperContext.Provider value={{ userData, setUserData, finalData, setFinalData }}>
+            <StepperContext.Provider
+              value={{ userData, setUserData, finalData, setFinalData }}
+            >
               {displaySteps(currentStep)}
             </StepperContext.Provider>
           </div>
-          {currentStep !== steps.length &&
-            <StepperControl handleClick={handleClick} currentStep={currentStep} steps={steps} isDataValid={currentStep === 1 ? isSelectPlanValid : isValidAddress}/>
-          }
+          {currentStep !== steps.length && (
+            <StepperControl
+              handleClick={handleClick}
+              currentStep={currentStep}
+              steps={steps}
+              isDataValid={
+                currentStep === 1 ? isSelectPlanValid : isValidAddress
+              }
+            />
+          )}
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
 export default OurPlans;

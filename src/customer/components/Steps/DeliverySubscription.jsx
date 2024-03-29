@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from "react";
 import Popup from "../../components/popup";
 import DeliveryAddress from "../deliveryAddress";
 import { StepperContext } from "../../../context/StepperContext";
 
-const DeliverySubscription = ({onAddressValidChange}) => {
+const DeliverySubscription = ({ onAddressValidChange }) => {
   const [customerId, setCustomerId] = useState("");
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState("");
@@ -35,7 +35,7 @@ const DeliverySubscription = ({onAddressValidChange}) => {
         //Set customer ID in state
         setCustomerId(customerId);
         console.log("Customer ID: ", customerId);
-  
+
         const { addresses } = profile;
         if (addresses && addresses.length > 0) {
           setAddresses(addresses);
@@ -44,13 +44,11 @@ const DeliverySubscription = ({onAddressValidChange}) => {
       }
     }
   }, []);
-  
 
   const handleSelectAddress = (addressId) => {
     setUserData({ ...userData, selectedAddress: addressId });
     setSelectedAddress(addressId);
-    localStorage.setItem("subscriptionaddresses", addressId);
-
+    localStorage.setItem("subscriptionDeliveryAddress", addressId);
   };
 
   const handleSaveAddress = (address) => {
@@ -87,89 +85,97 @@ const DeliverySubscription = ({onAddressValidChange}) => {
       userData.numberOfDays !== ""
     );
   };
-  const storingValidity = isDataValid()
-  console.log(storingValidity);
-  console.log(typeof storingValidity); // Should log "function"
-  console.log(typeof isDataValid()); // Should log "function"
-  console.log(typeof isDataValid); // Should log "function"
+  // const storingValidity = isDataValid()
+  // console.log(storingValidity);
+  // console.log(typeof storingValidity); // Should log "function"
+  // console.log(typeof isDataValid()); // Should log "function"
+  // console.log(typeof isDataValid); // Should log "function"
 
-  
-  // Notify the parent component of the validation status change
-  if (typeof onAddressValidChange === 'function') {
-    try {
-      onAddressValidChange(isDataValid);
-    } catch (error) {
-      console.error("Error in useEffect:", error);
+  // // Notify the parent component of the validation status change
+  // if (typeof onAddressValidChange === 'function') {
+  //   try {
+  //     onAddressValidChange(isDataValid);
+  //   } catch (error) {
+  //     console.error("Error in useEffect:", error);
+  //   }
+  // } else {
+  //   console.error("onAddressValidChange is not a function");
+  // }
+
+  useEffect(() => {
+    console.log(onAddressValidChange);
+    if (onAddressValidChange !== undefined) {
+      onAddressValidChange(
+        userData.selectedAddress &&
+          userData.selectedPlan &&
+          userData.startDate &&
+          userData.startTime &&
+          userData.numberOfDays &&
+          userData.numberOfDays !== ""
+      );
     }
-  } else {
-    console.error("onAddressValidChange is not a function");
-  }
-  
+  }, [userData, onAddressValidChange, isDataValid]);
 
   return (
     <>
       DeliverySubscription
       {/* Delivery Address */}
       <div className="card mb-8 shadow-md border border-gray-300">
-                  <div className="card-header bg-gray-50 py-4 px-6">
-                    DELIVERY ADDRESS
-                  </div>
-                  <div className="card-block p-4">
-                    {/* Address Form */}
-                    <div className="grid grid-cols-2 gap-4">
-                      {addresses.map((address) => (
-                        <div key={address.id}>
-                          <div
-                            className="checkout-address"
-                            onClick={() => handleSelectAddress(address.id)}
-                          >
-                            <div className="mr-2">
-                              <input
-                                id={`address_${address.id}`}
-                                name="delivery_address"
-                                type="radio"
-                                checked={selectedAddress === address}
-                                onChange={() => setSelectedAddress(address)}
-                                required
-                              />
-                            </div>
-                            <label
-                              htmlFor={`address_${address.id}`}
-                              onClick={() => setSelectedAddress(address)}
-                            >
-                              <span className="block">{address.label}</span>
-                              <span className="block">{address.city}</span>
-                              <span className="block">
-                                {address.address_line1}
-                              </span>
-                            </label>
-                          </div>
-                        </div>
-                      ))}
-                      <div className="col-lg-6">
-                        <div className="checkout-address align-items-center checkout-address--add-new-da">
-                          <div className="mr-2">
-                            <span className="icomoon icon-add"></span>
-                          </div>
-                          <button
-                            onClick={() => setShowPopup(true)}
-                            className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
-                          >
-                            Add Delivery Address
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  {showPopup && (
-                    <Popup
-                      onClose={() => setShowPopup(false)}
-                      content={<DeliveryAddress onSave={handleSaveAddress} />}
+        <div className="card-header bg-gray-50 py-4 px-6">DELIVERY ADDRESS</div>
+        <div className="card-block p-4">
+          {/* Address Form */}
+          <div className="grid grid-cols-2 gap-4">
+            {addresses.map((address) => (
+              <div key={address.id}>
+                <div
+                  className="checkout-address"
+                  onClick={() => handleSelectAddress(address.id)}
+                >
+                  <div className="mr-2">
+                    <input
+                      id={`address_${address.id}`}
+                      name="delivery_address"
+                      type="radio"
+                      checked={selectedAddress === address}
+                      onChange={() => setSelectedAddress(address)}
+                      required
                     />
-                  )}
+                  </div>
+                  <label
+                    htmlFor={`address_${address.id}`}
+                    onClick={() => setSelectedAddress(address)}
+                  >
+                    <span className="block">{address.label}</span>
+                    <span className="block">{address.city}</span>
+                    <span className="block">{address.address_line1}</span>
+                  </label>
                 </div>
+              </div>
+            ))}
+            <div className="col-lg-6">
+              <div className="checkout-address align-items-center checkout-address--add-new-da">
+                <div className="mr-2">
+                  <span className="icomoon icon-add"></span>
+                </div>
+                <button
+                  onClick={() => setShowPopup(true)}
+                  className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
+                >
+                  Add Delivery Address
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        {showPopup && (
+          <Popup
+            onClose={() => setShowPopup(false)}
+            content={<DeliveryAddress onSave={handleSaveAddress} />}
+          />
+        )}
+      </div>
     </>
-  )
-}
+  );
+};
 
-export default DeliverySubscription
+export default DeliverySubscription;
