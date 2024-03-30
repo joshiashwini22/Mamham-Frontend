@@ -12,7 +12,7 @@ import DishEdit from "./admin/components/Dishes/dishEdit";
 import Error from "./common/error";
 import Subscription from "./admin/components/Subscription/subscription";
 import CustomOrder from "./admin/components/CustomOrder/customOrder";
-import WeeklyMenu from "./admin/components/weeklyMenu";
+import WeeklyMenu from "./admin/components/WeeklyMenu/weeklyMenu";
 import Meal from "./admin/components/Meals/meal";
 import Plans from "./admin/components/Plans/plans";
 import Custom from "./customer/custom";
@@ -28,6 +28,8 @@ import PlanEdit from "./admin/components/Plans/planEdit";
 import PlanCreate from "./admin/components/Plans/planCreate";
 import MealCreate from "./admin/components/Meals/mealCreate";
 import MealEdit from "./admin/components/Meals/mealEdit";
+import WeeklymenuCreate from "./admin/components/WeeklyMenu/weeklymenu-create";
+import WeeklymenuEdit from "./admin/components/WeeklyMenu/weeklymenuEdit";
 
 
 const App = () => {
@@ -47,7 +49,6 @@ const App = () => {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/ourmenu" element={<OurMenu />} />
           <Route path="/ourplans" element={<OurPlans />} />
-          <Route path="/weeklyMenu" element={<WeeklyMenu />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dishes" element={<Dishes />} />
           <Route path="/dishes-create" element={<DishCreate />} />
@@ -61,6 +62,9 @@ const App = () => {
           <Route path="/meals" element={<Meal />} />
           <Route path="/meals-create" element={<MealCreate/>} />
           <Route path="/meals-update/:id" element={<MealEdit/>} />
+          <Route path="/weeklyMenu" element={<WeeklyMenu />} />
+          <Route path="/weeklymenu-create" element={<WeeklymenuCreate/>} />
+          <Route path="/weeklymenu-update/:id" element={<WeeklymenuEdit/>} />
           <Route path="/popup" element={<Popup />} />
           <Route path="/deliveryaddress" element={<DeliveryAddress />} />
           <Route path={myordersUrl} element={<MyOrders />} />
