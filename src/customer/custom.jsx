@@ -80,17 +80,17 @@ function Custom() {
   };
 
   return (
-    <>
+    <div className="h-screen">
       <Navbar />
       <div className="bg-gray-200">
 
-      <div className="bg-white lg:mx-[180px] h-screen mt-18 ">
+      <div className="bg-white lg:mx-[180px] mt-18 ">
         <div className="grid gap-4">
           <div className="flex flex-col items-center mx-44 py-5">
             <span className="text-red-600 text-4xl font-bold block mb-4">Build your Meal</span>
             <span className="text-gray-700 block">Select items to create your own dish!</span>
           </div>
-          <div className="min-h-full grid lg:grid-cols-2 lg:gap-5 mx-4">
+          <div className="grid lg:grid-cols-2 lg:gap-5 mx-4">
             <div className="build flex flex-col lg:block bg-white/80 border border-gray-500/30 rounded-md py-5">
               {categories.map((category) => (
                 <DishSelection key={category} category={category} onAddSelectedDish={addSelectedDish} />
@@ -115,7 +115,7 @@ function Custom() {
         <Popup onClose={() => setShowLoginPopup(false)} content={<Login onLogin={handleCheckoutAfterLogin} context="custom" />} />
         )}
 </div>
-    </>
+    </div>
   );
 }
 

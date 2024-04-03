@@ -30,11 +30,13 @@ import MealCreate from "./admin/components/Meals/mealCreate";
 import MealEdit from "./admin/components/Meals/mealEdit";
 import WeeklymenuCreate from "./admin/components/WeeklyMenu/weeklymenu-create";
 import WeeklymenuEdit from "./admin/components/WeeklyMenu/weeklymenuEdit";
+import MySubscriptions from "./customer/mySubscriptions";
 
 
 const App = () => {
   const customerId = getCustomerIdFromStorage(); // Retrieve customer ID from local storage
   const myordersUrl = customerId ? `/myorders/${customerId}` : '/myorders'; // Construct URL
+  const mysubscriptionsUrl = customerId ? `/mysubscriptions/${customerId}` : '/mysubscriptions'; // Construct URL
 
   return (
     <Router>
@@ -68,6 +70,7 @@ const App = () => {
           <Route path="/popup" element={<Popup />} />
           <Route path="/deliveryaddress" element={<DeliveryAddress />} />
           <Route path={myordersUrl} element={<MyOrders />} />
+          <Route path={mysubscriptionsUrl} element={<MySubscriptions/>} />
 
         </Routes>
       </AuthProvider>

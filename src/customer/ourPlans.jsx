@@ -97,9 +97,9 @@ const OurPlans = () => {
 
   return (
     <>
-      <div className="bg-gray-200">
+      <div className="bg-gray-200 h-screen">
         <Navbar />
-        <div className="md:w-3/4 mx-auto shadow-xl rounded-2xl pb-2 bg-white h-screen">
+        <div className="md:w-3/4 mx-auto shadow-xl rounded-2xl pb-2 bg-white">
           <Stepper steps={steps} currentStep={currentStep} />
           <div className="my-5 px-10">
             <StepperContext.Provider
@@ -108,7 +108,7 @@ const OurPlans = () => {
               {displaySteps(currentStep)}
             </StepperContext.Provider>
           </div>
-          {currentStep !== steps.length && (
+          {currentStep <= steps.length && (
             <StepperControl
               handleClick={handleClick}
               currentStep={currentStep}

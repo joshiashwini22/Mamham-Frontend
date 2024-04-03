@@ -34,12 +34,12 @@ function Navbar() {
 
 
   return (
-    <>
-      <nav className="bg-white w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
+    <div>
+      <nav className="bg-white w-full top-0 start-0 border-b border-gray-200 dark:border-gray-600">
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
           <a
             href="/"
-            className="flex items-center space-x-3 rtl:space-x-reverse"
+            className="flex items-center space-x-3"
           >
             <img src={Logo} className="h-8" alt="Mamham Logo" />
           </a>
@@ -59,16 +59,7 @@ function Navbar() {
                   Home
                 </a>
               </li>
-              <li>
-                <a
-                  href="/custom"
-                  className={`block py-2 px-3 hover:bg-gray-100 md:hover:bg-transparent md:p-0 md:dark:hover:text-red-500 dark:text-black dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 ${isActive(
-                    "/custom"
-                  )}`}
-                >
-                  Custom
-                </a>
-              </li>
+              
               <li>
                 <a
                   href="/ourplans"
@@ -77,6 +68,16 @@ function Navbar() {
                   )}`}
                 >
                   Our Plans
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/custom"
+                  className={`block py-2 px-3 hover:bg-gray-100 md:hover:bg-transparent md:p-0 md:dark:hover:text-red-500 dark:text-black dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 ${isActive(
+                    "/custom"
+                  )}`}
+                >
+                  Custom
                 </a>
               </li>
               <li>
@@ -107,6 +108,9 @@ function Navbar() {
                 <a href={`/myorders/${getCustomerIdFromStorage()}`} className="text-black">
                   My Orders
                 </a>{" "}
+                <a href={`/mysubscriptions/${getCustomerIdFromStorage()}`} className="text-black">
+                  My Subscriptions
+                </a>{" "}
                 {/* My Orders Link */}
                 <button
                   id="dropdownNotificationButton"
@@ -132,7 +136,7 @@ function Navbar() {
           </div>
         </div>
       </nav>
-    </>
+    </div>
   );
 }
 

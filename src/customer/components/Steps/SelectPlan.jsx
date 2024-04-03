@@ -61,8 +61,10 @@ const SelectPlan = ({ onDataValidChange }) => {
   ];
 
   const handleSelectPlan = (planId) => {
-    setUserData({ ...userData, selectedPlan: planId });
+    const selectedPlan = plans.find((plan) => plan.id === planId);
   };
+  
+  
   const handleSelectAddon = (addonId) => {
     const isSelected = userData.selectedAddons.indexOf(addonId) > -1;
     let updatedAddons = [];
@@ -130,10 +132,15 @@ const SelectPlan = ({ onDataValidChange }) => {
     }
   }, [userData.selectedAddons, addons]);
 
-  // Function to calculate plan total
-  const calculatePlanTotal = () => {
-    let totalPrice = mealPricing + addonPricing;
+  const calculatePlanTotal = (planPrice) => {
+    console.log("Meal Pricing:", mealPricing);
+    console.log("Addon Pricing:", addonPricing);
+    console.log("Number of Days:", userData.numberOfDays);
 
+    let totalPrice = parseFloat(mealPricing) + parseFloat(addonPricing);
+  console.log(totalPrice);
+  
+  if (!isNaN(totalPrice) && !isNaN(userData.numberOfDays)) {
     if (userData.numberOfDays === 7) {
       totalPrice *= 1;
     } else if (userData.numberOfDays === 14) {
@@ -141,14 +148,22 @@ const SelectPlan = ({ onDataValidChange }) => {
     } else if (userData.numberOfDays === 28) {
       totalPrice *= 3;
     }
-
     return totalPrice;
+  } else {
+    return 0; // Set to 0 if any value is NaN
+  }
   };
-
+  useEffect(() => {
+    const planTotal = calculatePlanTotal();
+    setUserData({ ...userData, planTotal });
+  }, [mealPricing, addonPricing, userData.numberOfDays]);
+  
+  
+  
   const isDataValid = () => {
     return (
       userData.selectedPlan &&
-      userData.selectedOption &&
+      // userData.selectedOption &&
       userData.startDate &&
       userData.startTime &&
       userData.numberOfDays &&
@@ -199,7 +214,7 @@ const SelectPlan = ({ onDataValidChange }) => {
                 <h2 className="text-l">{plan.name}</h2>
               </button>
             ))}
-          <div className="flex flex-col">
+          {/* <div className="flex flex-col">
             <span className="text-m mr-5 mb-3">Options:</span>
             <div className="flex flex-wrap justify-between">
                   <div className="m-4">
@@ -227,7 +242,7 @@ const SelectPlan = ({ onDataValidChange }) => {
                     </label>
                   </div>
             </div>
-          </div>
+          </div> */}
         </div>
         {/* Other Section */}
         <div className="w-1/2 p-4">
