@@ -34,7 +34,7 @@ function Navbar() {
 
 
   return (
-    <div>
+    <div className="z-1">
       <nav className="bg-white w-full top-0 start-0 border-b border-gray-200 dark:border-gray-600">
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
           <a

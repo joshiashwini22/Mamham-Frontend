@@ -6,18 +6,20 @@ const useFetch = (url) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(url);
-        setData(response.data);
-      } catch (error) {
-        setError(error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(url);
+      setData(response.data);
+      setError(null);
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, [url]);
 
@@ -30,7 +32,11 @@ const useFetch = (url) => {
     }
   };
 
-  return { data, loading, error, deleteItem };
+  const refetch = () => {
+    fetchData();
+  };
+
+  return { data, loading, error, deleteItem, refetch };
 };
 
 export default useFetch;

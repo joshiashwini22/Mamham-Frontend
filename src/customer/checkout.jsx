@@ -227,8 +227,12 @@ const CheckoutPage = () => {
         orderData
       );
       console.log("Order placed:", response.data);
-      console.log(response.data.online_payment_response.payment_url)
-      window.location.replace(response.data.online_payment_response.payment_url)
+      // Check if payment method is Khalti and the payment URL exists
+    if (selectedPaymentOption === "Khalti" && response.data.online_payment_response.payment_url) {
+      console.log(response.data.online_payment_response.payment_url);
+      // Redirect to Khalti payment URL
+      window.location.replace(response.data.online_payment_response.payment_url);
+    }
 
       // Clear selected dishes from local storage
       // localStorage.removeItem("selectedDishes");
