@@ -31,6 +31,7 @@ import MealEdit from "./admin/components/Meals/mealEdit";
 import WeeklymenuCreate from "./admin/components/WeeklyMenu/weeklymenu-create";
 import WeeklymenuEdit from "./admin/components/WeeklyMenu/weeklymenuEdit";
 import MySubscriptions from "./customer/mySubscriptions";
+import AdminNotification from "./admin/components/adminNotification";
 
 
 const App = () => {
@@ -71,7 +72,7 @@ const App = () => {
           <Route path="/deliveryaddress" element={<DeliveryAddress />} />
           <Route path={myordersUrl} element={<MyOrders />} />
           <Route path={mysubscriptionsUrl} element={<MySubscriptions/>} />
-
+          <Route path="/admin-notification" element={<AdminNotification/>}/>
         </Routes>
       </AuthProvider>
     </Router>

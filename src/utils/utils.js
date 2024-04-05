@@ -1,5 +1,5 @@
+// Function to retrieve customer ID from local storage
 export const getCustomerIdFromStorage = () => {
-    // Function to retrieve customer ID from local storage
     const token = localStorage.getItem("token");
     if (token) {
       const { profile } = JSON.parse(token);
@@ -9,3 +9,17 @@ export const getCustomerIdFromStorage = () => {
     }
     return null; // Return null if token or profile doesn't exist
   };
+
+
+// Function to retrieve user ID from local storage
+export const getUserIdFromStorage = () => {
+  const token = localStorage.getItem("token");
+
+  if(token) {
+    const { id } = JSON.parse(token);
+    if (id) {
+      return id;
+    }  
+  }
+  return null;
+}

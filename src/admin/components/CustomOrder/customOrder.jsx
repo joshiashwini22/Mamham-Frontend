@@ -22,7 +22,7 @@ const CustomOrder = () => {
   } = useFetch(
     `http://127.0.0.1:8000/api/customization/get-custom-order/?delivery_date=${filters.deliveryDate}&delivery_time=${filters.deliveryTime}&status=${filters.status}&order_id=${filters.orderId}`
   );
-
+  
   
 
   const fetchAddressesForCustomer = async (customerId) => {
@@ -54,9 +54,7 @@ const CustomOrder = () => {
     }
   };
 
-  useEffect(() => {
-    console.log(editedOrder);
-  }, [editedOrder]);
+  
 
   const handleInputChange = (e, field) => {
 let value;
@@ -76,9 +74,14 @@ let value;
     if (editedOrder.customer) {
       // Assuming the customer ID is stored in the editedOrder.customer field
       editedOrder.customer = editedOrder.customer.id;
+      editedOrder.delivery_address = editedOrder.delivery_address.id;
     }
     
     try {
+      const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+      // axios.defaults.headers.common["Authorization"] = token;
+
+
       const response = await axios.patch(`http://127.0.0.1:8000/api/customization/custom-order/${editedOrder.id}/`, editedOrder);
       
       // Assuming response.data contains the updated order object from the server
@@ -89,6 +92,7 @@ let value;
       
       // Reset editedOrder state to exit edit mode
       setEditedOrder(null);
+      // window.location.reload(false);
     } catch (error) {
       console.error('Error saving order:', error);
       // Handle error, maybe show an error message to the user
