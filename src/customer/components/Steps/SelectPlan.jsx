@@ -20,6 +20,9 @@ const SelectPlan = ({ onDataValidChange }) => {
   const { userData, setUserData } = useContext(StepperContext);
   // Initialize selected addons if not already initialized
   useEffect(() => {
+    if (!userData.selectedPlan) {
+      setUserData({ ...userData, selectedPlan: 1 });
+    }
     if (!userData.selectedAddons) {
       setUserData({ ...userData, selectedAddons: [] });
     }
@@ -58,10 +61,18 @@ const SelectPlan = ({ onDataValidChange }) => {
     "1:00 PM",
     "2:00 PM",
     "3:00 PM",
+    "4:00 PM",
+    "5:00 PM",
+    "6:00 PM",
+    "7:00 PM",
+    "8:00 PM",
   ];
 
   const handleSelectPlan = (planId) => {
     const selectedPlan = plans.find((plan) => plan.id === planId);
+    console.log(selectedPlan)
+    setUserData({ ...userData, selectedPlan: planId });
+
   };
   
   

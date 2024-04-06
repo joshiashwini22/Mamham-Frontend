@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import useFetch from "../../../common/useFetch";
-import { getCustomerIdFromStorage } from "../../../utils/utils";
 import Sidebar from "../../sidebar";
 import axios from "axios";
 
@@ -22,19 +21,19 @@ const CustomOrder = () => {
   } = useFetch(
     `http://127.0.0.1:8000/api/customization/get-custom-order/?delivery_date=${filters.deliveryDate}&delivery_time=${filters.deliveryTime}&status=${filters.status}&order_id=${filters.orderId}`
   );
-  
-  
 
   const fetchAddressesForCustomer = async (customerId) => {
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/authentication/getaddressforcustomer/${customerId}`);
+      const response = await fetch(
+        `http://127.0.0.1:8000/api/authentication/getaddressforcustomer/${customerId}`
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch addresses");
       }
       const addressdata = await response.json();
-      console.log(addressdata)
+      console.log(addressdata);
       setAddresses(addressdata.addresses);
-      console.log(addresses)
+      console.log(addresses);
     } catch (error) {
       console.error("Error fetching addresses:", error);
     }
@@ -47,28 +46,26 @@ const CustomOrder = () => {
 
   const handleEditClick = (order) => {
     setEditedOrder({ ...order });
-    console.log(editedOrder)
-    if (order.customer) { // Access customer_id from the order object
+    console.log(editedOrder);
+    if (order.customer) {
+      // Access customer_id from the order object
       console.log("here");
       fetchAddressesForCustomer(order.customer.id);
     }
   };
 
-  
-
   const handleInputChange = (e, field) => {
-let value;
-  if (field === 'delivery_address') {
-    value = parseInt(e, 10); // Parse the value as an integer
-  } else {
-    value = e.target ? e.target.value : e; // Keep other fields as they are
-  }    setEditedOrder((prevOrder) => ({
+    let value;
+    if (field === "delivery_address") {
+      value = parseInt(e, 10); // Parse the value as an integer
+    } else {
+      value = e.target ? e.target.value : e; // Keep other fields as they are
+    }
+    setEditedOrder((prevOrder) => ({
       ...prevOrder,
       [field]: value,
     }));
   };
-  
-  
 
   const handleSaveClick = async () => {
     if (editedOrder.customer) {
@@ -76,25 +73,27 @@ let value;
       editedOrder.customer = editedOrder.customer.id;
       editedOrder.delivery_address = editedOrder.delivery_address.id;
     }
-    
+
     try {
-      const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+      const token = localStorage.getItem("token"); // Retrieve the token from localStorage
       // axios.defaults.headers.common["Authorization"] = token;
 
+      const response = await axios.patch(
+        `http://127.0.0.1:8000/api/customization/custom-order/${editedOrder.id}/`,
+        editedOrder
+      );
 
-      const response = await axios.patch(`http://127.0.0.1:8000/api/customization/custom-order/${editedOrder.id}/`, editedOrder);
-      
       // Assuming response.data contains the updated order object from the server
       const updatedOrder = response.data;
-      
+
       // Handle success, maybe show a success message or update the UI
-      console.log('Order successfully updated:', updatedOrder);
-      
+      console.log("Order successfully updated:", updatedOrder);
+
       // Reset editedOrder state to exit edit mode
       setEditedOrder(null);
       // window.location.reload(false);
     } catch (error) {
-      console.error('Error saving order:', error);
+      console.error("Error saving order:", error);
       // Handle error, maybe show an error message to the user
     }
   };
@@ -192,40 +191,46 @@ let value;
                         )}
                       </td>
                       <td className="border px-4 py-2">
-                        {editedOrder && editedOrder.id === order.id ? (
-                          order.customer ? `${order.customer.first_name} ${order.customer.last_name}` : 'N/A'
-                        ) : (
-                          order.customer ? `${order.customer.first_name} ${order.customer.last_name}` : 'N/A'
-                          )}
+                        {editedOrder && editedOrder.id === order.id
+                          ? order.customer
+                            ? `${order.customer.first_name} ${order.customer.last_name}`
+                            : "N/A"
+                          : order.customer
+                          ? `${order.customer.first_name} ${order.customer.last_name}`
+                          : "N/A"}
                       </td>
                       <td className="border px-4 py-2">
-  {/* Delivery Address Dropdown */}
-  {editedOrder && editedOrder.id === order.id ? (
-    <select
-      name="delivery_address"
-      value={editedOrder.delivery_address}
-      onChange={(e) =>
-        handleInputChange(e.target.options[e.target.selectedIndex].value, "delivery_address")
-      }
-      className="border rounded-md px-2 py-1 w-full"
-    >
-      <option value="">Select Address</option>
-      {addresses.map((address) => (
-        <option
-          key={address.id}
-          value={address.id} // Set the address ID as the value
-        >
-          {address.id}: {address.label},{address.address_line1}, {address.city}
-        </option>
-      ))}
-    </select>
-  ) : (
-    // Display delivery address
-    order.delivery_address
-      ? `${order.delivery_address.address_line1}, ${order.delivery_address.city}`
-      : "N/A"
-  )}
-</td>
+                        {/* Delivery Address Dropdown */}
+                        {editedOrder && editedOrder.id === order.id ? (
+                          <select
+                            name="delivery_address"
+                            value={editedOrder.delivery_address}
+                            onChange={(e) =>
+                              handleInputChange(
+                                e.target.options[e.target.selectedIndex].value,
+                                "delivery_address"
+                              )
+                            }
+                            className="border rounded-md px-2 py-1 w-full"
+                          >
+                            <option value="">Select Address</option>
+                            {addresses.map((address) => (
+                              <option
+                                key={address.id}
+                                value={address.id} // Set the address ID as the value
+                              >
+                                {address.id}: {address.label},
+                                {address.address_line1}, {address.city}
+                              </option>
+                            ))}
+                          </select>
+                        ) : // Display delivery address
+                        order.delivery_address ? (
+                          `${order.delivery_address.address_line1}, ${order.delivery_address.city}`
+                        ) : (
+                          "N/A"
+                        )}
+                      </td>
 
                       <td className="border px-4 py-2">
                         {editedOrder && editedOrder.id === order.id ? (

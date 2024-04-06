@@ -12,8 +12,8 @@ function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { logout } = useAuth();
-  const [notifications, setNotifications] = useState([]);
 
+  const [showDropdown, setShowDropdown] = useState(false);
 
   const handleLoginClick = () => {
     navigate("/login");
@@ -106,17 +106,42 @@ function Navbar() {
               </li>
             </ul>
           </div>
-          <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+          <div className="flex flex-row md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
             {isAuth ? (
               <>
-                <a href={`/myorders/${getCustomerIdFromStorage()}`} className="text-black">
-                  My Orders
-                </a>{" "}
-                <a href={`/mysubscriptions/${getCustomerIdFromStorage()}`} className="text-black">
-                  My Subscriptions
-                </a>{" "}
-                <NotificationDropdown />
-                <Button purpose="Logout" onClick={handleLogoutClick} />
+                <ul className="flex flex-row">
+                  <li>
+                    <NotificationDropdown />
+                  </li>
+                  <li>
+                    <div>
+                      <button
+                        onClick={() => setShowDropdown(!showDropdown)}
+                        className="relative inline-flex items-center justify-center w-8 h-8 hover:text-gray-800 focus:outline-none"
+                      >
+                        Profile
+                      </button>
+                    </div>
+                  </li>
+                </ul>
+                {showDropdown && (
+                  <div className="absolute top-14 right-8 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
+                    <div
+                      className="p-2"
+                      role="menu"
+                      aria-orientation="vertical"
+                      aria-labelledby="options-menu"
+                    >
+                      <a href={`/myorders/${getCustomerIdFromStorage()}`} className="text-black block pb-2 hover:bg-gray-100">
+                        My Orders
+                      </a>
+                      <a href={`/mysubscriptions/${getCustomerIdFromStorage()}`} className="text-black block pb-4 hover:bg-gray-100">
+                        My Subscriptions
+                      </a>
+                      <Button purpose="Logout" onClick={handleLogoutClick} />
+                    </div>
+                  </div>
+                )}
               </>
             ) : (
               <Button purpose="Login" onClick={handleLoginClick} />

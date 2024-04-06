@@ -32,6 +32,7 @@ import WeeklymenuCreate from "./admin/components/WeeklyMenu/weeklymenu-create";
 import WeeklymenuEdit from "./admin/components/WeeklyMenu/weeklymenuEdit";
 import MySubscriptions from "./customer/mySubscriptions";
 import AdminNotification from "./admin/components/adminNotification";
+import SubscriptionDelivery from "./admin/components/Subscription/subscriptionDelivery";
 
 
 const App = () => {
@@ -57,6 +58,7 @@ const App = () => {
           <Route path="/dishes-create" element={<DishCreate />} />
           <Route path="/dishes-update/:id" element={<DishEdit />} />
           <Route path="/subscription" element={<Subscription />} />
+          <Route path="/delivery-subscription" element={<SubscriptionDelivery/>} />
           <Route path="/customOrder" element={<CustomOrder />} />
           <Route path="/plans" element={<Plans />} />
           <Route path="/plans-create" element={<PlanCreate/>} />
