@@ -21,6 +21,7 @@ const CheckoutPage = () => {
   const [total, setTotal] = useState(0);
   const [customerId, setCustomerId] = useState("");
   const [remark, setRemark] = useState("");
+  const [minDate, setMinDate] = useState("");
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -87,6 +88,7 @@ const CheckoutPage = () => {
     setTimeOptions(options);
   }, []);
 
+
   useEffect(() => {
     // Reset scheduled time when date changes
     setScheduledTime("");
@@ -100,8 +102,39 @@ const CheckoutPage = () => {
     setScheduledDate(e.target.value);
   };
 
+  useEffect(() => {
+    handleAsapTimeChange(); // Invoke handleAsapTimeChange when the component mounts
+  }, []); // Empty dependency array ensures it runs only once
+  
+  // Function to handle ASAP time change
+  const handleAsapTimeChange = () => {
+    // Get the current date and time
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+  
+    // Find the nearest available time slot based on the current time
+    let nearestHour = currentHour;
+    let nearestMinute = Math.ceil(currentMinute / 30) * 30;
+    if (nearestMinute === 60) {
+      nearestHour += 1;
+      nearestMinute = 0;
+    }
+  
+    // Log the nearest time before setting the scheduled time
+    console.log("Nearest Time:", nearestHour, nearestMinute);
+  
+    // Set the scheduled time to the nearest possible time for the day
+    const nearestTimeString = `${nearestHour < 10 ? "0" + nearestHour : nearestHour}:${nearestMinute < 10 ? "0" + nearestMinute : nearestMinute}`;
+    console.log(nearestTimeString); // Update scheduledTime state with the nearest time
+    setScheduledTime(nearestTimeString); // Update scheduledTime state with the nearest time
+  };
+  
+  
+
   const handleScheduledTimeChange = (e) => {
     setScheduledTime(e.target.value);
+    console.log(scheduledDate, scheduledTime)
   };
 
   useEffect(() => {
@@ -241,6 +274,15 @@ const CheckoutPage = () => {
     }
   };
 
+  useEffect(() => {
+    // Calculate the minimum date value 7 days after today's date
+    const today = new Date();
+    today.setDate(today.getDate() + 7);
+    const minDateValue = today.toISOString().substr(0, 10);
+    setMinDate(minDateValue);
+  }, []);
+
+
   // Function to calculate total price of selected dishes
   const calculateTotalPrice = () => {
     return dishSelection.reduce(
@@ -331,7 +373,7 @@ const CheckoutPage = () => {
                         name="deliveryOption"
                         value="asap"
                         checked={deliveryOption === "asap"}
-                        onChange={() => handleDeliveryOptionChange("asap")}
+                        onChange={() => {handleDeliveryOptionChange("asap"); handleAsapTimeChange();}}
                         className="mr-2"
                       />
                       <label htmlFor="asap">ASAP Delivery</label>
@@ -354,6 +396,7 @@ const CheckoutPage = () => {
                           type="date"
                           value={scheduledDate}
                           onChange={handleScheduledDateChange}
+                          min={minDate} // Set minimum date value
                           className="ml-4 p-2 border border-gray-300 rounded-md"
                         />
                       )}
@@ -452,16 +495,16 @@ const CheckoutPage = () => {
                           <div className="font-bold">{dish.name}</div>
                           {/* Quantity and Price */}
                           <div>
-                            {dish.portion}x {dish.name} - ${dish.price}
+                            {dish.portion}x {dish.name} - Rs. {dish.price}
                           </div>
                           {/* Total Price for the dish */}
                           <div className="font-bold">
-                            Total: ${(dish.price * dish.portion).toFixed(2)}
+                            Total: Rs. {(dish.price * dish.portion).toFixed(2)}
                           </div>
                         </div>
                       ))}
                       {/* Total Price for all selected dishes */}
-                      <div className="font-bold">Total Price: $</div>
+                      <div className="font-bold">Total Price: Rs. {calculateTotalPrice()}</div>
                     </div>
                   </div>
                 </div>

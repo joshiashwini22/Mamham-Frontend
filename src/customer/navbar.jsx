@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import Logo from "../assets/images/Logo.png";
+import Logo from "../assets/images/Mamham.png";
 import Button from "../common/button";
 import { useAuth } from "../context/AuthContext";
 import {getCustomerIdFromStorage} from "../utils/utils";
@@ -45,7 +45,7 @@ function Navbar() {
             href="/"
             className="flex items-center space-x-3"
           >
-            <img src={Logo} className="h-8" alt="Mamham Logo" />
+            <img src={Logo} className="h-12" alt="Mamham Logo" />
           </a>
           <div
             className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
@@ -117,7 +117,7 @@ function Navbar() {
                     <div>
                       <button
                         onClick={() => setShowDropdown(!showDropdown)}
-                        className="relative inline-flex items-center justify-center w-8 h-8 hover:text-gray-800 focus:outline-none"
+                        className="relative inline-flex items-center justify-center ml-5 w-8 h-8 hover:text-gray-800 focus:outline-none text-base"
                       >
                         Profile
                       </button>

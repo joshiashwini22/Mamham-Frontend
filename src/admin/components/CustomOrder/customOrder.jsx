@@ -13,13 +13,16 @@ const CustomOrder = () => {
 
   const [editedOrder, setEditedOrder] = useState(null);
   const [addresses, setAddresses] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const itemsPerPage = 10; // Number of items to display per page
 
   const {
     data: custom,
     loading: customLoading,
     error: customError,
   } = useFetch(
-    `http://127.0.0.1:8000/api/customization/get-custom-order/?delivery_date=${filters.deliveryDate}&delivery_time=${filters.deliveryTime}&status=${filters.status}&order_id=${filters.orderId}`
+    `http://127.0.0.1:8000/api/customization/get-custom-order/?delivery_date=${filters.deliveryDate}&delivery_time=${filters.deliveryTime}&status=${filters.status}&order_id=${filters.orderId}&page=${currentPage}&page_size=${itemsPerPage}`
   );
 
   const fetchAddressesForCustomer = async (customerId) => {
@@ -48,7 +51,6 @@ const CustomOrder = () => {
     setEditedOrder({ ...order });
     console.log(editedOrder);
     if (order.customer) {
-      // Access customer_id from the order object
       console.log("here");
       fetchAddressesForCustomer(order.customer.id);
     }
@@ -57,9 +59,9 @@ const CustomOrder = () => {
   const handleInputChange = (e, field) => {
     let value;
     if (field === "delivery_address") {
-      value = parseInt(e, 10); // Parse the value as an integer
+      value = parseInt(e, 10);
     } else {
-      value = e.target ? e.target.value : e; // Keep other fields as they are
+      value = e.target ? e.target.value : e;
     }
     setEditedOrder((prevOrder) => ({
       ...prevOrder,
@@ -69,39 +71,41 @@ const CustomOrder = () => {
 
   const handleSaveClick = async () => {
     if (editedOrder.customer) {
-      // Assuming the customer ID is stored in the editedOrder.customer field
       editedOrder.customer = editedOrder.customer.id;
       editedOrder.delivery_address = editedOrder.delivery_address.id;
     }
 
     try {
-      const token = localStorage.getItem("token"); // Retrieve the token from localStorage
-      // axios.defaults.headers.common["Authorization"] = token;
-
+      const token = localStorage.getItem("token");
       const response = await axios.patch(
         `http://127.0.0.1:8000/api/customization/custom-order/${editedOrder.id}/`,
         editedOrder
       );
 
-      // Assuming response.data contains the updated order object from the server
       const updatedOrder = response.data;
 
-      // Handle success, maybe show a success message or update the UI
       console.log("Order successfully updated:", updatedOrder);
 
-      // Reset editedOrder state to exit edit mode
       setEditedOrder(null);
-      // window.location.reload(false);
     } catch (error) {
       console.error("Error saving order:", error);
-      // Handle error, maybe show an error message to the user
     }
   };
 
   const handleCancelClick = () => {
-    // Reset editedOrder state to exit edit mode
     setEditedOrder(null);
   };
+
+  const handlePageClick = (page) => {
+    setCurrentPage(page);
+  };
+
+  useEffect(() => {
+    if (custom && custom.count) {
+      const totalPagesCount = Math.ceil(custom.count / itemsPerPage);
+      setTotalPages(totalPagesCount);
+    }
+  }, [custom, itemsPerPage]);
   return (
     <>
       <Sidebar />
@@ -149,6 +153,36 @@ const CustomOrder = () => {
                 <option value="On the Way">On the Way</option>
                 <option value="Completed">Completed</option>
               </select>
+            </div>
+            {/* Pagination buttons */}
+            <div className="flex justify-center my-4">
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
+                onClick={() => handlePageClick(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </button>
+              {Array.from({ length: totalPages }, (_, i) => (
+                <button
+                  key={i + 1}
+                  className={`px-4 py-2 rounded-md mr-2 ${
+                    currentPage === i + 1
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-300"
+                  }`}
+                  onClick={() => handlePageClick(i + 1)}
+                >
+                  {i + 1}
+                </button>
+              ))}
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded-md ml-2"
+                onClick={() => handlePageClick(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </button>
             </div>
             <table className="table-auto">
               <thead>

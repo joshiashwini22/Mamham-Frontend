@@ -51,17 +51,8 @@ const OurPlans = () => {
     setIsValidAddress(isValid);
   };
 
-  // Function to handle validity of delivery address
-  // const handleDeliveryDataValidChange = (isDataValid) => {
-  //   const addressId = localStorage.getItem("subscriptionDeliveryAddress"); // Retrieve addressId from local storage
-  //   const isValidAddress = !!addressId; // Check if addressId exists
-  //   console.log(isValidAddress);
-  //   console.log(isDataValid);
-  //   console.log(addressId);
-  //   setIsValidAddress(isDataValid); // Set isValidAddress state based on addressId existence
-  // };
 
-  const steps = ["Select Plan", "Register", "Delivery", "Payment"];
+  const steps = ["Select Plan", "Login", "Delivery", "Payment"];
 
   const displaySteps = (step) => {
     switch (step) {

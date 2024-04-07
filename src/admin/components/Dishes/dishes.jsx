@@ -61,6 +61,7 @@ const Dishes = () => {
               <table className="table-auto">
                 <thead>
                   <tr>
+                    <th scope="col" className="px-4 py-2">Id</th>
                     <th scope="col" className="px-4 py-2">Name</th>
                     <th scope="col" className="px-4 py-2">Price</th>
                     <th scope="col" className="px-4 py-2">Category</th>
@@ -79,7 +80,7 @@ const Dishes = () => {
                     ) :dishes && dishes.length > 0 ? (
                     dishes.map((dish) => (
                     <tr key={dish.id}>
-                      
+                      <td className="border px-4 py-2">{dish.id}</td>
                       <td className="border px-4 py-2">{dish.name}</td>
                       <td className="border px-4 py-2">{dish.price}</td>
                       <td className="border px-4 py-2">{dish.category}</td>
