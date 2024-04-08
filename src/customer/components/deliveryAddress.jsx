@@ -26,7 +26,7 @@ const DeliveryAddress = ({ onSave }) => {
   const handleSave = (e) => {
     e.preventDefault();
 
-    if (!deliveryLocation || !addressTitle || !latitude || !longitude || !city || !addressLine) {
+    if (!deliveryLocation || !addressTitle || !city || !addressLine) {
       setError("Please fill in all fields.");
       return;
     }
@@ -35,8 +35,9 @@ const DeliveryAddress = ({ onSave }) => {
       label: addressTitle,
       address_line1: addressLine,
       city: city,
-      latitude: latitude,
-      longitude: longitude,
+      landmark: deliveryLocation,
+      // latitude: latitude,
+      // longitude: longitude,
       customer: customerId,
     });
 
@@ -59,8 +60,8 @@ const DeliveryAddress = ({ onSave }) => {
         // Reset form fields after successful save if needed
         setDeliveryLocation("");
         setAddressTitle("");
-        setLatitude("");
-        setLongitude("");
+        // setLatitude("");
+        // setLongitude("");
         setCity("");
         setAddressLine("");
       })
@@ -73,24 +74,7 @@ const DeliveryAddress = ({ onSave }) => {
     <div className="m-8">
       <h2 className="text-lg font-semibold mb-4 mt-8">Your Delivery Address</h2>
       <form onSubmit={handleSave}>
-        <div className="mb-4">
-          <label
-            htmlFor="deliveryLocation"
-            className="block text-sm font-medium text-gray-700"
-          >
-            DELIVERY LOCATION *
-          </label>
-          <input
-            type="text"
-            id="deliveryLocation"
-            name="deliveryLocation"
-            value={deliveryLocation}
-            onChange={(e) => setDeliveryLocation(e.target.value)}
-            placeholder="P8CC+J2 Kathmandu, Nepal"
-            className="mt-1 p-2 border border-gray-300 rounded-md w-full"
-            required
-          />
-        </div>
+        
         <div className="mb-4">
           <label
             htmlFor="addressTitle"
@@ -112,7 +96,7 @@ const DeliveryAddress = ({ onSave }) => {
             Address title is required.
           </p>
         </div>
-        <div className="grid grid-cols-2 gap-4 mb-4">
+        {/* <div className="grid grid-cols-2 gap-4 mb-4">
           <div>
             <label
               htmlFor="latitude"
@@ -146,7 +130,7 @@ const DeliveryAddress = ({ onSave }) => {
             />
           </div>
         </div>
-    
+     */}
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div>
             <label
@@ -195,7 +179,24 @@ const DeliveryAddress = ({ onSave }) => {
             required
           />
         </div>
-        
+        <div className="mb-4">
+          <label
+            htmlFor="deliveryLocation"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Landmark *
+          </label>
+          <input
+            type="text"
+            id="deliveryLocation"
+            name="deliveryLocation"
+            value={deliveryLocation}
+            onChange={(e) => setDeliveryLocation(e.target.value)}
+            placeholder="Kumari Hall"
+            className="mt-1 p-2 border border-gray-300 rounded-md w-full"
+            required
+          />
+        </div>
         <button
           type="submit"
           className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"

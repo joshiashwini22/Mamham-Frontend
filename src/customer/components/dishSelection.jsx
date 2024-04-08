@@ -126,7 +126,7 @@ const DishSelection = ({ category, onAddSelectedDish }) => {
           ))}
         </ul>
       </div> */}
-      <ToastContainer/>
+      {/* <ToastContainer/> */}
     </div>
   );
   
