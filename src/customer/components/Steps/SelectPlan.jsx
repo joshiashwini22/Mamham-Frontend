@@ -191,7 +191,8 @@ const SelectPlan = ({ onDataValidChange }) => {
 
 
   return (
-    <div className="m-2 p-2 border">
+<>
+<div className="m-2 p-2 border mb-10">
       <div className="flex">
         {/* Plans Section */}
         <div className="w-1/2 flex flex-wrap justify-between">
@@ -378,6 +379,7 @@ const SelectPlan = ({ onDataValidChange }) => {
         </div>
       </div>
     </div>
+</>
   );
 };
 

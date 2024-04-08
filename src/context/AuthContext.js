@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
         const accessToken = localStorage.getItem('access_token');
         if (accessToken) {
           axios.defaults.headers.common["Authorization"] = "Bearer " + accessToken;
-          const response = await axios.get("http://127.0.0.1:8000/api/authentication/user/");
+          const response = await axios.get("http://127.0.0.1:8000/api/authentication/user/", { headers: {"Authorization" : `Bearer ${accessToken}`} });
           setUserInfo(response.data.userinfo);
         }
       } catch (error) {

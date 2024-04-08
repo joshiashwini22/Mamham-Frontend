@@ -65,11 +65,11 @@ const Register = () => {
     <>
       <div className="grid grid-cols-2 ">
         {/* form Section */}
-        <section className="bg-gray-50">
+        <section className="bg-gray-50 p-6 pt-4 pb-4 space-y-4 md:space-y-6 sm:p-8">
           <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-            <div className="w-full bg-white rounded-lg shadow">
+            <div className="w-full bg-gray rounded-lg shadow">
               <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-                <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
+              <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl text-center mt-12">
                   Sign up to create an account
                 </h1>
                 <form
@@ -80,9 +80,9 @@ const Register = () => {
                   <div>
                     <label
                       htmlFor="fname"
-                      className="block mb-2 text-sm font-medium text-gray-900"
+                      className="block mb-2 text-sm font-medium text-gray-900 mt-4"
                     >
-                      Your first name
+                      Your First Name
                     </label>
                     <input
                       type="text"
@@ -99,9 +99,9 @@ const Register = () => {
                     />
                     <label
                       htmlFor="lname"
-                      className="block mb-2 text-sm font-medium text-gray-900"
+                      className="block mb-2 text-sm font-medium text-gray-900  mt-4"
                     >
-                      Your last name
+                      Your Last Name
                     </label>
                     <input
                       type="text"
@@ -118,9 +118,9 @@ const Register = () => {
                     />
                     <label
                       htmlFor="uname"
-                      className="block mb-2 text-sm font-medium text-gray-900"
+                      className="block mb-2 text-sm font-medium text-gray-900  mt-4"
                     >
-                      Your username
+                      Your Username
                     </label>
                     <input
                       type="text"
@@ -137,7 +137,7 @@ const Register = () => {
                     />
                     <label
                       htmlFor="email"
-                      className="block mb-2 text-sm font-medium text-gray-900"
+                      className="block mb-2 text-sm font-medium text-gray-900 mt-4"
                     >
                       Your email
                     </label>
@@ -156,28 +156,30 @@ const Register = () => {
                     />
                     <label
                       htmlFor="phonenumber"
-                      className="block mb-2 text-sm font-medium text-gray-900"
+                      className="block mb-2 text-sm font-medium text-gray-900 mt-4"
                     >
                       Your phone number
                     </label>
                     <input
-                      type="text"
-                      name="phonenumber"
-                      id="phonenumber"
-                      value={phoneNumber}
-                      onChange={(e) => {
-                        setphoneNumber(e.target.value);
-                        handleInputChange();
-                      }}
-                      className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                      placeholder="0909876"
-                      required=""
-                    />
+                    type="text"
+                    name="phonenumber"
+                    id="phonenumber"
+                    value={phoneNumber}
+                    onChange={(e) => {
+                      setphoneNumber(e.target.value);
+                      handleInputChange();
+                    }}
+                    pattern="[0-9]{10}" // Pattern for 10-digit numbers
+                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                    placeholder="123456789"
+                    required=""
+                  />
+
                   </div>
                   <div>
                     <label
                       htmlFor="password"
-                      className="block mb-2 text-sm font-medium text-gray-900"
+                      className="block mb-2 text-sm font-medium text-gray-900 mt-4"
                     >
                       Password
                     </label>
@@ -197,17 +199,17 @@ const Register = () => {
                   </div>
                   <button
                     type="submit"
-                    className="w-full text-black bg-[#93040B] hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                    className="w-full text-white bg-[#93040B] hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                   >
                     Sign up
                   </button>
-                  <p className="text-sm font-light text-gray-500">
+                  <p className="text-sm font-light text-black text-center ">
                     Already have an account yet?{" "}
                     <a
                       href="./login"
                       className="font-medium text-primary-600 hover:underline"
                     >
-                      Sign up
+                      Sign in
                     </a>
                   </p>
                 </form>

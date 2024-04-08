@@ -88,29 +88,26 @@ const OurPlans = () => {
 
   return (
     <>
-      <div className="bg-gray-200 h-screen">
-        <Navbar />
-        <div className="md:w-3/4 mx-auto shadow-xl rounded-2xl pb-2 bg-white">
-          <Stepper steps={steps} currentStep={currentStep} />
-          <div className="my-5 px-10">
-            <StepperContext.Provider
-              value={{ userData, setUserData, finalData, setFinalData }}
-            >
-              {displaySteps(currentStep)}
-            </StepperContext.Provider>
-          </div>
-          {currentStep <= steps.length && (
-            <StepperControl
-              handleClick={handleClick}
-              currentStep={currentStep}
-              steps={steps}
-              isDataValid={
-                currentStep === 1 ? isSelectPlanValid : isValidAddress
-              }
-            />
-          )}
-        </div>
-      </div>
+     <div className="bg-white-200 h-screen">
+  <Navbar />
+  <div className="md:w-3/4 mx-auto shadow-xl rounded-2xl pb-2 bg-white mt-4 mb-auto">
+    <Stepper steps={steps} currentStep={currentStep} />
+    <div className="my-5 px-10 mb-10"> {/* Adjusted margin-bottom from mb-50 to mb-10 */}
+      <StepperContext.Provider value={{ userData, setUserData, finalData, setFinalData }}>
+        {displaySteps(currentStep)}
+      </StepperContext.Provider>
+    </div>
+    {currentStep <= steps.length && (
+      <StepperControl
+        handleClick={handleClick}
+        currentStep={currentStep}
+        steps={steps}
+        isDataValid={currentStep === 1 ? isSelectPlanValid : isValidAddress}
+      />
+    )}
+  </div>
+</div>
+
     </>
   );
 };
