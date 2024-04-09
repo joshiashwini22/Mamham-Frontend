@@ -254,18 +254,32 @@ const CheckoutPage = () => {
       //   return;
       // }
 
-      //Place order to backend
-      const response = await axios.post(
+      // Place order to backend
+      const response = await fetch(
         "http://127.0.0.1:8000/api/customization/custom-order/",
-        orderData
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(orderData),
+        }
       );
-      console.log("Order placed:", response.data);
+
+    const responseData = await response.json();
+      console.log("Order placed:", responseData);
+
       // Check if payment method is Khalti and the payment URL exists
-    if (selectedPaymentOption === "Khalti" && response.data.online_payment_response.payment_url) {
-      console.log(response.data.online_payment_response.payment_url);
-      // Redirect to Khalti payment URL
-      window.location.replace(response.data.online_payment_response.payment_url);
-    }
+      if (
+        selectedPaymentOption === "Khalti" &&
+        responseData.online_payment_response.payment_url
+      ) {
+        console.log(responseData.online_payment_response.payment_url);
+        // Redirect to Khalti payment URL
+        window.location.replace(
+          responseData.online_payment_response.payment_url
+        );
+      }
 
       // Clear selected dishes from local storage
       // localStorage.removeItem("selectedDishes");

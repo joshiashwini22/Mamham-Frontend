@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import useFetch from "../../../common/useFetch";
 import Sidebar from "../../sidebar";
-import axios from "axios";
+import { useAccessToken } from '../../../context/AuthContext';
 
 const CustomOrder = () => {
+  const accessToken = useAccessToken();
+
   const [filters, setFilters] = useState({
     deliveryDate: "",
     deliveryTime: "",
@@ -76,13 +78,23 @@ const CustomOrder = () => {
     }
 
     try {
-      const token = localStorage.getItem("token");
-      const response = await axios.patch(
+      const response = await fetch(
         `http://127.0.0.1:8000/api/customization/custom-order/${editedOrder.id}/`,
-        editedOrder
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify(editedOrder),
+        }
       );
 
-      const updatedOrder = response.data;
+      if (!response.ok) {
+        throw new Error("Failed to update order");
+      }
+
+      const updatedOrder = await response.json();
 
       console.log("Order successfully updated:", updatedOrder);
 

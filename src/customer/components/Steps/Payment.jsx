@@ -79,6 +79,7 @@ const Payment = () => {
         "http://127.0.0.1:8000/api/subscription/subscription-order/",
         subscriptionData
       );
+      
 
       console.log("Subscription placed:", response.data);
       console.log(response.data.online_payment_response.payment_url);
