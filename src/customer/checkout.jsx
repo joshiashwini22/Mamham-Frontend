@@ -3,8 +3,8 @@ import Navbar from "./navbar";
 import Popup from "./components/popup";
 import DeliveryAddress from "./components/deliveryAddress";
 import Button from "../common/button";
-import axios from "axios";
-import initiateKhaltiPayment from "./components/khaltiPayment";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CheckoutPage = () => {
   const [selectedPaymentOption, setSelectedPaymentOption] =
@@ -33,6 +33,8 @@ const CheckoutPage = () => {
         const { addresses } = profile;
         if (addresses && addresses.length > 0) {
           setAddresses(addresses);
+          setSelectedAddress(addresses[0])
+
         }
         console.log(addresses);
       }
@@ -212,6 +214,10 @@ const CheckoutPage = () => {
   };
   const handlePlaceOrder = async () => {
     try {
+      if (!selectedAddress) { // Check if a delivery address is selected
+        toast.error("Please select a delivery address");
+        return;
+      }
       //Payment
       let paymentStatus = "";
       let paidStatus = false;
@@ -268,6 +274,8 @@ const CheckoutPage = () => {
 
     const responseData = await response.json();
       console.log("Order placed:", responseData);
+      toast.success("Your order was placed successfully")
+
 
       // Check if payment method is Khalti and the payment URL exists
       if (
@@ -280,18 +288,22 @@ const CheckoutPage = () => {
           responseData.online_payment_response.payment_url
         );
       }
+      else {
+
+      }
 
       // Clear selected dishes from local storage
       // localStorage.removeItem("selectedDishes");
     } catch (error) {
       console.error("Error placing order:", error);
+      toast.error(`Error placing order: ${error.message}`)
     }
   };
 
   useEffect(() => {
     // Calculate the minimum date value 7 days after today's date
     const today = new Date();
-    today.setDate(today.getDate() + 7);
+    today.setDate(today.getDate());
     const minDateValue = today.toISOString().substr(0, 10);
     setMinDate(minDateValue);
   }, []);
@@ -527,6 +539,7 @@ const CheckoutPage = () => {
           </div>
         </section>
       </div>
+      <ToastContainer/>
     </>
   );
 };
