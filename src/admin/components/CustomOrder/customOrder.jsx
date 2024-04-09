@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import useFetch from "../../../common/useFetch";
 import Sidebar from "../../sidebar";
-import { useAccessToken } from '../../../context/AuthContext';
+import { useAccessToken } from "../../../context/AuthContext";
 
 const CustomOrder = () => {
   const accessToken = useAccessToken();
@@ -62,6 +62,13 @@ const CustomOrder = () => {
     let value;
     if (field === "delivery_address") {
       value = parseInt(e, 10);
+    } else if (field === "delivery_time") {
+      value = e.target.value;
+      if (!isTimeInRange(value)) {
+        // Handle out of range time selection
+        alert("Please select a time between 10:00 AM and 8:00 PM.");
+        return;
+      }
     } else {
       value = e.target ? e.target.value : e;
     }
@@ -84,7 +91,7 @@ const CustomOrder = () => {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            'Authorization': `Bearer ${accessToken}`,
+            Authorization: `Bearer ${accessToken}`,
           },
           body: JSON.stringify(editedOrder),
         }
@@ -111,6 +118,7 @@ const CustomOrder = () => {
   const handlePageClick = (page) => {
     setCurrentPage(page);
   };
+  
 
   useEffect(() => {
     if (custom && custom.count) {
@@ -118,6 +126,12 @@ const CustomOrder = () => {
       setTotalPages(totalPagesCount);
     }
   }, [custom, itemsPerPage]);
+
+  const isTimeInRange = (time) => {
+    const selectedHour = parseInt(time.split(":")[0], 10);
+    return selectedHour >= 10 && selectedHour <= 20;
+  };
+
   return (
     <>
       <Sidebar />
@@ -150,8 +164,11 @@ const CustomOrder = () => {
                 name="deliveryTime"
                 value={filters.deliveryTime}
                 onChange={handleFilterChange}
+                min="10:00"
+                max="20:00"
                 className="border rounded-md px-2 py-1"
               />
+
               <select
                 name="status"
                 value={filters.status}
@@ -299,6 +316,8 @@ const CustomOrder = () => {
                             type="time"
                             name="delivery_time"
                             value={editedOrder.delivery_time}
+                            min="10:00"
+                            max="20:00"
                             onChange={(e) =>
                               handleInputChange(e, "delivery_time")
                             }
