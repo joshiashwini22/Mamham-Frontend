@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import LoginImg from "../../src/assets/images/Login.png";
+import LoginImg from "../../src/assets/images/Mamham.jpg";
 import { useNavigate } from "react-router-dom";
 import DeliverySubscription from "../customer/components/Steps/DeliverySubscription";
 
@@ -53,13 +53,14 @@ const Login = ({ onLogin, context }) => {
   return (
     <div className="grid grid-cols-2 ">
       {/* Image section */}
-      <section>
-        <img
-          src={LoginImg}
-          alt="Login"
-          className=" w-full object-cover h-screen"
-        />
-      </section>
+      <section className="mx-auto md:h-screen flex justify-center items-center">
+  <img
+    src={LoginImg}
+    alt="Login"
+    className="w-full object-cover"
+  />
+</section>
+
       {/* form Section */}
       <section className="bg-gray-50">
         <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">

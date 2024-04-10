@@ -7,7 +7,7 @@ import CompletedSubscriptions from './components/completedSubscriptions';
 
 const MySubscriptions = () => {
   
-  const {data: subs, loading: customLoading, error: customError} = useFetch(`http://127.0.0.1:8000/api/subscription/mysubscriptions/by-customer/${getCustomerIdFromStorage()}/`);
+  const {data: subs, loading: customLoading, error: customError} = useFetch(`http://127.0.0.1:8000/api/subscription/mysubscriptions/by-customer/`);
   console.log(subs)
   return (
     <>
@@ -16,7 +16,7 @@ const MySubscriptions = () => {
       <section className="bg-white min-h-screen py-12 lg:mx-[180px]">
         <div className="container">
         <div className="flex flex-col items-center mx-44 py-5">
-            <span className="text-red-600 text-4xl font-bold block mb-4">My Orders</span>
+            <span className="text-red-600 text-4xl font-bold block mb-4">My Subscriptions</span>
           </div>
           <OngoingSubscriptions/>
           <CompletedSubscriptions/>

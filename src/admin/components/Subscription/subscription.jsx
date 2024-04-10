@@ -21,6 +21,7 @@ const Subscription = () => {
   } = useFetch(
     `http://127.0.0.1:8000/api/subscription/get-subscription-order/?customer=${filters.customer}&start_date=${filters.deliveryDate}&delivery_time=${filters.deliveryTime}&status=${filters.status}`
   );
+  console.log(subscriptions)
 
   const fetchAddressesForCustomer = async (customerId) => {
     try {
@@ -129,6 +130,7 @@ const Subscription = () => {
             <table className="table-auto">
               <thead>
                 <tr>
+                  <th className="px-4 py-2">ID</th>
                   <th className="px-4 py-2">Customer</th>
                   <th className="px-4 py-2">Start Date</th>
                   <th className="px-4 py-2">End Date</th>
@@ -155,26 +157,24 @@ const Subscription = () => {
                 ) : subscriptions && subscriptions.results.length > 0 ? (
                   subscriptions.results.map((subscription) => (
                     <tr key={subscription.id}>
+                                            <td className="border px-4 py-2">
+                                            {editedSubscription && editedSubscription.id === subscription.id
+                          ? subscription.id
+                          : subscription.id}
+                      </td>
                       <td className="border px-4 py-2">
                         {editedSubscription &&
-                        editedSubscription.id === subscription.id ? (
-                          subscription.customer
-                        ) : (
-                          subscription.customer
-                        )}
+                        editedSubscription.id === subscription.id ? subscription.customer
+                        ? `${subscription.customer.first_name} ${subscription.customer.last_name}`
+                        : "N/A"
+                      : subscription.customer
+                      ? `${subscription.customer.first_name} ${subscription.customer.last_name}`
+                      : "N/A"}
                       </td>
                       <td className="border px-4 py-2">
                         {editedSubscription &&
                         editedSubscription.id === subscription.id ? (
-                          <input
-                            type="date"
-                            name="startDate"
-                            value={editedSubscription.start_date}
-                            onChange={(e) =>
-                              handleInputChange(e, "start_date")
-                            }
-                            className="border rounded-md px-2 py-1 w-full"
-                          />
+                          subscription.start_date
                         ) : (
                           subscription.start_date
                         )}
@@ -182,15 +182,7 @@ const Subscription = () => {
                       <td className="border px-4 py-2">
                         {editedSubscription &&
                         editedSubscription.id === subscription.id ? (
-                          <input
-                            type="date"
-                            name="endDate"
-                            value={editedSubscription.end_date}
-                            onChange={(e) =>
-                              handleInputChange(e, "end_date")
-                            }
-                            className="border rounded-md px-2 py-1 w-full"
-                          />
+                          subscription.end_date
                         ) : (
                           subscription.end_date
                         )}
@@ -240,8 +232,10 @@ const Subscription = () => {
                               </option>
                             ))}
                           </select>
+                        ) : subscription.delivery_address ? (
+                          `${subscription.delivery_address.address_line1}, ${subscription.delivery_address.city}`
                         ) : (
-                          subscription.delivery_address
+                          "N/A"
                         )}
                       </td>
                       <td className="border px-4 py-2">
@@ -266,27 +260,15 @@ const Subscription = () => {
                       <td className="border px-4 py-2">
                         {editedSubscription &&
                         editedSubscription.id === subscription.id ? (
-                          <input
-                            type="text"
-                            name="plan"
-                            value={editedSubscription.plan}
-                            onChange={(e) => handleInputChange(e, "plan")}
-                            className="border rounded-md px-2 py-1 w-full"
-                          />
+                          subscription.plan.name
                         ) : (
-                          subscription.plan
+                          subscription.plan.name
                         )}
                       </td>
                       <td className="border px-4 py-2">
                         {editedSubscription &&
                         editedSubscription.id === subscription.id ? (
-                          <input
-                            type="number"
-                            name="total"
-                            value={editedSubscription.total}
-                            onChange={(e) => handleInputChange(e, "total")}
-                            className="border rounded-md px-2 py-1 w-full"
-                          />
+                          subscription.total
                         ) : (
                           subscription.total
                         )}

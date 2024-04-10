@@ -1,10 +1,12 @@
 import React from 'react'
 import useFetch from '../../common/useFetch'
+import { useNavigate } from "react-router-dom";
 import { getCustomerIdFromStorage } from '../../utils/utils';
 import Button from '../../common/button';
 
 const OngoingSubscriptions = () => {
     const { data: subsOngoing, loading: subsLoading, error: subsError } = useFetch(`http://127.0.0.1:8000/api/subscription/ongoing-subscriptions/${getCustomerIdFromStorage()}/ongoing/`);
+    const navigate = useNavigate();
 
     // Function to determine the position of order status on the slider
     const getStatusPosition = (status) => {
@@ -20,6 +22,9 @@ const OngoingSubscriptions = () => {
                 return 0;
         }
     };
+    const handleEdit = (subscriptionId) => {
+        navigate(`/modify-delivery/${subscriptionId}`);
+      };
 
     return (
         <div>
@@ -51,7 +56,7 @@ const OngoingSubscriptions = () => {
                                         <Button purpose={"View More"} />
                                     </div>
                                     <div>
-                                        <Button purpose={"Modify"} />
+                                        <Button purpose={"Modify"} onClick={() => handleEdit(order.id)}/>
                                     </div>
                                     <div>
                                         <Button purpose={"Type: Subscription"} />

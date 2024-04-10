@@ -154,9 +154,9 @@ const SelectPlan = ({ onDataValidChange }) => {
   if (!isNaN(totalPrice) && !isNaN(userData.numberOfDays)) {
     if (userData.numberOfDays === 7) {
       totalPrice *= 1;
-    } else if (userData.numberOfDays === 14) {
+    } else if (userData.numberOfDays === 15) {
       totalPrice *= 2;
-    } else if (userData.numberOfDays === 28) {
+    } else if (userData.numberOfDays === 30) {
       totalPrice *= 3;
     }
     return totalPrice;
@@ -276,25 +276,25 @@ const SelectPlan = ({ onDataValidChange }) => {
                 <button
                   style={{
                     backgroundColor:
-                      selectedDays === 14 ? "#93040B" : "#ffffff",
-                    color: selectedDays === 14 ? "#ffffff" : "#93040B",
+                      selectedDays === 15 ? "#93040B" : "#ffffff",
+                    color: selectedDays === 15 ? "#ffffff" : "#93040B",
                   }}
                   className="text-red-700 font-semibold p-5 border border-red-700 hover:bg-red-700 hover:text-white"
-                  onClick={() => handleSelectDays(14)}
+                  onClick={() => handleSelectDays(15)}
                 >
-                  14
+                  15
                 </button>
 
                 <button
                   style={{
                     backgroundColor:
-                      selectedDays === 28 ? "#93040B" : "#ffffff",
-                    color: selectedDays === 28 ? "#ffffff" : "#93040B",
+                      selectedDays === 30 ? "#93040B" : "#ffffff",
+                    color: selectedDays === 30 ? "#ffffff" : "#93040B",
                   }}
                   className="text-red-700 font-semibold p-5 border border-red-700 hover:bg-red-700 hover:text-white"
-                  onClick={() => handleSelectDays(28)}
+                  onClick={() => handleSelectDays(30)}
                 >
-                  28
+                  30
                 </button>
               </div>
             </div>

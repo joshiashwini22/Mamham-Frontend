@@ -30,11 +30,16 @@ const SubscriptionDelivery = () => {
 
   const fetchAddressesForCustomer = async (customerId) => {
     try {
+      const response = await fetch(
+        `http://127.0.0.1:8000/api/authentication/getaddressforcustomer/${customerId}`
+      );
       if (!Response.ok) {
         throw new Error("Failed to fetch address");
       }
-      const addressdata = await Response.json();
+      const addressdata = await response.json();
+      console.log(addressdata);
       setAddresses(addressdata.addresses);
+      console.log(addresses);
     } catch (error) {
       console.error("Error fetching addresses:", error);
     }
@@ -57,6 +62,7 @@ const SubscriptionDelivery = () => {
       [field]: value,
     }));
   };
+  
 
   const handleEditClick = (delivery) => {
     setEditedDelivery({ ...delivery });
@@ -178,8 +184,38 @@ const SubscriptionDelivery = () => {
                           delivery.delivery_time
                         )}
                       </td>
-                      <td className="border px-4 py-2">address</td>
                       <td className="border px-4 py-2">
+                        {/* Delivery Address Dropdown */}
+                        {editedDelivery && editedDelivery.id === delivery.id ? (
+                          <select
+                            name="delivery_address"
+                            value={delivery.delivery_address}
+                            onChange={(e) =>
+                              handleInputChange(
+                                e.target.options[e.target.selectedIndex].value,
+                                "delivery_address"
+                              )
+                            }
+                            className="border rounded-md px-2 py-1 w-full"
+                          >
+                            <option value="">Select Address</option>
+                            {addresses.map((address) => (
+                              <option
+                                key={address.id}
+                                value={address.id} // Set the address ID as the value
+                              >
+                                {address.id}: {address.label},
+                                {address.address_line1}, {address.city}
+                              </option>
+                            ))}
+                          </select>
+                        ) : // Display delivery address
+                        delivery.delivery_address ? (
+                          `${delivery.delivery_address.address_line1}, ${delivery.delivery_address.city}`
+                        ) : (
+                          "N/A"
+                        )}
+                      </td>                      <td className="border px-4 py-2">
                         {editedDelivery && editedDelivery.id === delivery.id
                           ? delivery.subscription.plan.name
                           : delivery.subscription.plan.name}

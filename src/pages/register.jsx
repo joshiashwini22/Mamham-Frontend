@@ -64,13 +64,21 @@ const Register = () => {
   return (
     <>
       <div className="grid grid-cols-2 ">
+        {/* Image section */}
+        <section className="bg-gray-50 m-auto md:h-screen flex justify-center items-center">
+          <img
+            src={RegisterImg}
+            alt="Register"
+            className=" w-full object-cover"
+          />
+        </section>
         {/* form Section */}
-        <section className="bg-gray-50 p-6 pt-4 pb-4 space-y-4 md:space-y-6 sm:p-8">
+        <section className="bg-gray-50 space-y-4 md:space-y-6 sm:p-8">
           <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-            <div className="w-full bg-gray rounded-lg shadow">
+            <div className="w-full bg-white rounded-lg shadow">
               <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
               <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl text-center mt-12">
-                  Sign up to create an account
+                  Register to create an account
                 </h1>
                 <form
                   className="space-y-4 md:space-y-6"
@@ -217,14 +225,7 @@ const Register = () => {
             </div>
           </div>
         </section>
-        {/* Image section */}
-        <section>
-          <img
-            src={RegisterImg}
-            alt="Login"
-            className=" w-full object-cover h-screen"
-          />
-        </section>
+        
       </div>
       <ToastContainer/>
     </>

@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import useFetch from "../../../common/useFetch";
 import Sidebar from "../../sidebar";
 import { useAccessToken } from "../../../context/AuthContext";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CustomOrder = () => {
-  const accessToken = useAccessToken();
-
+  const accessToken = localStorage.getItem("access_token");
   const [filters, setFilters] = useState({
     deliveryDate: "",
     deliveryTime: "",
@@ -63,12 +64,19 @@ const CustomOrder = () => {
     if (field === "delivery_address") {
       value = parseInt(e, 10);
     } else if (field === "delivery_time") {
-      value = e.target.value;
-      if (!isTimeInRange(value)) {
-        // Handle out of range time selection
-        alert("Please select a time between 10:00 AM and 8:00 PM.");
-        return;
+      // Convert the time format from 24-hour to 12-hour with AM/PM
+      const timeValue = e.target.value;
+      const [hours, minutes] = timeValue.split(":");
+      let formattedHours = parseInt(hours, 10);
+      let period = "AM";
+      if (formattedHours >= 12) {
+        formattedHours -= 12;
+        period = "PM";
       }
+      if (formattedHours === 0) {
+        formattedHours = 12; // 12 AM
+      }
+      value = `${formattedHours}:${minutes} ${period}`;
     } else {
       value = e.target ? e.target.value : e;
     }
@@ -79,6 +87,11 @@ const CustomOrder = () => {
   };
 
   const handleSaveClick = async () => {
+    if (!isTimeInRange(editedOrder.delivery_time)) {
+      // Handle out of range time selection
+      toast.error("Please select a time between 10:00 AM and 8:00 PM.");
+      return;
+    }
     if (editedOrder.customer) {
       editedOrder.customer = editedOrder.customer.id;
       editedOrder.delivery_address = editedOrder.delivery_address.id;
@@ -118,7 +131,6 @@ const CustomOrder = () => {
   const handlePageClick = (page) => {
     setCurrentPage(page);
   };
-  
 
   useEffect(() => {
     if (custom && custom.count) {
@@ -166,9 +178,9 @@ const CustomOrder = () => {
                 onChange={handleFilterChange}
                 min="10:00"
                 max="20:00"
+                step="900"
                 className="border rounded-md px-2 py-1"
               />
-
               <select
                 name="status"
                 value={filters.status}
@@ -442,6 +454,7 @@ const CustomOrder = () => {
           </div>
         </section>
       </div>
+      <ToastContainer />
     </>
   );
 };

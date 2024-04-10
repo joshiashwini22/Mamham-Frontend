@@ -5,6 +5,7 @@ import DeliveryAddress from "./components/deliveryAddress";
 import Button from "../common/button";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 const CheckoutPage = () => {
   const [selectedPaymentOption, setSelectedPaymentOption] =
@@ -22,6 +23,7 @@ const CheckoutPage = () => {
   const [customerId, setCustomerId] = useState("");
   const [remark, setRemark] = useState("");
   const [minDate, setMinDate] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -33,8 +35,7 @@ const CheckoutPage = () => {
         const { addresses } = profile;
         if (addresses && addresses.length > 0) {
           setAddresses(addresses);
-          setSelectedAddress(addresses[0])
-
+          setSelectedAddress(addresses[0]);
         }
         console.log(addresses);
       }
@@ -58,43 +59,43 @@ const CheckoutPage = () => {
       }
     }
   }, []);
-  
 
   useEffect(() => {
-    const now = new Date();
-    const currentHour = now.getHours();
-    const currentMinute = now.getMinutes();
-
-    let startHour = currentHour;
-    let startMinute = Math.ceil(currentMinute / 30) * 30;
-    if (startMinute === 60) {
-      startHour += 1;
-      startMinute = 0;
-    }
-
+    // Generate time options
     const options = [];
     for (let hour = 10; hour <= 20; hour++) {
       for (let minute = 0; minute < 60; minute += 30) {
-        if (
-          (hour > currentHour ||
-            (hour === currentHour && minute >= startMinute)) &&
-          hour < 20
-        ) {
-          const time = `${hour < 10 ? "0" + hour : hour}:${
-            minute < 10 ? "0" + minute : minute
-          }`;
-          options.push(time);
-        }
+        const time = `${hour < 10 ? "0" + hour : hour}:${
+          minute < 10 ? "0" + minute : minute
+        }`;
+        options.push(time);
       }
     }
     setTimeOptions(options);
   }, []);
 
-
   useEffect(() => {
-    // Reset scheduled time when date changes
-    setScheduledTime("");
-  }, [scheduledDate]);
+    // Initialize scheduled date and time if ASAP delivery is selected by default
+    if (deliveryOption === "asap") {
+      const today = new Date();
+      setScheduledDate(today.toISOString().split("T")[0]);
+
+      let currentHour = today.getHours();
+      const currentMinute = today.getMinutes();
+      let nearestHour = Math.ceil(currentMinute / 30) * 0.5 + currentHour;
+
+      if (nearestHour > 20) {
+        nearestHour = 20;
+      }
+      let nearestTime = `${Math.floor(nearestHour)}:${today.getMinutes()}`;
+      if (nearestTime.length === 4) nearestTime = "0" + nearestTime; // Add leading zero if minute is a single digit
+
+      setScheduledTime(nearestTime);
+      console.log(scheduledTime);
+      console.log(nearestTime);
+      console.log(scheduledDate);
+    }
+  }, [deliveryOption, scheduledDate, scheduledTime]);
 
   const handleDeliveryOptionChange = (option) => {
     setDeliveryOption(option);
@@ -104,39 +105,10 @@ const CheckoutPage = () => {
     setScheduledDate(e.target.value);
   };
 
-  useEffect(() => {
-    handleAsapTimeChange(); // Invoke handleAsapTimeChange when the component mounts
-  }, []); // Empty dependency array ensures it runs only once
-  
-  // Function to handle ASAP time change
-  const handleAsapTimeChange = () => {
-    // Get the current date and time
-    const now = new Date();
-    const currentHour = now.getHours();
-    const currentMinute = now.getMinutes();
-  
-    // Find the nearest available time slot based on the current time
-    let nearestHour = currentHour;
-    let nearestMinute = Math.ceil(currentMinute / 30) * 30;
-    if (nearestMinute === 60) {
-      nearestHour += 1;
-      nearestMinute = 0;
-    }
-  
-    // Log the nearest time before setting the scheduled time
-    console.log("Nearest Time:", nearestHour, nearestMinute);
-  
-    // Set the scheduled time to the nearest possible time for the day
-    const nearestTimeString = `${nearestHour < 10 ? "0" + nearestHour : nearestHour}:${nearestMinute < 10 ? "0" + nearestMinute : nearestMinute}`;
-    console.log(nearestTimeString); // Update scheduledTime state with the nearest time
-    setScheduledTime(nearestTimeString); // Update scheduledTime state with the nearest time
-  };
-  
-  
-
   const handleScheduledTimeChange = (e) => {
     setScheduledTime(e.target.value);
-    console.log(scheduledDate, scheduledTime)
+    console.log("Selected Time:", e.target.value); // Log the selected time
+    console.log("Selected Time:", scheduledTime); // Log the selected time
   };
 
   useEffect(() => {
@@ -214,7 +186,8 @@ const CheckoutPage = () => {
   };
   const handlePlaceOrder = async () => {
     try {
-      if (!selectedAddress) { // Check if a delivery address is selected
+      if (!selectedAddress) {
+        // Check if a delivery address is selected
         toast.error("Please select a delivery address");
         return;
       }
@@ -223,10 +196,7 @@ const CheckoutPage = () => {
       let paidStatus = false;
 
       if (selectedPaymentOption === "Khalti") {
-        
-        paymentStatus ="Khalti";
-
-        
+        paymentStatus = "Khalti";
       } else {
         paymentStatus = "Cash On Delivery";
       }
@@ -236,11 +206,14 @@ const CheckoutPage = () => {
         .split("T")[0];
 
       // Format scheduled time
-      const formattedScheduledTime = new Date(`1970-01-01T${scheduledTime}:00`)
-        .toISOString()
-        .split("T")[1]
-        .split(".")[0];
-
+      let formattedScheduledTime = "";
+      if (scheduledTime) {
+        const [hours, minutes] = scheduledTime.split(":");
+        formattedScheduledTime = `${hours.padStart(2, "0")}:${minutes.padStart(
+          2,
+          "0"
+        )}:00`;
+      }
       // Prepare order data
       const orderData = {
         customer: customerId,
@@ -260,6 +233,8 @@ const CheckoutPage = () => {
       //   return;
       // }
 
+      const accessToken = localStorage.getItem("access_token");
+
       // Place order to backend
       const response = await fetch(
         "http://127.0.0.1:8000/api/customization/custom-order/",
@@ -267,15 +242,15 @@ const CheckoutPage = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
           },
           body: JSON.stringify(orderData),
         }
       );
 
-    const responseData = await response.json();
+      const responseData = await response.json();
       console.log("Order placed:", responseData);
-      toast.success("Your order was placed successfully")
-
+      toast.success("Your order was placed successfully");
 
       // Check if payment method is Khalti and the payment URL exists
       if (
@@ -288,15 +263,14 @@ const CheckoutPage = () => {
           responseData.online_payment_response.payment_url
         );
       }
-      else {
-
-      }
 
       // Clear selected dishes from local storage
-      // localStorage.removeItem("selectedDishes");
+      localStorage.removeItem("selectedDishes");
+
+      navigate(`../myorders/${customerId}`);
     } catch (error) {
       console.error("Error placing order:", error);
-      toast.error(`Error placing order: ${error.message}`)
+      toast.error(`Error placing order: ${error.message}`);
     }
   };
 
@@ -307,7 +281,6 @@ const CheckoutPage = () => {
     const minDateValue = today.toISOString().substr(0, 10);
     setMinDate(minDateValue);
   }, []);
-
 
   // Function to calculate total price of selected dishes
   const calculateTotalPrice = () => {
@@ -399,7 +372,9 @@ const CheckoutPage = () => {
                         name="deliveryOption"
                         value="asap"
                         checked={deliveryOption === "asap"}
-                        onChange={() => {handleDeliveryOptionChange("asap"); handleAsapTimeChange();}}
+                        onChange={() => {
+                          handleDeliveryOptionChange("asap");
+                        }}
                         className="mr-2"
                       />
                       <label htmlFor="asap">ASAP Delivery</label>
@@ -530,7 +505,9 @@ const CheckoutPage = () => {
                         </div>
                       ))}
                       {/* Total Price for all selected dishes */}
-                      <div className="font-bold">Total Price: Rs. {calculateTotalPrice()}</div>
+                      <div className="font-bold">
+                        Total Price: Rs. {calculateTotalPrice()}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -539,7 +516,7 @@ const CheckoutPage = () => {
           </div>
         </section>
       </div>
-      <ToastContainer/>
+      <ToastContainer />
     </>
   );
 };

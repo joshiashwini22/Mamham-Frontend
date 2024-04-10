@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useAccessToken } from '../context/AuthContext';
 
 const useFetch = (url) => {
-  const accessToken = useAccessToken();
+  const accessToken = localStorage.getItem("access_token");
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -12,8 +11,9 @@ const useFetch = (url) => {
     try {
       const response = await fetch(url, {
         headers: {
-          'Authorization': `Bearer ${accessToken}`
+          Authorization: `Bearer ${JSON.parse(accessToken)}`
         }
+        
       });
       if (!response.ok) {
         throw new Error('Network response was not ok');

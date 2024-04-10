@@ -28,7 +28,7 @@ const Payment = () => {
         selectedAddress,
         startDate,
         startTime,
-        planTotal
+        planTotal,
       } = userData;
 
       // Format scheduled date
@@ -50,7 +50,10 @@ const Payment = () => {
       date.setHours(adjustedHours, minutes, 0, 0);
 
       // Format scheduled time
-      const formattedScheduledTime = date.toISOString().split("T")[1].split(".")[0];
+      const formattedScheduledTime = date
+        .toISOString()
+        .split("T")[1]
+        .split(".")[0];
 
       const deliverDetailsData = {
         delivery_address: selectedAddress,
@@ -74,16 +77,23 @@ const Payment = () => {
       };
 
       console.log(subscriptionData);
+      const accessToken = localStorage.getItem("access_token");
 
       const response = await axios.post(
         "http://127.0.0.1:8000/api/subscription/subscription-order/",
-        subscriptionData
+        subscriptionData,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
       );
-      
 
       console.log("Subscription placed:", response.data);
       console.log(response.data.online_payment_response.payment_url);
-      window.location.replace(response.data.online_payment_response.payment_url);
+      window.location.replace(
+        response.data.online_payment_response.payment_url
+      );
     } catch (error) {
       console.error("Error placing order:", error);
     }
@@ -92,11 +102,18 @@ const Payment = () => {
   return (
     <div className="flex flex-col items-center">
       <div className="text-center">
-        <span className="text-red-600 text-4xl font-bold block mb-4">Payment</span>
-        <span className="text-red-600 text-xl font-bold block">Almost there!</span>
+        <span className="text-red-600 text-4xl font-bold block mb-4">
+          Payment
+        </span>
+        <span className="text-red-600 text-xl font-bold block">
+          Almost there!
+        </span>
       </div>
       <img src={KhaltiImg} alt="Khalti Logo" />
-      <button className="bg-red-600 text-white px-4 py-2 rounded-lg font-bold" onClick={handlePlaceOrder}>
+      <button
+        className="bg-red-600 text-white px-4 py-2 rounded-lg font-bold"
+        onClick={handlePlaceOrder}
+      >
         Pay with Khalti
       </button>
     </div>

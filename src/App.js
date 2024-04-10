@@ -33,12 +33,13 @@ import WeeklymenuEdit from "./admin/components/WeeklyMenu/weeklymenuEdit";
 import MySubscriptions from "./customer/mySubscriptions";
 import AdminNotification from "./admin/components/adminNotification";
 import SubscriptionDelivery from "./admin/components/Subscription/subscriptionDelivery";
+import ModifyDelivery from "./customer/modifyDelivery";
 
 
 const App = () => {
   const customerId = getCustomerIdFromStorage(); // Retrieve customer ID from local storage
   const myordersUrl = customerId ? `/myorders/${customerId}` : '/myorders'; // Construct URL
-  const mysubscriptionsUrl = customerId ? `/mysubscriptions/${customerId}` : '/mysubscriptions'; // Construct URL
+  const mysubscriptionsUrl = '/mysubscriptions'; // Construct URL
 
   return (
     <Router>
@@ -57,6 +58,7 @@ const App = () => {
           <Route path="/dishes" element={<Dishes />} />
           <Route path="/dishes-create" element={<DishCreate />} />
           <Route path="/dishes-update/:id" element={<DishEdit />} />
+          <Route path="/modify-delivery/:id" element={<ModifyDelivery />} />
           <Route path="/subscription" element={<Subscription />} />
           <Route path="/delivery-subscription" element={<SubscriptionDelivery/>} />
           <Route path="/customOrder" element={<CustomOrder />} />
