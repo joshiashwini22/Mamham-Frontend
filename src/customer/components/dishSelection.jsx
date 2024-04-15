@@ -11,7 +11,8 @@ const DishSelection = ({ category, onAddSelectedDish }) => {
   const [selectedDishId, setSelectedDishId] = useState(null);
   const [selectedPortion, setSelectedPortion] = useState(null);
   const [cartItems, setCartItems] = useState([]);
-  const portionOptions = ["1", "2"];
+  const [totalPortions, setTotalPortions] = useState(0); // Track total portions
+  const maxPortions = 15; // Maximum allowed portions
   const defaultImage = LoginImg;
 
   useEffect(() => {
@@ -37,7 +38,16 @@ const DishSelection = ({ category, onAddSelectedDish }) => {
     setSelectedDishId(selectedDishId); // Set the selected dish ID
   };
 
-  const handleSelectPortion = (portion) => {
+  const handleSelectPortion = (e) => {
+    const portion = parseInt(e.target.value);
+    if (portion < 1 || portion > maxPortions) {
+      toast.error(`Please enter a portion value between 1 and ${maxPortions}.`);
+      return;
+    }
+    if (totalPortions + portion > maxPortions) {
+      toast.error(`Maximum portions allowed (${maxPortions}) exceeded.`);
+      return;
+    }
     setSelectedPortion(portion); // Set the selected portion
   };
 
@@ -58,16 +68,15 @@ const DishSelection = ({ category, onAddSelectedDish }) => {
       if (selectedDish) {
         // Add the selected dish and portion to the cart
         const newItem = {
-
           id: selectedDishId,
           name: selectedDish.name,
           image: selectedDish.image,
           price: selectedDish.price,
           portion: selectedPortion
-
         };
         console.log(newItem);
         setCartItems([...cartItems, newItem]);
+        setTotalPortions(totalPortions + selectedPortion); // Update total portions
         onAddSelectedDish(newItem)
         console.log(
           `Added dish ${selectedDish.image}  ${selectedDish.name} ${selectedDishId} with portion ${selectedPortion} to the cart`
@@ -96,17 +105,14 @@ const DishSelection = ({ category, onAddSelectedDish }) => {
             <option key={dish.id}>{dish.name}</option>
           ))}
         </select>
-        <select
+        <input
+          type="number"
+          min="1"
+          max={maxPortions - totalPortions} // Limit the max value based on remaining portions
           className="mb-3 py-2 mr-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-          onChange={(e) => handleSelectPortion(e.target.value)}
-        >
-          <option>Select portion</option>
-          {portionOptions.map((portion) => (
-            <option key={portion} value={portion}>
-              {portion}
-            </option>
-          ))}
-        </select>
+          placeholder="Enter portion"
+          onChange={handleSelectPortion}
+        />
         <button
           className="py-2 px-4 bg-white rounded hover:bg-red-100 focus:outline-none"
           onClick={handleAddToCart}

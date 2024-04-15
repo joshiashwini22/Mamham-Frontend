@@ -13,13 +13,16 @@ const Subscription = () => {
 
   const [editedSubscription, setEditedSubscription] = useState(null);
   const [addresses, setAddresses] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const itemsPerPage = 10;
 
   const {
     data: subscriptions,
     loading: subscriptionsLoading,
     error: subscriptionsError,
   } = useFetch(
-    `http://127.0.0.1:8000/api/subscription/get-subscription-order/?customer=${filters.customer}&start_date=${filters.deliveryDate}&delivery_time=${filters.deliveryTime}&status=${filters.status}`
+    `http://127.0.0.1:8000/api/subscription/get-subscription-order/?customer=${filters.customer}&start_date=${filters.deliveryDate}&delivery_time=${filters.deliveryTime}&status=${filters.status}&page=${currentPage}&page_size=${itemsPerPage}`
   );
   console.log(subscriptions)
 
@@ -81,6 +84,23 @@ const Subscription = () => {
     setEditedSubscription(null);
   };
 
+  const handlePageClick = (page) => {
+    setCurrentPage(page);
+  };
+
+  useEffect(() => {
+    if (subscriptions && subscriptions.count) {
+      const totalPagesCount = Math.ceil(subscriptions.count / itemsPerPage);
+      setTotalPages(totalPagesCount);
+    }
+  }, [subscriptions, itemsPerPage]);
+
+  const isTimeInRange = (time) => {
+    const selectedHour = parseInt(time.split(":")[0], 10);
+    return selectedHour >= 10 && selectedHour <= 20;
+  };
+
+
   return (
     <>
       <Sidebar />
@@ -126,6 +146,36 @@ const Subscription = () => {
                 <option value="COMPLETED">Completed</option>
                 <option value="CANCELLED">Cancelled</option>
               </select>
+            </div>
+            {/* Pagination buttons */}
+            <div className="flex justify-center my-4">
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
+                onClick={() => handlePageClick(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </button>
+              {Array.from({ length: totalPages }, (_, i) => (
+                <button
+                  key={i + 1}
+                  className={`px-4 py-2 rounded-md mr-2 ${
+                    currentPage === i + 1
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-300"
+                  }`}
+                  onClick={() => handlePageClick(i + 1)}
+                >
+                  {i + 1}
+                </button>
+              ))}
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded-md ml-2"
+                onClick={() => handlePageClick(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </button>
             </div>
             <table className="table-auto">
               <thead>

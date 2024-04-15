@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import useFetch from "../../../common/useFetch";
 import Sidebar from "../../sidebar";
 
 const SubscriptionDelivery = () => {
   // Get today's date and format it as yyyy-mm-dd
-//   const today = new Date().toISOString().split("T")[0];
+  //   const today = new Date().toISOString().split("T")[0];
 
   const [filters, setFilters] = useState({
     deliveryDate: "",
@@ -18,13 +18,16 @@ const SubscriptionDelivery = () => {
 
   const [editedDelivery, setEditedDelivery] = useState(null);
   const [addresses, setAddresses] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const itemsPerPage = 10;
 
   const {
     data: deliverySubscription,
     loading: deliveryLoading,
     error: deliveryError,
   } = useFetch(
-    `http://127.0.0.1:8000/api/subscription/subscription-deliveries/?delivery_date=${filters.deliveryDate}&status=${filters.status}&delivery_id=${filters.deliveryId}&subscription__customer__id=${filters.customerId}&subscription__plan__id=${filters.subscriptionId}`
+    `http://127.0.0.1:8000/api/subscription/subscription-deliveries/?delivery_date=${filters.deliveryDate}&status=${filters.status}&delivery_id=${filters.deliveryId}&subscription__customer__id=${filters.customerId}&subscription__plan__id=${filters.subscriptionId}&page=${currentPage}&page_size=${itemsPerPage}`
   );
   console.log(deliverySubscription);
 
@@ -62,7 +65,6 @@ const SubscriptionDelivery = () => {
       [field]: value,
     }));
   };
-  
 
   const handleEditClick = (delivery) => {
     setEditedDelivery({ ...delivery });
@@ -74,6 +76,24 @@ const SubscriptionDelivery = () => {
   const handleCancelClick = () => {
     // Reset editedOrder state to exit edit mode
     setEditedDelivery(null);
+  };
+
+  const handlePageClick = (page) => {
+    setCurrentPage(page);
+  };
+
+  useEffect(() => {
+    if (deliverySubscription && deliverySubscription.count) {
+      const totalPagesCount = Math.ceil(
+        deliverySubscription.count / itemsPerPage
+      );
+      setTotalPages(totalPagesCount);
+    }
+  }, [deliverySubscription, itemsPerPage]);
+
+  const isTimeInRange = (time) => {
+    const selectedHour = parseInt(time.split(":")[0], 10);
+    return selectedHour >= 10 && selectedHour <= 20;
   };
 
   return (
@@ -123,6 +143,27 @@ const SubscriptionDelivery = () => {
                 <option value="DELIVERED">Delivered</option>
                 <option value="CANCELLED">Cancelled</option>
               </select>
+            </div>
+            {/* Pagination buttons */}
+            <div className="flex justify-center my-4">
+              {currentPage !== 1 && (
+                <button
+                  className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
+                  onClick={() => handlePageClick(currentPage - 1)}
+                  disabled={currentPage === 1}
+                >
+                  Previous
+                </button>
+              )}
+              {currentPage !== totalPages && (
+                <button
+                  className="bg-blue-500 text-white px-4 py-2 rounded-md ml-2"
+                  onClick={() => handlePageClick(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                </button>
+              )}
             </div>
             <table className="table-auto">
               <thead>
@@ -215,7 +256,8 @@ const SubscriptionDelivery = () => {
                         ) : (
                           "N/A"
                         )}
-                      </td>                      <td className="border px-4 py-2">
+                      </td>{" "}
+                      <td className="border px-4 py-2">
                         {editedDelivery && editedDelivery.id === delivery.id
                           ? delivery.subscription.plan.name
                           : delivery.subscription.plan.name}

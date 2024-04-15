@@ -32,31 +32,36 @@ const OngoingServices = () => {
             <div className="col-span-3">
               {/* Orders */}
               {customongoing.map(order => (
-                  <div key={order.id} className="card mb-8 shadow-md border border-gray-300">
-                <div className="card-header bg-gray-50 py-4 px-6">
-                <h3>Order #{order.id} | Rs. {order.total} | {order.status}</h3>
-          <p>{order.delivery_time} | {order.delivery_date}</p>
-           </div>
-                <div className="card-block p-4">
-                  {/* Order status */}
-                  <input
-            type="range"
-            min="0"
-            max="100"
-            value={getStatusPosition(order.status)}
-            readOnly
-            style={{ width: '100%', }}
-          />
-          <div className='grid grid-cols-2 my-3'>
-            <div className='mr-3'>
-            <Button purpose={"View More"} />
-            </div>
-            <div>
-            <Button purpose={"Type: Cutomization"} />
-            </div>
-          </div>
+                  <div className="card mb-8 shadow-md border border-gray-300">
+                  <div className="card-header bg-gray-50 py-4 px-6">
+                    <h3>Order ID #C{order.id} | Rs. {order.total} | {order.status}</h3>
+                    <p>{order.delivery_time} | {order.delivery_date}</p>
+                  </div>
+                  <div className="card-block p-4">
+                    {/* Order status */}
+                    <div className="flex items-center justify-between">
+                      <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        value={getStatusPosition(order.status)}
+                        readOnly
+                        style={{ width: 'calc(100% - 20px)', marginRight: '10px' }} // Adjust the width and margin
+                      />
+                      <span>{order.status}</span> {/* Display status name */}
+                    </div>
+                
+                    <div className='grid grid-cols-2 my-3'>
+                      <div className='mr-3'>
+                        <Button purpose={"View More"} />
+                      </div>
+                      <div>
+                        <Button purpose={"Type: Cutomization"} />
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>              
+                         
                     ))}
             </div>         
         </div>

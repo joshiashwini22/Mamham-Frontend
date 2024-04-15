@@ -12,7 +12,9 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [phoneNumber, setphoneNumber] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [otp, setOtp] = useState(""); 
+  const [showOtpInput, setShowOtpInput] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -20,7 +22,7 @@ const Register = () => {
     e.preventDefault();
 
     if (!email || !username || !password || !firstName || !lastName || !phoneNumber) {
-      toast.error("Please fill in all the fields.")
+      toast.error("Please fill in all the fields.");
       setError("Please fill in all fields.");
       return;
     }
@@ -48,8 +50,8 @@ const Register = () => {
       .request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
-        toast.success("Your account is Registered!")
-        navigate(-1);
+        toast.success("Your account is Registered!");
+        setShowOtpInput(true); // Show OTP input form after successful registration
       })
       .catch((error) => {
         console.log(error);
@@ -57,8 +59,62 @@ const Register = () => {
         toast.error("Registration failed. Please try again.");
       });
   };
+
   const handleInputChange = () => {
     setError("");
+  };
+
+  const handleOtpSubmit = (e) => {
+    e.preventDefault();
+    let data = JSON.stringify({
+      email: email,
+      otp: otp,
+    });
+    let config = {
+      method: "post",
+      url: "http://127.0.0.1:8000/api/authentication/verify-email/",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        toast.success("Email verified successfully!");
+        navigate(-1); // Redirect after successful verification
+      })
+      .catch((error) => {
+        console.error(error);
+        setError("Email verification failed. Please try again.");
+        toast.error("Email verification failed. Please try again.");
+      });
+  };
+
+  const handleResendOTP = () => {
+    let data = JSON.stringify({
+      email: email,
+    });
+    let config = {
+      method: "post",
+      url: "http://127.0.0.1:8000/api/authentication/resend-otp/",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        toast.success("OTP resent successfully!");
+      })
+      .catch((error) => {
+        console.error(error);
+        setError("Failed to resend OTP. Please try again.");
+        toast.error("Failed to resend OTP. Please try again.");
+      });
   };
 
   return (
@@ -77,15 +133,44 @@ const Register = () => {
           <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
             <div className="w-full bg-white rounded-lg shadow">
               <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-              <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl text-center mt-12">
+                <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl text-center mt-12">
                   Register to create an account
                 </h1>
-                <form
-                  className="space-y-4 md:space-y-6"
-                  onSubmit={handleSubmit}
-                >
-                  {error && <p className="text-red-500">{error}</p>}
-                  <div>
+                {showOtpInput ? (
+                  // OTP input form
+                  <form onSubmit={handleOtpSubmit}>
+                    <label htmlFor="otp" className="block mb-2 text-sm font-medium text-gray-900 mt-4">
+                      Enter OTP
+                    </label>
+                    <input
+                      type="text"
+                      id="otp"
+                      value={otp}
+                      onChange={(e) => setOtp(e.target.value)}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                      placeholder="Enter OTP"
+                      required
+                    />
+                    <button
+                      type="submit"
+                      className="w-full mt-4 text-white bg-[#93040B] hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                    >
+                      Verify OTP
+                    </button>
+
+                    <button
+                      onClick={handleResendOTP}
+                      className=" text-[#93040B] font-medium text-sm "
+                    >
+                      Resend OTP
+                    </button>
+                    
+                  </form>
+                ) : (
+                  // Registration form
+                  <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+                    {error && <p className="text-red-500">{error}</p>}
+                    <div>
                     <label
                       htmlFor="fname"
                       className="block mb-2 text-sm font-medium text-gray-900 mt-4"
@@ -174,12 +259,12 @@ const Register = () => {
                     id="phonenumber"
                     value={phoneNumber}
                     onChange={(e) => {
-                      setphoneNumber(e.target.value);
+                      setPhoneNumber(e.target.value);
                       handleInputChange();
                     }}
-                    pattern="[0-9]{10}" // Pattern for 10-digit numbers
-                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                    placeholder="123456789"
+                    pattern="[0-9]{10}"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
+                    placeholder="9800000000"
                     required=""
                   />
 
@@ -205,27 +290,28 @@ const Register = () => {
                       required=""
                     />
                   </div>
-                  <button
-                    type="submit"
-                    className="w-full text-white bg-[#93040B] hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-                  >
-                    Sign up
-                  </button>
-                  <p className="text-sm font-light text-black text-center ">
-                    Already have an account yet?{" "}
-                    <a
-                      href="./login"
-                      className="font-medium text-primary-600 hover:underline"
+                    <button
+                      type="submit"
+                      className="w-full text-white bg-[#93040B] hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                     >
-                      Sign in
-                    </a>
-                  </p>
-                </form>
+                      Sign Up
+                    </button>
+                    <p className="text-sm font-light text-black text-center ">
+                      Already have an account yet?{" "}
+                      <a
+                        href="./login"
+                        className="font-medium text-red-700 hover:underline"
+                      >
+                        Sign in
+                      </a>
+                    
+                    </p>
+                  </form>
+                )}
               </div>
             </div>
           </div>
         </section>
-        
       </div>
       <ToastContainer/>
     </>

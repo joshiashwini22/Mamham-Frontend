@@ -22,7 +22,7 @@ const useAxiosAuth = () => {
     return () => {
       axios.interceptors.request.eject(interceptorRef.current);
     };
-  }, [authHeader]);
+  }, [accessToken ]);
 
   return axios;
 };

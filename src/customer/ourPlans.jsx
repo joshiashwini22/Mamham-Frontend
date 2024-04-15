@@ -90,10 +90,10 @@ const OurPlans = () => {
     <>
      <div className="bg-white-200 h-screen">
   <Navbar />
-  <div className="md:w-3/4 mx-auto shadow-xl rounded-2xl pb-2 bg-white mt-4 mb-auto">
+  <div className="md:w-3/4 mx-auto shadow-xl rounded-2xl pb-2 bg-white my-4">
     <Stepper steps={steps} currentStep={currentStep} />
-    <div className="my-5 px-10 mb-10"> {/* Adjusted margin-bottom from mb-50 to mb-10 */}
-      <StepperContext.Provider value={{ userData, setUserData, finalData, setFinalData }}>
+    <div className="my-8 px-10"> {/* Adjusted margin-bottom from mb-50 to mb-10 */}
+      <StepperContext.Provider className="mb-4" value={{ userData, setUserData, finalData, setFinalData }}>
         {displaySteps(currentStep)}
       </StepperContext.Provider>
     </div>

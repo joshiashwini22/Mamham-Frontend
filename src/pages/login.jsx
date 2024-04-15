@@ -24,9 +24,6 @@ const Login = ({ onLogin, context }) => {
       // Call the login function from AuthContext
       await login(email, password);
 
-      // Invoke the callback function with appropriate parameters
-      console.log(onLogin);
-
       // Get the role from localStorage and convert it to a boolean value
       const role = localStorage.getItem("role") === "true";
 
@@ -123,7 +120,7 @@ const Login = ({ onLogin, context }) => {
                     Don’t have an account yet?{" "}
                     <a
                       href="./register"
-                      className="font-medium text-maroon-600 hover:underline"
+                      className="font-medium text-red-700 hover:underline"
                     >
                       Sign up
                     </a>

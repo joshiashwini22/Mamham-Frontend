@@ -18,7 +18,7 @@ const CustomOrder = () => {
   const [addresses, setAddresses] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const itemsPerPage = 10; // Number of items to display per page
+  const itemsPerPage = 10; 
 
   const {
     data: custom,

@@ -38,6 +38,7 @@ export const AuthProvider = ({ children }) => {
     checkAuth();
   }, []);
 
+
   const login = async (email, password) => {
     try {
       const response = await fetch("http://127.0.0.1:8000/api/authentication/login/", {
@@ -47,25 +48,29 @@ export const AuthProvider = ({ children }) => {
         },
         body: JSON.stringify({ email, password })
       });
-
-      if (!response.ok) {
-        throw new Error('Login request failed');
-      }
-
+  
       const responseData = await response.json();
-
-      const { access } = responseData.token;
+  
+      if (!response.ok) {
+        throw new Error(responseData.message || 'Login request failed');
+      }
+  
+      const { access, refresh, userinfo } = responseData.token;
       localStorage.setItem("access_token", access);
-      localStorage.setItem("role", responseData.token.userinfo.is_staff);
-      localStorage.setItem("token", JSON.stringify(responseData.token.userinfo));
-      setUserInfo(responseData.token.userinfo);
-
+      localStorage.setItem("refresh_token", refresh);
+      localStorage.setItem("role", userinfo.is_staff);
+      localStorage.setItem("token", JSON.stringify(userinfo));
+      setUserInfo(userinfo);
+  
+      return userinfo;
+  
     } catch (error) {
       console.error("Login error:", error);
-      throw new Error('Login failed');
+      throw new Error(error.message);
     }
   };
-
+  
+  
   const logout = () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("role");

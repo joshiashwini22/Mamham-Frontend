@@ -192,10 +192,10 @@ const SelectPlan = ({ onDataValidChange }) => {
 
   return (
 <>
-<div className="m-2 p-2 border mb-10">
-      <div className="flex">
+<div className="m-2 p-2 border ">
+      <div className="grid grid-cols-2">
         {/* Plans Section */}
-        <div className="w-1/2 flex flex-wrap justify-between">
+        <div className="flex flex-wrap justify-between">
           {plans &&
             plans.map((plan) => (
               <button
@@ -221,43 +221,14 @@ const SelectPlan = ({ onDataValidChange }) => {
                 <img
                   src={plan.image}
                   alt={plan.name}
-                  className="max-w-xs mb-4"
+                  className=""
                 />
                 <h2 className="text-l">{plan.name}</h2>
               </button>
             ))}
-          {/* <div className="flex flex-col">
-            <span className="text-m mr-5 mb-3">Options:</span>
-            <div className="flex flex-wrap justify-between">
-                  <div className="m-4">
-                    <label className="flex flex-col items-center p-4 border rounded-lg bg-white relative">
-                      <input
-                        type="radio"
-                        name="selectedOption"
-                        value="NonVeg"
-                        onChange={handleInputChange}
-                        className="absolute top-2 left-2 appearance-none checked:bg-green-500 h-6 w-6 rounded-full border border-gray-300 focus:outline-none"
-                      />
-                      <h2 className="text-l ml-5">Non Vegitarian</h2>
-                    </label>
-                  </div>
-                  <div className="m-4">
-                    <label className="flex flex-col items-center p-4 border rounded-lg bg-white relative">
-                      <input
-                        type="radio"
-                        name="selectedOption"
-                        value="Veg"
-                        onChange={handleInputChange}
-                        className="absolute top-2 left-2 appearance-none checked:bg-green-500 h-6 w-6 rounded-full border border-gray-300 focus:outline-none"
-                      />
-                      <h2 className="text-l ml-5">Vegitarian</h2>
-                    </label>
-                  </div>
-            </div>
-          </div> */}
         </div>
         {/* Other Section */}
-        <div className="w-1/2 p-4">
+        <div className="p-4">
           <div className="flex flex-col">
             <div className="flex mb-2">
               <span className="text-m mr-5">Number of days:</span>

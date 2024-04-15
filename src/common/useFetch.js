@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const useFetch = (url) => {
-  const accessToken = localStorage.getItem("access_token");
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -9,17 +9,9 @@ const useFetch = (url) => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const response = await fetch(url, {
-        headers: {
-          Authorization: `Bearer ${JSON.parse(accessToken)}`
-        }
-        
-      });
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const responseData = await response.json();
-      setData(responseData);
+      const response = await axios.get(url);
+      
+      setData(response.data);
       setError(null);
     } catch (error) {
       setError(error);
@@ -30,11 +22,22 @@ const useFetch = (url) => {
 
   useEffect(() => {
     fetchData();
-  }, [url, accessToken]);
+  }, [url]);
 
-  // deleteItem and refetch functions remain the same
+  const deleteItem = async (id) => {
+    try {
+      await axios.delete(`${url}/${id}`);
+      setData(data.filter(item => item.id !== id));
+    } catch (error) {
+      console.error('Error deleting item:', error);
+    }
+  };
 
-  return { data, loading, error };
+  const refetch = () => {
+    fetchData();
+  };
+
+  return { data, loading, error, deleteItem, refetch };
 };
 
 export default useFetch;

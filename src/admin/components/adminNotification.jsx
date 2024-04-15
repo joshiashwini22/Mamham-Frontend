@@ -10,7 +10,7 @@ const AdminNotification = () => {
   const [error, setError] = useState(null);
 
   // Use useFetch hook to fetch notifications
-  const { data: adminNotificationsData, loading: fetchLoading, error: fetchError } = useFetch(`http://127.0.0.1:8000/api/authentication/notification-user/${getUserIdFromStorage()}`);
+  const { data: adminNotificationsData, loading: fetchLoading, error: fetchError } = useFetch(`http://127.0.0.1:8000/api/authentication/notification-user/`);
 
   useEffect(() => {
     if (adminNotificationsData) {

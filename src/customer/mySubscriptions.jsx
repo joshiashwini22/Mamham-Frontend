@@ -7,7 +7,7 @@ import CompletedSubscriptions from './components/completedSubscriptions';
 
 const MySubscriptions = () => {
   
-  const {data: subs, loading: customLoading, error: customError} = useFetch(`http://127.0.0.1:8000/api/subscription/mysubscriptions/by-customer/`);
+  const {data: subs, loading: customLoading, error: customError} = useFetch(`http://127.0.0.1:8000/api/subscription/mysubscriptions/by-customer/${getCustomerIdFromStorage()}/`);
   console.log(subs)
   return (
     <>

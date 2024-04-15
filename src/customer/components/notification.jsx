@@ -8,10 +8,14 @@ const NotificationDropdown = () => {
 
   const fetchNotifications = async () => {
     try {
-      const customerId = getUserIdFromStorage();
+      const accessToken = localStorage.getItem("access_token");
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/authentication/notification-user/${customerId}`
-      );
+        `http://127.0.0.1:8000/api/authentication/notification-user/`, {
+         headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`
+         }}
+       );
       setNotifications(response.data);
     } catch (error) {
       console.error("Error fetching notifications:", error);

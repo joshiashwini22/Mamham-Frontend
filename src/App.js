@@ -39,7 +39,7 @@ import ModifyDelivery from "./customer/modifyDelivery";
 const App = () => {
   const customerId = getCustomerIdFromStorage(); // Retrieve customer ID from local storage
   const myordersUrl = customerId ? `/myorders/${customerId}` : '/myorders'; // Construct URL
-  const mysubscriptionsUrl = '/mysubscriptions'; // Construct URL
+  const mysubscriptionsUrl = customerId ? `/mysubscriptions/${customerId}`: '/mysubscriptions'; // Construct URL
 
   return (
     <Router>
