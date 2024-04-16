@@ -90,6 +90,8 @@ const OurPlans = () => {
     <>
      <div className="bg-white-200 h-screen">
   <Navbar />
+  <span className="text-red-600 text-4xl text-center font-bold block my-4">Place Your Subscription</span>
+
   <div className="md:w-3/4 mx-auto shadow-xl rounded-2xl pb-2 bg-white my-4">
     <Stepper steps={steps} currentStep={currentStep} />
     <div className="my-8 px-10"> {/* Adjusted margin-bottom from mb-50 to mb-10 */}

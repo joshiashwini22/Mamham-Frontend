@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import Sidebar from "./sidebar";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import TopDishes from "./components/Dashboard/TopDishes";
 
 const Dashboard = () => {
   const {isAdmin} = useAuth();
@@ -21,7 +22,7 @@ const Dashboard = () => {
     <div className="p-4 sm:ml-64">
       <Sidebar />
       <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
-      {isAdminUser ? <p>User is an admin</p> : <p>User is not an admin</p>}
+      {/* <TopDishes/> */}
       </div>
     </div>
   );

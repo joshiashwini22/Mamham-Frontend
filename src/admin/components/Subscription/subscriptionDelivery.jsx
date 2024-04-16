@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import useFetch from "../../../common/useFetch";
 import Sidebar from "../../sidebar";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 const SubscriptionDelivery = () => {
-  // Get today's date and format it as yyyy-mm-dd
-  //   const today = new Date().toISOString().split("T")[0];
-
   const [filters, setFilters] = useState({
     deliveryDate: "",
     deliveryTime: "",
@@ -21,6 +21,8 @@ const SubscriptionDelivery = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const itemsPerPage = 10;
+    const accessToken = localStorage.getItem("access_token");
+
 
   const {
     data: deliverySubscription,
@@ -36,7 +38,7 @@ const SubscriptionDelivery = () => {
       const response = await fetch(
         `http://127.0.0.1:8000/api/authentication/getaddressforcustomer/${customerId}`
       );
-      if (!Response.ok) {
+      if (!response.ok) {
         throw new Error("Failed to fetch address");
       }
       const addressdata = await response.json();
@@ -52,11 +54,26 @@ const SubscriptionDelivery = () => {
     const { name, value } = e.target;
     setFilters({ ...filters, [name]: value });
   };
+  const handleResetFilters = () => {
+    // Reset all filter values
+    setFilters({
+      deliveryDate: "",
+      deliveryTime: "",
+      deliveryAddress: "",
+      status: "",
+      subscriptionId: "",
+      customerId: "",
+      deliveryId: "",
+    });
+  };
+
 
   const handleInputChange = (e, field) => {
     let value;
     if (field === "delivery_address" || field === "planId") {
       value = parseInt(e, 10); // Parse the value as an integer
+    } else if (field === "delivery_time") {
+      value = e.target.value;
     } else {
       value = e.target ? e.target.value : e; // Keep other fields as they are
     }
@@ -67,12 +84,54 @@ const SubscriptionDelivery = () => {
   };
 
   const handleEditClick = (delivery) => {
-    setEditedDelivery({ ...delivery });
+    setEditedDelivery({ ...delivery,       delivery_address: delivery.subscription.delivery_address.id,       subscription: delivery.subscription.id
+    });
     if (delivery.subscription.customer) {
+      // console.log(delivery.subscription.customer.id)
       fetchAddressesForCustomer(delivery.subscription.customer.id);
     }
   };
-  const handleSaveClick = async () => {};
+
+  const handleSaveClick = async () => {
+    try {
+      if (editedDelivery.subscription.customer) {
+        editedDelivery.subscription.customer = editedDelivery.subscription.customer.id;
+      }
+      if (editedDelivery.subscription.plan) {
+        editedDelivery.subscription.plan = editedDelivery.subscription.plan.id;
+      }
+      if (!isTimeInRange(editedDelivery.delivery_time)) {
+        // Handle out of range time selection
+        toast.error("Please select a time between 10:00 AM and 8:00 PM.");
+        return;
+      }
+
+      const response = await fetch(
+        `http://127.0.0.1:8000/api/subscription/subscription-delivery-details/${editedDelivery.id}/`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify(editedDelivery),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to update delivery");
+      }
+
+      const updatedDelivery = await response.json();
+
+      console.log("Delivery successfully updated:", updatedDelivery);
+
+      setEditedDelivery(null);
+    } catch (error) {
+      console.error("Error saving delivery:", error);
+    }
+  };
+
   const handleCancelClick = () => {
     // Reset editedOrder state to exit edit mode
     setEditedDelivery(null);
@@ -102,10 +161,14 @@ const SubscriptionDelivery = () => {
       <div className="bg-white sm:ml-64">
         <section className="bg-white min-h-screen py-12 lg:mx-[10px]">
           <div className="relative overflow-x-auto container">
-            <div className="flex flex-col items-center mx-44 py-5">
-              <span className="text-red-700 text-4xl font-bold block mb-4">
+          <div className="flex flex-col items-center mx-44 py-5">
+              <h3 className="text-red-800 text-xl font-bold sm:text-2xl">
                 Subscription Delivery
-              </span>
+              </h3>
+              <p className="text-gray-600 mt-2">
+                Lorem Ipsum is simply dummy text of the printing and
+                typesetting industry.
+              </p>
             </div>
             <div className="flex justify-end mb-4 mx-4 space-x-4">
               <input
@@ -143,9 +206,16 @@ const SubscriptionDelivery = () => {
                 <option value="DELIVERED">Delivered</option>
                 <option value="CANCELLED">Cancelled</option>
               </select>
+              {/* Reset Button */}
+              <button
+                className="bg-gray-500 text-white px-4 py-2 rounded-md"
+                onClick={handleResetFilters}
+                >
+                Reset Filters
+              </button>
             </div>
             {/* Pagination buttons */}
-            <div className="flex justify-center my-4">
+            <div className="flex justify-between my-4">
               {currentPage !== 1 && (
                 <button
                   className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
@@ -165,20 +235,20 @@ const SubscriptionDelivery = () => {
                 </button>
               )}
             </div>
-            <table className="table-auto">
-              <thead>
+            <table className="w-full table-auto text-sm text-left">
+            <thead className="bg-gray-50 text-gray-600 font-medium border-b">
                 <tr>
-                  <th className="px-4 py-2">Delivery ID</th>
-                  <th className="px-4 py-2">Customer</th>
-                  <th className="px-4 py-2">Delivery Date</th>
-                  <th className="px-4 py-2">Delivery Time</th>
-                  <th className="px-4 py-2">Delivery Address</th>
-                  <th className="px-4 py-2">Plan</th>
-                  <th className="px-4 py-2">Status</th>
-                  <th className="px-4 py-2">Actions</th>
+                  <th className="py-3 px-6">Delivery ID</th>
+                  <th className="py-3 px-6">Customer</th>
+                  <th className="py-3 px-6">Delivery Date</th>
+                  <th className="py-3 px-6">Delivery Time</th>
+                  <th className="py-3 px-6">Delivery Address</th>
+                  <th className="py-3 px-6">Plan</th>
+                  <th className="py-3 px-6">Status</th>
+                  <th className="py-3 px-6">Actions</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="text-gray-600 divide-y">
                 {deliveryLoading ? (
                   <tr>
                     <td colSpan="12">Loading Delivery Details...</td>
@@ -191,12 +261,12 @@ const SubscriptionDelivery = () => {
                   deliverySubscription.results.length > 0 ? (
                   deliverySubscription.results.map((delivery) => (
                     <tr key={deliverySubscription.id}>
-                      <td className="border px-4 py-2">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         {editedDelivery && editedDelivery.id === delivery.id
                           ? delivery.id
                           : delivery.id}
                       </td>
-                      <td className="border px-4 py-2">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         {editedDelivery && editedDelivery.id === delivery.id
                           ? delivery.subscription.customer
                             ? `${delivery.subscription.customer.first_name} ${delivery.subscription.customer.last_name}`
@@ -205,12 +275,12 @@ const SubscriptionDelivery = () => {
                           ? `${delivery.subscription.customer.first_name} ${delivery.subscription.customer.last_name}`
                           : "N/A"}
                       </td>
-                      <td className="border px-4 py-2">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         {editedDelivery && editedDelivery.id === delivery.id
                           ? delivery.delivery_date
                           : delivery.delivery_date}
                       </td>
-                      <td className="border px-4 py-2">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         {editedDelivery && editedDelivery.id === delivery.id ? (
                           <input
                             type="time"
@@ -225,7 +295,7 @@ const SubscriptionDelivery = () => {
                           delivery.delivery_time
                         )}
                       </td>
-                      <td className="border px-4 py-2">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         {/* Delivery Address Dropdown */}
                         {editedDelivery && editedDelivery.id === delivery.id ? (
                           <select
@@ -257,12 +327,12 @@ const SubscriptionDelivery = () => {
                           "N/A"
                         )}
                       </td>{" "}
-                      <td className="border px-4 py-2">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         {editedDelivery && editedDelivery.id === delivery.id
                           ? delivery.subscription.plan.name
                           : delivery.subscription.plan.name}
                       </td>
-                      <td className="border px-4 py-2">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         {editedDelivery && editedDelivery.id === delivery.id ? (
                           <select
                             name="status"
@@ -279,7 +349,7 @@ const SubscriptionDelivery = () => {
                           delivery.status
                         )}
                       </td>
-                      <td className="border px-4 py-2">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         {editedDelivery && editedDelivery.id === delivery.id ? (
                           <>
                             <button
@@ -316,6 +386,7 @@ const SubscriptionDelivery = () => {
           </div>
         </section>
       </div>
+      <ToastContainer/>
     </>
   );
 };

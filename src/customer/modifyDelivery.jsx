@@ -13,7 +13,8 @@ const ModifyDelivery = ({ onEdit }) => {
   const { id } = useParams();
   const [addresses, setAddresses] = useState([]);
   const navigate = useNavigate();
-  const customerId = getCustomerIdFromStorage(); 
+  const customerId = getCustomerIdFromStorage();
+
   const {
     data: deliverySubscription,
     loading: deliveryLoading,
@@ -21,18 +22,17 @@ const ModifyDelivery = ({ onEdit }) => {
   } = useFetch(
     `http://127.0.0.1:8000/api/subscription/customer-deliveries/${customerId}/${id}`
   );
-  console.log(deliverySubscription);
+
 
   const [editedDelivery, setEditedDelivery] = useState(null);
   const [showPopup, setShowPopup] = useState(false); // State for controlling the popup
 
   const handleInputChange = (e, field) => {
-     let value;
+    let value;
     if (field === "delivery_address") {
       value = parseInt(e, 10);
     } else if (field === "delivery_time") {
       value = e.target.value;
-     
     } else {
       value = e.target ? e.target.value : e;
     }
@@ -88,7 +88,7 @@ const ModifyDelivery = ({ onEdit }) => {
     setEditedDelivery({
       ...delivery,
       subscription: delivery.subscription.id,
-      delivery_address: delivery.delivery_address.id
+      delivery_address: delivery.delivery_address.id,
     });
     if (delivery.delivery_address) {
       fetchAddressesForCustomer(delivery.subscription.customer.id);
@@ -112,7 +112,7 @@ const ModifyDelivery = ({ onEdit }) => {
         toast.error("Please select a time between 10:00 AM and 8:00 PM.");
         return;
       }
-      
+
       // Send the updated delivery details to the server
       const response = await axios.patch(
         `http://127.0.0.1:8000/api/subscription/subscription-delivery-details/${editedDelivery.id}/`,
@@ -131,8 +131,7 @@ const ModifyDelivery = ({ onEdit }) => {
           "Failed to update delivery details. Please try again later."
         );
       }
-
-      onEdit(response.data);
+      window.location.reload();
     } catch (error) {
       // Handle any errors that occur during the request
       console.error("Error updating delivery details:", error);
@@ -142,12 +141,20 @@ const ModifyDelivery = ({ onEdit }) => {
       );
     }
     setEditedDelivery(null);
-    
   };
 
   const handleCancelClick = () => {
     setEditedDelivery(null);
   };
+
+  const isDeliveryWithin24Hours = (deliveryDate) => {
+    const today = new Date();
+  const deliveryDateTime = new Date(deliveryDate);
+  const timeDifference = deliveryDateTime.getTime() - today.getTime();
+  const hoursDifference = Math.floor(timeDifference / (1000 * 60 * 60));
+  return hoursDifference > 24;
+  };
+  
 
   return (
     <>
@@ -192,8 +199,8 @@ const ModifyDelivery = ({ onEdit }) => {
                 deliverySubscription.length > 0 ? (
                 deliverySubscription.map((delivery, index) => (
                   <tr key={delivery.id}>
-                            <td className="border px-4 py-2">{index + 1}</td> {/* Index column */}
-
+                    <td className="border px-4 py-2">{index + 1}</td>{" "}
+                    {/* Index column */}
                     <td className="border px-4 py-2">
                       {editedDelivery && editedDelivery.id === delivery.id
                         ? delivery.delivery_date
@@ -215,48 +222,47 @@ const ModifyDelivery = ({ onEdit }) => {
                       )}
                     </td>
                     <td className="border px-4 py-2">
-                        {editedDelivery &&
-                        editedDelivery.id === delivery.id ? (
-                          <select
-                            name="deliveryAddress"
-                            value={editedDelivery.delivery_address}
-                            onChange={(e) =>
-                              handleInputChange(e.target.value, "delivery_address")
-                            }
-                            className="border rounded-md px-2 py-1 w-full"
-                          >
-                            <option value="">Select Address</option>
-                            {addresses.map((address) => (
-                              <option
-                                key={address.id}
-                                value={address.id}
-                              >
-                                {address.label}, {address.address_line1}, {address.city}
-                              </option>
-                            ))}
-                          </select>
-                        ) : delivery.delivery_address ? (
-                          `${delivery.delivery_address.address_line1}, ${delivery.delivery_address.city}`
-                        ) : (
-                          "N/A"
-                        )}
-                      </td>
-                      <td className="border px-4 py-2">
-                        {editedDelivery && editedDelivery.id === delivery.id ? (
-                          <select
-                            name="status"
-                            value={editedDelivery.status}
-                            onChange={(e) => handleInputChange(e, "status")}
-                            className="border rounded-md px-2 py-1 w-full"
-                          >
-                            <option value="SCHEDULED">Scheduled</option>
-                            <option value="CANCELLED">Cancelled</option>
-                          </select>
-                        ) : (
-                          delivery.status
-                        )}
-                      </td>
-
+                      {editedDelivery && editedDelivery.id === delivery.id ? (
+                        <select
+                          name="deliveryAddress"
+                          value={editedDelivery.delivery_address}
+                          onChange={(e) =>
+                            handleInputChange(
+                              e.target.value,
+                              "delivery_address"
+                            )
+                          }
+                          className="border rounded-md px-2 py-1 w-full"
+                        >
+                          <option value="">Select Address</option>
+                          {addresses.map((address) => (
+                            <option key={address.id} value={address.id}>
+                              {address.label}, {address.address_line1},{" "}
+                              {address.city}
+                            </option>
+                          ))}
+                        </select>
+                      ) : delivery.delivery_address ? (
+                        `${delivery.delivery_address.address_line1}, ${delivery.delivery_address.city}`
+                      ) : (
+                        "N/A"
+                      )}
+                    </td>
+                    <td className="border px-4 py-2">
+                      {editedDelivery && editedDelivery.id === delivery.id ? (
+                        <select
+                          name="status"
+                          value={editedDelivery.status}
+                          onChange={(e) => handleInputChange(e, "status")}
+                          className="border rounded-md px-2 py-1 w-full"
+                        >
+                          <option value="SCHEDULED">Scheduled</option>
+                          <option value="CANCELLED">Cancelled</option>
+                        </select>
+                      ) : (
+                        delivery.status
+                      )}
+                    </td>
                     <td className="border px-4 py-2">
                       {editedDelivery && editedDelivery.id === delivery.id ? (
                         <>
@@ -275,11 +281,14 @@ const ModifyDelivery = ({ onEdit }) => {
                         </>
                       ) : (
                         <button
-                          className="bg-blue-500 text-white px-2 py-1 rounded-md mr-2"
-                          onClick={() => handleEditClick(delivery)}
-                        >
-                          Edit
-                        </button>
+                        className={`bg-blue-500 text-white px-2 py-1 rounded-md mr-2 ${
+                          isDeliveryWithin24Hours(delivery.delivery_date) ? "" : "disabled:opacity-50 cursor-not-allowed"
+                        }`}
+                        onClick={() => handleEditClick(delivery)}
+                        disabled={!isDeliveryWithin24Hours(delivery.delivery_date)}
+                      >
+                        Edit
+                      </button>
                       )}
                     </td>
                   </tr>

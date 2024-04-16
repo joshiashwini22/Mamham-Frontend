@@ -17,8 +17,8 @@ const CustomOrder = () => {
   const [editedOrder, setEditedOrder] = useState(null);
   const [addresses, setAddresses] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
   const [totalPages, setTotalPages] = useState(1);
-  const itemsPerPage = 10; 
 
   const {
     data: custom,
@@ -50,11 +50,19 @@ const CustomOrder = () => {
     setFilters({ ...filters, [name]: value });
   };
 
+  const handleResetFilters = () => {
+    // Reset all filter values
+    setFilters({
+      deliveryDate: "",
+      deliveryTime: "",
+      status: "",
+      orderId: "",
+    });
+  };
+
   const handleEditClick = (order) => {
-    setEditedOrder({ ...order });
-    console.log(editedOrder);
+    setEditedOrder({ ...order, delivery_address: order.delivery_address.id });
     if (order.customer) {
-      console.log("here");
       fetchAddressesForCustomer(order.customer.id);
     }
   };
@@ -64,19 +72,7 @@ const CustomOrder = () => {
     if (field === "delivery_address") {
       value = parseInt(e, 10);
     } else if (field === "delivery_time") {
-      // Convert the time format from 24-hour to 12-hour with AM/PM
-      const timeValue = e.target.value;
-      const [hours, minutes] = timeValue.split(":");
-      let formattedHours = parseInt(hours, 10);
-      let period = "AM";
-      if (formattedHours >= 12) {
-        formattedHours -= 12;
-        period = "PM";
-      }
-      if (formattedHours === 0) {
-        formattedHours = 12; // 12 AM
-      }
-      value = `${formattedHours}:${minutes} ${period}`;
+      value = e.target.value;
     } else {
       value = e.target ? e.target.value : e;
     }
@@ -89,12 +85,11 @@ const CustomOrder = () => {
   const handleSaveClick = async () => {
     if (!isTimeInRange(editedOrder.delivery_time)) {
       // Handle out of range time selection
-      toast.error("Please select a time between 10:00 AM and 8:00 PM.");
+      toast.error("Please select a time between 10:00 AM and 7:30 PM.");
       return;
     }
     if (editedOrder.customer) {
       editedOrder.customer = editedOrder.customer.id;
-      editedOrder.delivery_address = editedOrder.delivery_address.id;
     }
 
     try {
@@ -141,7 +136,7 @@ const CustomOrder = () => {
 
   const isTimeInRange = (time) => {
     const selectedHour = parseInt(time.split(":")[0], 10);
-    return selectedHour >= 10 && selectedHour <= 20;
+    return selectedHour >= 10 && selectedHour < 20;
   };
 
   return (
@@ -150,10 +145,14 @@ const CustomOrder = () => {
       <div className="bg-white sm:ml-64">
         <section className="bg-white min-h-screen py-12 lg:mx-[10px]">
           <div className="relative overflow-x-auto container">
-            <div className="flex flex-col items-center mx-44 py-5">
-              <span className="text-red-700 text-4xl font-bold block mb-4">
-                All Orders
-              </span>
+          <div className="flex flex-col items-center mx-44 py-5">
+              <h3 className="text-red-800 text-xl font-bold sm:text-2xl">
+                Custom Orders
+              </h3>
+              <p className="text-gray-600 mt-2">
+                Lorem Ipsum is simply dummy text of the printing and
+                typesetting industry.
+              </p>
             </div>
             <div className="flex justify-end mb-4 mx-4 space-x-4">
               <input
@@ -194,6 +193,13 @@ const CustomOrder = () => {
                 <option value="On the Way">On the Way</option>
                 <option value="Completed">Completed</option>
               </select>
+              {/* Reset Button */}
+              <button
+                className="bg-gray-500 text-white px-4 py-2 rounded-md"
+                onClick={handleResetFilters}
+              >
+                Reset Filters
+              </button>
             </div>
             {/* Pagination buttons */}
             <div className="flex justify-center my-4">
@@ -225,23 +231,23 @@ const CustomOrder = () => {
                 Next
               </button>
             </div>
-            <table className="table-auto">
-              <thead>
+            <table className="w-full table-auto text-sm text-left">
+              <thead className="bg-gray-50 text-gray-600 font-medium border-b">
                 <tr>
-                  <th className="px-4 py-2">Order ID</th>
-                  <th className="px-4 py-2">Customer</th>
-                  <th className="px-4 py-2">Delivery Address</th>
-                  <th className="px-4 py-2">Delivery Date</th>
-                  <th className="px-4 py-2">Delivery Time</th>
-                  <th className="px-4 py-2">Total</th>
-                  <th className="px-4 py-2">Remarks</th>
-                  <th className="px-4 py-2">Status</th>
-                  <th className="px-4 py-2">Payment Method</th>
-                  <th className="px-4 py-2">Paid</th>
-                  <th className="px-4 py-2">Actions</th>
+                  <th className="py-3 px-6">Order ID</th>
+                  <th className="py-3 px-6">Customer</th>
+                  <th className="py-3 px-6">Delivery Address</th>
+                  <th className="py-3 px-6">Delivery Date</th>
+                  <th className="py-3 px-6">Delivery Time</th>
+                  <th className="py-3 px-6">Total</th>
+                  <th className="py-3 px-6">Status</th>
+                  <th className="py-3 px-6">Payment Method</th>
+                  <th className="py-3 px-6">Paid</th>
+                  <th className="py-3 px-6">Remarks</th>
+                  <th className="py-3 px-6">Actions</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="text-gray-600 divide-y">
                 {customLoading ? (
                   <tr>
                     <td colSpan="11">Loading...</td>
@@ -253,7 +259,7 @@ const CustomOrder = () => {
                 ) : custom && custom.results.length > 0 ? (
                   custom.results.map((order) => (
                     <tr key={order.id}>
-                      <td className="border px-4 py-2">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         {editedOrder && editedOrder.id === order.id ? (
                           <input
                             type="text"
@@ -265,7 +271,7 @@ const CustomOrder = () => {
                           order.id
                         )}
                       </td>
-                      <td className="border px-4 py-2">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         {editedOrder && editedOrder.id === order.id
                           ? order.customer
                             ? `${order.customer.first_name} ${order.customer.last_name}`
@@ -274,7 +280,7 @@ const CustomOrder = () => {
                           ? `${order.customer.first_name} ${order.customer.last_name}`
                           : "N/A"}
                       </td>
-                      <td className="border px-4 py-2">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         {/* Delivery Address Dropdown */}
                         {editedOrder && editedOrder.id === order.id ? (
                           <select
@@ -295,19 +301,18 @@ const CustomOrder = () => {
                                 value={address.id} // Set the address ID as the value
                               >
                                 {address.id}: {address.label},
-                                {address.address_line1}, {address.city}
+                                {address.address_line1}
                               </option>
                             ))}
                           </select>
                         ) : // Display delivery address
                         order.delivery_address ? (
-                          `${order.delivery_address.address_line1}, ${order.delivery_address.city}`
+                          `${order.delivery_address.address_line1}`
                         ) : (
                           "N/A"
                         )}
                       </td>
-
-                      <td className="border px-4 py-2">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         {editedOrder && editedOrder.id === order.id ? (
                           <input
                             type="date"
@@ -322,7 +327,7 @@ const CustomOrder = () => {
                           order.delivery_date
                         )}
                       </td>
-                      <td className="border px-4 py-2">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         {editedOrder && editedOrder.id === order.id ? (
                           <input
                             type="time"
@@ -339,7 +344,7 @@ const CustomOrder = () => {
                           order.delivery_time
                         )}
                       </td>
-                      <td className="border px-4 py-2">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         {editedOrder && editedOrder.id === order.id ? (
                           <input
                             type="text"
@@ -352,20 +357,8 @@ const CustomOrder = () => {
                           order.total
                         )}
                       </td>
-                      <td className="border px-4 py-2">
-                        {editedOrder && editedOrder.id === order.id ? (
-                          <input
-                            type="text"
-                            name="remarks"
-                            value={editedOrder.remarks}
-                            onChange={(e) => handleInputChange(e, "remarks")}
-                            className="border rounded-md px-2 py-1 w-full"
-                          />
-                        ) : (
-                          order.remarks
-                        )}
-                      </td>
-                      <td className="border px-4 py-2">
+
+                      <td className="px-6 py-4 whitespace-nowrap">
                         {editedOrder && editedOrder.id === order.id ? (
                           <select
                             name="status"
@@ -383,7 +376,7 @@ const CustomOrder = () => {
                           order.status
                         )}
                       </td>
-                      <td className="border px-4 py-2">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         {editedOrder && editedOrder.id === order.id ? (
                           <select
                             name="payment_method"
@@ -402,7 +395,7 @@ const CustomOrder = () => {
                           order.payment_method
                         )}
                       </td>
-                      <td className="border px-4 py-2">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         {editedOrder && editedOrder.id === order.id ? (
                           <input
                             type="checkbox"
@@ -417,7 +410,7 @@ const CustomOrder = () => {
                           "No"
                         )}
                       </td>
-                      <td className="border px-4 py-2">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         {editedOrder && editedOrder.id === order.id ? (
                           <>
                             <button

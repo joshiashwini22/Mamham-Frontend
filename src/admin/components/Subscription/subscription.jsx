@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import useFetch from "../../../common/useFetch";
 import Sidebar from "../../sidebar";
-import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Subscription = () => {
   const [filters, setFilters] = useState({
@@ -17,6 +18,8 @@ const Subscription = () => {
   const [totalPages, setTotalPages] = useState(1);
   const itemsPerPage = 10;
 
+  const accessToken = localStorage.getItem("access_token");
+
   const {
     data: subscriptions,
     loading: subscriptionsLoading,
@@ -24,7 +27,7 @@ const Subscription = () => {
   } = useFetch(
     `http://127.0.0.1:8000/api/subscription/get-subscription-order/?customer=${filters.customer}&start_date=${filters.deliveryDate}&delivery_time=${filters.deliveryTime}&status=${filters.status}&page=${currentPage}&page_size=${itemsPerPage}`
   );
-  console.log(subscriptions)
+  console.log(subscriptions);
 
   const fetchAddressesForCustomer = async (customerId) => {
     try {
@@ -46,8 +49,22 @@ const Subscription = () => {
     setFilters({ ...filters, [name]: value });
   };
 
+  const handleResetFilters = () => {
+    // Reset all filter values
+    setFilters({
+      customer: "",
+    deliveryDate: "",
+    deliveryTime: "",
+    status: "",
+    });
+  };
+
   const handleEditClick = (subscription) => {
-    setEditedSubscription({ ...subscription });
+    setEditedSubscription({
+      ...subscription,
+      delivery_address: subscription.delivery_address.id,
+    });
+
     if (subscription.customer) {
       fetchAddressesForCustomer(subscription.customer.id);
     }
@@ -57,6 +74,8 @@ const Subscription = () => {
     let value;
     if (field === "delivery_address") {
       value = parseInt(e, 10);
+    } else if (field === "delivery_time") {
+      value = e.target.value;
     } else {
       value = e.target ? e.target.value : e;
     }
@@ -68,12 +87,38 @@ const Subscription = () => {
 
   const handleSaveClick = async () => {
     try {
-      const response = await axios.patch(
-        `http://127.0.0.1:8000/api/subscriptions/${editedSubscription.id}/`,
-        editedSubscription
+      if (editedSubscription.customer) {
+        editedSubscription.customer = editedSubscription.customer.id;
+      }
+      if (editedSubscription.plan) {
+        editedSubscription.plan = editedSubscription.plan.id;
+      }
+      if (!isTimeInRange(editedSubscription.delivery_time)) {
+        // Handle out of range time selection
+        toast.error("Please select a time between 10:00 AM and 8:00 PM.");
+        return;
+      }
+
+      const response = await fetch(
+        `http://127.0.0.1:8000/api/subscription/subscription-order/${editedSubscription.id}/`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify(editedSubscription),
+        }
       );
-      const updatedSubscription = response.data;
+
+      if (!response.ok) {
+        throw new Error("Failed to update subscription");
+      }
+
+      const updatedSubscription = await response.json();
+
       console.log("Subscription successfully updated:", updatedSubscription);
+
       setEditedSubscription(null);
     } catch (error) {
       console.error("Error saving subscription:", error);
@@ -96,10 +141,10 @@ const Subscription = () => {
   }, [subscriptions, itemsPerPage]);
 
   const isTimeInRange = (time) => {
+    console.log(time);
     const selectedHour = parseInt(time.split(":")[0], 10);
     return selectedHour >= 10 && selectedHour <= 20;
   };
-
 
   return (
     <>
@@ -108,9 +153,13 @@ const Subscription = () => {
         <section className="bg-white min-h-screen py-12 lg:mx-[10px]">
           <div className="relative overflow-x-auto container">
             <div className="flex flex-col items-center mx-44 py-5">
-              <span className="text-red-700 text-4xl font-bold block mb-4">
+              <h3 className="text-red-800 text-xl font-bold sm:text-2xl">
                 All Subscriptions
-              </span>
+              </h3>
+              <p className="text-gray-600 mt-2">
+                Lorem Ipsum is simply dummy text of the printing and
+                typesetting industry.
+              </p>
             </div>
             <div className="flex justify-end mb-4 mx-4 space-x-4">
               <input
@@ -146,6 +195,13 @@ const Subscription = () => {
                 <option value="COMPLETED">Completed</option>
                 <option value="CANCELLED">Cancelled</option>
               </select>
+              {/* Reset Button */}
+              <button
+                className="bg-gray-500 text-white px-4 py-2 rounded-md"
+                onClick={handleResetFilters}
+                >
+                Reset Filters
+              </button>
             </div>
             {/* Pagination buttons */}
             <div className="flex justify-center my-4">
@@ -177,25 +233,25 @@ const Subscription = () => {
                 Next
               </button>
             </div>
-            <table className="table-auto">
-              <thead>
+            <table className="w-full table-auto text-sm text-left">
+            <thead className="bg-gray-50 text-gray-600 font-medium border-b">
                 <tr>
-                  <th className="px-4 py-2">ID</th>
-                  <th className="px-4 py-2">Customer</th>
-                  <th className="px-4 py-2">Start Date</th>
-                  <th className="px-4 py-2">End Date</th>
-                  <th className="px-4 py-2">Delivery Time</th>
-                  <th className="px-4 py-2">Duration</th>
-                  <th className="px-4 py-2">Delivery Address</th>
-                  <th className="px-4 py-2">Status</th>
-                  <th className="px-4 py-2">Plan</th>
-                  <th className="px-4 py-2">Total</th>
-                  <th className="px-4 py-2">Remarks</th>
-                  <th className="px-4 py-2">Is Paid</th>
-                  <th className="px-4 py-2">Actions</th>
+                  <th className="py-3 px-6">ID</th>
+                  <th className="py-3 px-6">Customer</th>
+                  <th className="py-3 px-6">Start Date</th>
+                  <th className="py-3 px-6">End Date</th>
+                  <th className="py-3 px-6">Delivery Time</th>
+                  <th className="py-3 px-6">Duration</th>
+                  <th className="py-3 px-6">Delivery Address</th>
+                  <th className="py-3 px-6">Status</th>
+                  <th className="py-3 px-6">Plan</th>
+                  <th className="py-3 px-6">Total</th>
+                  <th className="py-3 px-6">Remarks</th>
+                  <th className="py-3 px-6">Is Paid</th>
+                  <th className="py-3 px-6">Actions</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="text-gray-600 divide-y">
                 {subscriptionsLoading ? (
                   <tr>
                     <td colSpan="12">Loading...</td>
@@ -207,42 +263,40 @@ const Subscription = () => {
                 ) : subscriptions && subscriptions.results.length > 0 ? (
                   subscriptions.results.map((subscription) => (
                     <tr key={subscription.id}>
-                                            <td className="border px-4 py-2">
-                                            {editedSubscription && editedSubscription.id === subscription.id
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {editedSubscription &&
+                        editedSubscription.id === subscription.id
                           ? subscription.id
                           : subscription.id}
                       </td>
-                      <td className="border px-4 py-2">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         {editedSubscription &&
-                        editedSubscription.id === subscription.id ? subscription.customer
-                        ? `${subscription.customer.first_name} ${subscription.customer.last_name}`
-                        : "N/A"
-                      : subscription.customer
-                      ? `${subscription.customer.first_name} ${subscription.customer.last_name}`
-                      : "N/A"}
+                        editedSubscription.id === subscription.id
+                          ? subscription.customer
+                            ? `${subscription.customer.first_name} ${subscription.customer.last_name}`
+                            : "N/A"
+                          : subscription.customer
+                          ? `${subscription.customer.first_name} ${subscription.customer.last_name}`
+                          : "N/A"}
                       </td>
-                      <td className="border px-4 py-2">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         {editedSubscription &&
-                        editedSubscription.id === subscription.id ? (
-                          subscription.start_date
-                        ) : (
-                          subscription.start_date
-                        )}
+                        editedSubscription.id === subscription.id
+                          ? subscription.start_date
+                          : subscription.start_date}
                       </td>
-                      <td className="border px-4 py-2">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         {editedSubscription &&
-                        editedSubscription.id === subscription.id ? (
-                          subscription.end_date
-                        ) : (
-                          subscription.end_date
-                        )}
+                        editedSubscription.id === subscription.id
+                          ? subscription.end_date
+                          : subscription.end_date}
                       </td>
-                      <td className="border px-4 py-2">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         {editedSubscription &&
                         editedSubscription.id === subscription.id ? (
                           <input
                             type="time"
-                            name="deliveryTime"
+                            name="delivery_time"
                             value={editedSubscription.delivery_time}
                             onChange={(e) =>
                               handleInputChange(e, "delivery_time")
@@ -253,50 +307,46 @@ const Subscription = () => {
                           subscription.delivery_time
                         )}
                       </td>
-                      <td className="border px-4 py-2">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         {editedSubscription &&
-                        editedSubscription.id === subscription.id ? (
-                          subscription.duration
-                        ) : (
-                          subscription.duration
-                        )}
+                        editedSubscription.id === subscription.id
+                          ? subscription.duration
+                          : subscription.duration}
                       </td>
-                      <td className="border px-4 py-2">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         {editedSubscription &&
                         editedSubscription.id === subscription.id ? (
                           <select
                             name="deliveryAddress"
                             value={editedSubscription.delivery_address}
                             onChange={(e) =>
-                              handleInputChange(e.target.value, "delivery_address")
+                              handleInputChange(
+                                e.target.value,
+                                "delivery_address"
+                              )
                             }
                             className="border rounded-md px-2 py-1 w-full"
                           >
                             <option value="">Select Address</option>
                             {addresses.map((address) => (
-                              <option
-                                key={address.id}
-                                value={address.id}
-                              >
-                                {address.label}, {address.address_line1}, {address.city}
+                              <option key={address.id} value={address.id}>
+                                {address.label}, {address.address_line1}
                               </option>
                             ))}
                           </select>
                         ) : subscription.delivery_address ? (
-                          `${subscription.delivery_address.address_line1}, ${subscription.delivery_address.city}`
+                          `${subscription.delivery_address.address_line1}`
                         ) : (
                           "N/A"
                         )}
                       </td>
-                      <td className="border px-4 py-2">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         {editedSubscription &&
                         editedSubscription.id === subscription.id ? (
                           <select
                             name="status"
                             value={editedSubscription.status}
-                            onChange={(e) =>
-                              handleInputChange(e, "status")
-                            }
+                            onChange={(e) => handleInputChange(e, "status")}
                             className="border rounded-md px-2 py-1 w-full"
                           >
                             <option value="ONGOING">OnGoing</option>
@@ -307,23 +357,19 @@ const Subscription = () => {
                           subscription.status
                         )}
                       </td>
-                      <td className="border px-4 py-2">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         {editedSubscription &&
-                        editedSubscription.id === subscription.id ? (
-                          subscription.plan.name
-                        ) : (
-                          subscription.plan.name
-                        )}
+                        editedSubscription.id === subscription.id
+                          ? subscription.plan.name
+                          : subscription.plan.name}
                       </td>
-                      <td className="border px-4 py-2">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         {editedSubscription &&
-                        editedSubscription.id === subscription.id ? (
-                          subscription.total
-                        ) : (
-                          subscription.total
-                        )}
+                        editedSubscription.id === subscription.id
+                          ? subscription.total
+                          : subscription.total}
                       </td>
-                      <td className="border px-4 py-2">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         {editedSubscription &&
                         editedSubscription.id === subscription.id ? (
                           <input
@@ -337,7 +383,7 @@ const Subscription = () => {
                           subscription.remarks
                         )}
                       </td>
-                      <td className="border px-4 py-2">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         {editedSubscription &&
                         editedSubscription.id === subscription.id ? (
                           <input
@@ -353,7 +399,7 @@ const Subscription = () => {
                           "No"
                         )}
                       </td>
-                      <td className="border px-4 py-2">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         {editedSubscription &&
                         editedSubscription.id === subscription.id ? (
                           <>
@@ -391,6 +437,7 @@ const Subscription = () => {
           </div>
         </section>
       </div>
+      <ToastContainer />
     </>
   );
 };

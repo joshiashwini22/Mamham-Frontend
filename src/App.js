@@ -9,6 +9,9 @@ import Dashboard from "./admin/dashboard";
 import Dishes from "./admin/components/Dishes/dishes";
 import DishCreate from "./admin/components/Dishes/dishCreate";
 import DishEdit from "./admin/components/Dishes/dishEdit";
+import Addon from "./admin/components/Addon/addon";
+import AddonCreate from "./admin/components/Addon/addonCreate";
+import AddonEdit from "./admin/components/Addon/addonEdit";
 import Error from "./common/error";
 import Subscription from "./admin/components/Subscription/subscription";
 import CustomOrder from "./admin/components/CustomOrder/customOrder";
@@ -58,6 +61,9 @@ const App = () => {
           <Route path="/dishes" element={<Dishes />} />
           <Route path="/dishes-create" element={<DishCreate />} />
           <Route path="/dishes-update/:id" element={<DishEdit />} />
+          <Route path="/addons" element={<Addon />} />
+          <Route path="/addon-create" element={<AddonCreate />} />
+          <Route path="/addon-update/:id" element={<AddonEdit />} />
           <Route path="/modify-delivery/:id" element={<ModifyDelivery />} />
           <Route path="/subscription" element={<Subscription />} />
           <Route path="/delivery-subscription" element={<SubscriptionDelivery/>} />

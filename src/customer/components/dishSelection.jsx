@@ -49,10 +49,10 @@ const DishSelection = ({ category, onAddSelectedDish }) => {
       return;
     }
     setSelectedPortion(portion); // Set the selected portion
+    handleAddToCart()
   };
 
   const handleAddToCart = (e) => {
-    e.preventDefault()
     if (!selectedDishId || !selectedPortion) {
       if (!selectedDishId) {
         toast.error('Please select a dish.');
@@ -76,7 +76,7 @@ const DishSelection = ({ category, onAddSelectedDish }) => {
         };
         console.log(newItem);
         setCartItems([...cartItems, newItem]);
-        setTotalPortions(totalPortions + selectedPortion); // Update total portions
+        setTotalPortions(selectedPortion); // Update total portions
         onAddSelectedDish(newItem)
         console.log(
           `Added dish ${selectedDish.image}  ${selectedDish.name} ${selectedDishId} with portion ${selectedPortion} to the cart`
@@ -113,12 +113,7 @@ const DishSelection = ({ category, onAddSelectedDish }) => {
           placeholder="Enter portion"
           onChange={handleSelectPortion}
         />
-        <button
-          className="py-2 px-4 bg-white rounded hover:bg-red-100 focus:outline-none"
-          onClick={handleAddToCart}
-        >
-          <FontAwesomeIcon icon={faShoppingCart} className="text-red-500" />
-        </button>
+        
       </div>
   
       {/* <DishImagePreview dishId={selectedDishId} defaultImage={defaultImage} />

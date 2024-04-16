@@ -63,7 +63,7 @@ const CheckoutPage = () => {
   useEffect(() => {
     // Generate time options
     const options = [];
-    for (let hour = 10; hour <= 20; hour++) {
+    for (let hour = 10; hour <= 19; hour++) {
       for (let minute = 0; minute < 60; minute += 30) {
         const time = `${hour < 10 ? "0" + hour : hour}:${
           minute < 10 ? "0" + minute : minute
@@ -132,7 +132,7 @@ const CheckoutPage = () => {
       }
 
       const options = [];
-      for (let hour = startHour; hour <= 20; hour++) {
+      for (let hour = startHour; hour <= 19; hour++) {
         for (let minute = 0; minute < 60; minute += 30) {
           if (
             (hour > currentHour ||
@@ -150,7 +150,7 @@ const CheckoutPage = () => {
     } else {
       // If selected date is not today, provide full time options
       const options = [];
-      for (let hour = 10; hour <= 20; hour++) {
+      for (let hour = 10; hour <= 19; hour++) {
         for (let minute = 0; minute < 60; minute += 30) {
           const time = `${hour < 10 ? "0" + hour : hour}:${
             minute < 10 ? "0" + minute : minute

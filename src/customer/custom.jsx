@@ -82,9 +82,9 @@ function Custom() {
   return (
     <div className="h-screen">
       <Navbar />
-      <div className="bg-gray-200 ">
+      <div className="bg-white-200 ">
 
-      <div className="bg-white lg:mx-[180px] mt-18 mb-8">
+      <div className="bg-white lg:mx-[180px] mt-22 mb-8 shadow-xl rounded-2xl p-4">
         <div className="grid gap-4">
           <div className="flex flex-col items-center mx-44 py-5">
             <span className="text-red-600 text-4xl font-bold block mb-4">Build your Meal</span>
