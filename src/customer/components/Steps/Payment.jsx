@@ -36,24 +36,32 @@ const Payment = () => {
         .toISOString()
         .split("T")[0];
 
-      // Parse the time string
-      const timeParts = startTime.split(":");
-      const hours = parseInt(timeParts[0]);
-      const minutes = parseInt(timeParts[1].split(" ")[0]);
-      const meridiem = timeParts[1].split(" ")[1];
-
-      // Adjust hours for PM
-      const adjustedHours = meridiem === "PM" ? hours + 12 : hours;
-
-      // Create Date object
-      const date = new Date();
-      date.setHours(adjustedHours, minutes, 0, 0);
-
       // Format scheduled time
-      const formattedScheduledTime = date
-        .toISOString()
-        .split("T")[1]
-        .split(".")[0];
+      let formattedScheduledTime = "";
+
+      if (startTime) {
+        const [timeValue, period] = startTime.split(" ");
+        const [hours, minutes] = timeValue.split(":");
+
+        if (period === "PM" && hours !== "12") {
+          formattedScheduledTime = `${parseInt(hours) + 12}:${minutes.padStart(
+            2,
+            "0"
+          )}:00`;
+        } else if (period === 'AM' && hours === '12') {
+          formattedScheduledTime = `00:${minutes.padStart(2, "0")}:00`;
+        } else {
+          formattedScheduledTime = `${hours.padStart(2, "0")}:${minutes.padStart(2, "0")}:00`;
+        }
+        
+        
+        console.log(timeValue)
+        console.log(period)
+        console.log(hours)
+        console.log(minutes)
+        console.log(formattedScheduledTime)
+
+      }
 
       const deliverDetailsData = {
         delivery_address: selectedAddress,
@@ -70,6 +78,7 @@ const Payment = () => {
         start_date: formattedScheduledDate,
         duration: `${numberOfDays}D`,
         delivery_address: selectedAddress,
+        delivery_time: formattedScheduledTime,
         plan: selectedPlan,
         addons: selectedAddons,
         total: planTotal,
@@ -88,7 +97,7 @@ const Payment = () => {
           },
         }
       );
-
+      console.log(subscriptionData);
       console.log("Subscription placed:", response.data);
       console.log(response.data.online_payment_response.payment_url);
       window.location.replace(
@@ -105,8 +114,8 @@ const Payment = () => {
         <span className="text-red-600 text-4xl font-bold block mb-4">
           Payment
         </span>
-        <span className="text-red-600 text-xl font-bold block">
-          Almost there!
+        <span className="text-gray-700 text-2xl font-bold block">
+          Almost there! Please proceed to confirm your subscription.
         </span>
       </div>
       <img src={KhaltiImg} alt="Khalti Logo" />

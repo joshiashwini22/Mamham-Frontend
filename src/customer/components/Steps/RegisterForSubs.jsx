@@ -10,15 +10,17 @@ const RegisterForSubs = ({onLoginSuccess,setCurrentStep, setDirection}) => {
     console.log('Login successful');
     localStorage.setItem('registrationCompleted', 'true');
     onLoginSuccess(); 
+    
   };
   
   if (isAuthenticated && setDirection === "back"){
     setCurrentStep(1)
-    window.location.reload();
 
   }
   else if (isAuthenticated && setDirection === "next"){
     setCurrentStep(3)
+    window.location.reload()
+
   }
   
   return (

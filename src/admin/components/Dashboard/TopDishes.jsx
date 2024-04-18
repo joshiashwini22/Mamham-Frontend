@@ -3,7 +3,7 @@ import axios from "axios";
 import { Bar } from "react-chartjs-2";
 
 const TopDishes = () => {
-  const [topDishesData, setTopDishesData] = useState({
+  const [topDishes, setTopDishes] = useState({
     labels: [],
     datasets: [
       {
@@ -24,17 +24,18 @@ const TopDishes = () => {
     try {
       
       const response = await axios.get("http://127.0.0.1:8000/api/customization/dashboard/order");
-      const topDishes = response.data.top_dishes_data;
+      console.log(response)
+      const topDish = response.data.top_dishes_data;
 
-      const labels = topDishes.map(dish => dish.dish__name);
-      const quantities = topDishes.map(dish => dish.quantity);
+      const labels = topDish.map(dish => dish.dish__name);
+      const quantities = topDish.map(dish => dish.quantity);
 
-      setTopDishesData({
-        ...topDishesData,
+      setTopDishes({
+        ...topDishes,
         labels: labels,
         datasets: [
           {
-            ...topDishesData.datasets[0],
+            ...topDishes.datasets[0],
             data: quantities
           }
         ]
@@ -47,26 +48,7 @@ const TopDishes = () => {
   return (
     <div>
       <h2>Top 5 Ordered Dishes</h2>
-      <Bar
-        data={topDishesData}
-        options={{
-          scales: {
-            y: {
-              beginAtZero: true
-            }
-          },
-          plugins: {
-            title: {
-              display: true,
-              text: "Top 5 Ordered Dishes",
-              fontSize: 20
-            },
-            legend: {
-              display: false
-            }
-          }
-        }}
-      />
+      
     </div>
   );
 };

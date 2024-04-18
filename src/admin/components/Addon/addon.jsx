@@ -35,78 +35,88 @@ const Addon = () => {
     <>
       <Sidebar />
       <div className="bg-white sm:ml-64">
-        <section className="bg-white min-h-screen py-12 lg:mx-[10px]">
-          <div className="relative overflow-x-auto container">
-            <div className="flex flex-col sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-center pb-4">
-              <div>
-                <span className="text-red-700 text-4xl font-bold block mb-4 ">
-                  Addons
-                </span>
+      <section className="bg-white min-h-screen py-12 lg:mx-[10px]">
+        <div className="max-w-screen-xl mx-auto px-4 md:px-8">
+          <div className="items-start justify-between md:flex">
+              <div className="max-w-lg">
+                    <h3 className="text-gray-800 text-xl font-bold sm:text-2xl">
+                    Addons                    
+                    </h3>
+                    <p className="text-gray-600 mt-2">
+                        Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                    </p>
+                </div>
+                <div className="mt-3 md:mt-0">
                 <a
                   href="/addon-create"
-                  className="flex items-center p-2 text-red-700 rounded-lg dark:text-white"
-                >
-                  <button
-                    id="dropdownRadioButton"
-                    data-dropdown-toggle="dropdownRadio"
-                    className="p-4 rounded inline-flex items-center bg-red-700 text-white border border-gray-300"
-                    type="button"
+                  className="inline-block px-4 py-2 text-white duration-150 font-medium bg-indigo-600 rounded-lg hover:bg-indigo-500 active:bg-indigo-700 md:text-sm"
                   >
-                    + Add
-                  </button>
-                </a>
-              </div>
-            </div>
-            <div className="flex justify-center">
-              <table className="table-auto">
-                <thead>
-                  <tr>
-                    <th scope="col" className="px-4 py-2">Addon Id</th>
-                    <th scope="col" className="px-4 py-2">Name</th>
-                    <th scope="col" className="px-4 py-2">Price</th>
-                    <th scope="col" className="px-4 py-2">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {loading? ( <tr>
-                      <td colSpan="11">Loading...</td>
-                    </tr>): error ? (
-                      <tr>
-                      <td colSpan="11">Error: {error.message}</td>
-                    </tr>
-                    ) :addons && addons.length > 0 ? (
-                    addons.map((addon) => (
-                    <tr key={addon.id}>
-                      <td className="border px-4 py-2">{addon.id}</td>
-                      <td className="border px-4 py-2">{addon.name}</td>
-                      <td className="border px-4 py-2">{addon.price}</td>
-                      <td className="border px-4 py-2">
-                        <button
-                          onClick={() => handleEdit(addon.id)}
-                          className="bg-blue-500 text-white px-2 py-1 rounded-md mr-2"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDelete(addon.id)}
-                          className="bg-red-500 text-white px-2 py-1 rounded-md"
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                  ): (
-                    <tr>
-                      <td colSpan="11">No addons found</td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+                  <button
+                   id="dropdownRadioButton"
+                   data-dropdown-toggle="dropdownRadio"
+                   className=""
+                   type="button"
+                    >
+                        + Add
+                    </button>
+                    </a>
+
+                </div>
           </div>
-        </section>
-        <ToastContainer/>
+          <div className="mt-12 relative h-max overflow-auto">
+          <table className="w-full table-auto text-sm text-left">
+                <thead className="text-gray-600 font-medium border-b">
+                        <tr>
+                            <th className="py-3 pr-6">Addon Id</th>
+                            <th className="py-3 pr-6">Name</th>
+                            <th className="py-3 pr-6">Price</th>
+                            <th className="py-3 pr-6">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody className="text-gray-600 divide-y">
+                        {loading? ( <tr>
+                          <td colSpan="11">Loading...</td>
+                        </tr>): error ? (
+                          <tr>
+                          <td colSpan="11">Error: {error.message}</td>
+                        </tr>
+                        ) :addons && addons.length > 0 ? (
+                          addons.map((addon) => (
+                          <tr key={addon.id}>
+                            <td className="pr-6 py-4 whitespace-nowrap">{addon.id}</td>
+                            <td className="pr-6 py-4 whitespace-nowrap">{addon.name}</td>
+                            <td className="pr-6 py-4 whitespace-nowrap">{addon.price}</td>
+                            <td className="pr-6 py-4 whitespace-nowrap">
+                              <button
+                              onClick={() => handleEdit(addon.id)}
+                              className="bg-blue-500 text-white px-2 py-1 rounded-md mr-2"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              onClick={() => handleDelete(addon.id)}
+                              className="bg-red-500 text-white px-2 py-1 rounded-md"
+                            >
+                              Delete
+                            </button>
+                           
+                            </td>
+
+
+                          </tr>
+                          ))
+                        ): (
+                          <tr>
+                            <td colSpan="11">No dishes found</td>
+                          </tr>
+                        )}
+                    </tbody>
+          </table>
+
+          </div>
+        </div>
+      </section>
+
       </div>
     </>
   );

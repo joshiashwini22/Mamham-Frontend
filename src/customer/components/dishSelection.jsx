@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import LoginImg from "../../assets/images/Login.png";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -11,7 +11,6 @@ const DishSelection = ({ category, onAddSelectedDish }) => {
   const [selectedDishId, setSelectedDishId] = useState(null);
   const [selectedPortion, setSelectedPortion] = useState(null);
   const [cartItems, setCartItems] = useState([]);
-  const [totalPortions, setTotalPortions] = useState(0); // Track total portions
   const maxPortions = 15; // Maximum allowed portions
   const defaultImage = LoginImg;
 
@@ -31,56 +30,51 @@ const DishSelection = ({ category, onAddSelectedDish }) => {
     fetchDishes();
   }, [category]);
 
-  const handleSelectDish = (index) => {
-    console.log("Selected index:", index);
-    const selectedDishId = dishes[index]?.id; // Get the ID of the dish at the specified index
-    console.log("Selected dish ID:", selectedDishId);
-    setSelectedDishId(selectedDishId); // Set the selected dish ID
-  };
+  
 
+  const handleSelectDish = (index) => {
+    const selectedDishId = dishes[index]?.id;
+    setSelectedDishId(selectedDishId);
+  };
+  
+  
   const handleSelectPortion = (e) => {
+    if (!selectedDishId) {
+        toast.error("Please select a dish.");
+   
+    }
     const portion = parseInt(e.target.value);
     if (portion < 1 || portion > maxPortions) {
       toast.error(`Please enter a portion value between 1 and ${maxPortions}.`);
       return;
     }
-    if (totalPortions + portion > maxPortions) {
+    if (portion > maxPortions) {
       toast.error(`Maximum portions allowed (${maxPortions}) exceeded.`);
       return;
     }
-    setSelectedPortion(portion); // Set the selected portion
-    handleAddToCart()
+    setSelectedPortion(portion);
+
   };
+  useEffect(() => {
+    console.log(selectedPortion)
+    // Call handleAddToCart() whenever selectedPortion changes
+    handleAddToCart();
+  }, [selectedPortion, selectedDishId]); 
 
   const handleAddToCart = (e) => {
-    if (!selectedDishId || !selectedPortion) {
-      if (!selectedDishId) {
-        toast.error('Please select a dish.');
-      }
-      if (!selectedPortion) {
-        toast.error('Please specify the portion.');
-      }
-      return;
-    }
+    
     if (selectedDishId && selectedPortion) {
-      // Find the selected dish by its ID
       const selectedDish = dishes.find((dish) => dish.id === selectedDishId);
       if (selectedDish) {
-        // Add the selected dish and portion to the cart
         const newItem = {
           id: selectedDishId,
           name: selectedDish.name,
           image: selectedDish.image,
           price: selectedDish.price,
-          portion: selectedPortion
+          portion: selectedPortion,
         };
-        console.log(newItem);
         setCartItems([...cartItems, newItem]);
-        setTotalPortions(selectedPortion); // Update total portions
-        onAddSelectedDish(newItem)
-        console.log(
-          `Added dish ${selectedDish.image}  ${selectedDish.name} ${selectedDishId} with portion ${selectedPortion} to the cart`
-        );
+        onAddSelectedDish(newItem);
       } else {
         console.error("Selected dish not found");
       }
@@ -89,10 +83,15 @@ const DishSelection = ({ category, onAddSelectedDish }) => {
     }
   };
 
+
+
   return (
     <div>
       <div className="flex items-center mx-6 text-sm">
-        <label htmlFor={category} className="mb-3 mr-3 font-semibold w-20 flex items-center">
+        <label
+          htmlFor={category}
+          className="mb-3 mr-3 font-semibold w-20 flex items-center"
+        >
           {category}
         </label>
         <select
@@ -108,14 +107,13 @@ const DishSelection = ({ category, onAddSelectedDish }) => {
         <input
           type="number"
           min="1"
-          max={maxPortions - totalPortions} // Limit the max value based on remaining portions
+          max={maxPortions} // Limit the max value based on remaining portions
           className="mb-3 py-2 mr-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
           placeholder="Enter portion"
           onChange={handleSelectPortion}
         />
-        
       </div>
-  
+
       {/* <DishImagePreview dishId={selectedDishId} defaultImage={defaultImage} />
       <div className="mt-4">
         <h2 className="font-semibold text-lg">Cart</h2>
@@ -130,7 +128,6 @@ const DishSelection = ({ category, onAddSelectedDish }) => {
       {/* <ToastContainer/> */}
     </div>
   );
-  
 };
 
 const DishImagePreview = ({ dishId, defaultImage }) => {

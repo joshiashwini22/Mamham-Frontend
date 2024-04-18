@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Sidebar from "../../sidebar";
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -9,8 +10,11 @@ const PlanCreate = ({ onPlanCreated }) => {
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
+  const navigate = useNavigate();
 
   
+  
+
   const handleImageChange = (e) => {
     setImage(e.target.files[0]);
   };
@@ -33,8 +37,7 @@ const PlanCreate = ({ onPlanCreated }) => {
         }
       );
 
-      // Show toast
-      toast.success("Plan created successfully!");
+     
 
       if (onPlanCreated) {
         onPlanCreated(response.data);
@@ -45,12 +48,21 @@ const PlanCreate = ({ onPlanCreated }) => {
       setPrice("");
       setDescription("");
       setImage(null);
+
+
+      setTimeout(() => {
+        navigate("/plans");
+      },1000); // Adjust the delay as needed
+      // Show toast
+      toast.success("Plan  created successfully!");
     } catch (error) {
       console.error("Error creating plan:", error);
       toast.error("Error creating plan.  Please provide all values.");
     }
   };
-
+  const handleCancel = () => {
+    navigate(-1);
+  };
   return (
     <>
       <Sidebar />
@@ -132,10 +144,17 @@ const PlanCreate = ({ onPlanCreated }) => {
             <button
               type="button"
               onClick={handleCreatePlan}
-              className="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center border border-gray-300 text-blue bg-red-700 rounded-lg focus:ring-2 focus:ring-primary-600 hover:bg-primary-800"
+              className="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center border border-gray-300 text-blue bg-red-700 rounded-lg focus:ring-2 focus:ring-primary-600 hover:bg-primary-800 text-white"
             >
             Add
             </button>
+            <button
+                type="button"
+                onClick={handleCancel}
+                className="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center border border-gray-300 text-blue bg-gray-300 rounded-lg focus:ring-4 focus:ring-primary-200 hover:bg-gray-400"
+              >
+                Back
+              </button>
           </form>
         </div>
         <ToastContainer />

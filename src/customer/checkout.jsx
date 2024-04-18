@@ -79,23 +79,29 @@ const CheckoutPage = () => {
     if (deliveryOption === "asap") {
       const today = new Date();
       setScheduledDate(today.toISOString().split("T")[0]);
-
+  
       let currentHour = today.getHours();
       const currentMinute = today.getMinutes();
       let nearestHour = Math.ceil(currentMinute / 30) * 0.5 + currentHour;
-
+  
       if (nearestHour > 20) {
         nearestHour = 20;
       }
-      let nearestTime = `${Math.floor(nearestHour)}:${today.getMinutes()}`;
+  
+      // Ensure minutes are padded with leading zeros
+      const formattedMinutes = currentMinute.toString().padStart(2, "0");
+  
+      // Format nearest time with leading zeros if necessary
+      let nearestTime = `${Math.floor(nearestHour)}:${formattedMinutes}`;
       if (nearestTime.length === 4) nearestTime = "0" + nearestTime; // Add leading zero if minute is a single digit
-
+  
       setScheduledTime(nearestTime);
       console.log(scheduledTime);
       console.log(nearestTime);
       console.log(scheduledDate);
     }
   }, [deliveryOption, scheduledDate, scheduledTime]);
+  
 
   const handleDeliveryOptionChange = (option) => {
     setDeliveryOption(option);
@@ -108,8 +114,12 @@ const CheckoutPage = () => {
   const handleScheduledTimeChange = (e) => {
     setScheduledTime(e.target.value);
     console.log("Selected Time:", e.target.value); // Log the selected time
-    console.log("Selected Time:", scheduledTime); // Log the selected time
   };
+
+  useEffect(() => {
+    console.log(scheduledTime)
+    // Call handleAddToCart() whenever selectedPortion changes
+  }, [scheduledTime]); 
 
   useEffect(() => {
     if (!scheduledDate) return; // If no date selected, return

@@ -30,7 +30,7 @@ function Custom() {
 
     if (existingIndex !== -1) {
       const updatedSelectedDishes = [...selectedDishes];
-      updatedSelectedDishes[existingIndex].portion = +updatedSelectedDishes[existingIndex].portion + +dish.portion;
+      updatedSelectedDishes[existingIndex].portion = dish.portion;
       setSelectedDishes(updatedSelectedDishes);
       localStorage.setItem("selectedDishes", JSON.stringify(updatedSelectedDishes));
       toast.success('Dish added successfully!');
@@ -87,7 +87,7 @@ function Custom() {
       <div className="bg-white lg:mx-[180px] mt-22 mb-8 shadow-xl rounded-2xl p-4">
         <div className="grid gap-4">
           <div className="flex flex-col items-center mx-44 py-5">
-            <span className="text-red-600 text-4xl font-bold block mb-4">Build your Meal</span>
+            <span className="text-red-600 text-4xl font-bold bl ock mb-4">Build your Meal</span>
             <span className="text-gray-700 block">Select items to create your own dish!</span>
           </div>
           <div className="grid lg:grid-cols-2 lg:gap-5 mx-4">
@@ -104,7 +104,7 @@ function Custom() {
                 address={address}
                 paymentOption={paymentOption}
                 onAddressChange={handleAddressChange}
-                onPaymentChange={handlePaymentChange}
+                onPaymentChange={handlePaymentChange}  
                 onProceedToCheckout={handleProceedToCheckout}
                 />
             </div>

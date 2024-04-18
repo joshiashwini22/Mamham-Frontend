@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 const useFetch = (url) => {
   const [data, setData] = useState([]);
@@ -8,9 +8,16 @@ const useFetch = (url) => {
 
   const fetchData = async () => {
     setLoading(true);
+    const accessToken = localStorage.getItem("access_token");
+    const authorizationHeader = {};
+    if (accessToken !== undefined || accessToken !== null) {
+      authorizationHeader.Authorization = `Bearer ${accessToken}`;
+    }
     try {
-      const response = await axios.get(url);
-      
+      const response = await axios.get(url, {
+        headers: { ...authorizationHeader },
+      });
+
       setData(response.data);
       setError(null);
     } catch (error) {
@@ -27,9 +34,9 @@ const useFetch = (url) => {
   const deleteItem = async (id) => {
     try {
       await axios.delete(`${url}/${id}`);
-      setData(data.filter(item => item.id !== id));
+      setData(data.filter((item) => item.id !== id));
     } catch (error) {
-      console.error('Error deleting item:', error);
+      console.error("Error deleting item:", error);
     }
   };
 

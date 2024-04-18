@@ -5,8 +5,6 @@ import axios from "axios";
 const DeliveryAddress = ({ onSave }) => {
   const [deliveryLocation, setDeliveryLocation] = useState("");
   const [addressTitle, setAddressTitle] = useState("");
-  const [latitude, setLatitude] = useState("");
-  const [longitude, setLongitude] = useState("");
   const [city, setCity] = useState("");
   const [addressLine, setAddressLine] = useState("");
   const [error, setError] = useState("");
@@ -92,45 +90,8 @@ const DeliveryAddress = ({ onSave }) => {
             className="mt-1 p-2 border border-gray-300 rounded-md w-full"
             required
           />
-          <p className="text-red-500 text-sm mt-1">
-            Address title is required.
-          </p>
+          
         </div>
-        {/* <div className="grid grid-cols-2 gap-4 mb-4">
-          <div>
-            <label
-              htmlFor="latitude"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Latitude *
-            </label>
-            <input
-              type="number"
-              id="latitude"
-              name="latitude"
-              value={latitude}
-              onChange={(e) => setLatitude(parseFloat(e.target.value))}
-              className="mt-1 p-2 border border-gray-300 rounded-md w-full"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="longitude"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Longitude
-            </label>
-            <input
-              type="number"
-              id="longitude"
-              name="longitude"
-              value={longitude}
-              onChange={(e) => setLongitude(parseFloat(e.target.value))}
-              className="mt-1 p-2 border border-gray-300 rounded-md w-full"
-            />
-          </div>
-        </div>
-     */}
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div>
             <label

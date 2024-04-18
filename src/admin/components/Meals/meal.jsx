@@ -29,86 +29,96 @@ const Meal = () => {
     <>
       <Sidebar />
       <div className="bg-white sm:ml-64">
-        <section className="bg-white min-h-screen py-12 lg:mx-[10px]">
-          <div className="relative overflow-x-auto container">
-            <div className="flex flex-col sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-center pb-4">
-              <div>
-                <span className="text-red-700 text-4xl font-bold block mb-4 ">
-                  Meals
-                </span>
+      <section className="bg-white min-h-screen py-12 lg:mx-[10px]">
+        <div className="max-w-screen-xl mx-auto px-4 md:px-8">
+          <div className="items-start justify-between md:flex">
+              <div className="max-w-lg">
+                    <h3 className="text-gray-800 text-xl font-bold sm:text-2xl">
+                    Meals                    
+                    </h3>
+                    <p className="text-gray-600 mt-2">
+                        Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                    </p>
+                </div>
+                <div className="mt-3 md:mt-0">
                 <a
                   href="/meals-create"
-                  className="flex items-center p-2 text-red-700 rounded-lg dark:text-white"
-                >
-                  <button
-                    id="dropdownRadioButton"
-                    data-dropdown-toggle="dropdownRadio"
-                    className="p-4 rounded inline-flex items-center bg-[#93040B] text-white border border-gray-300"                    
-                    type="button"
+                  className="inline-block px-4 py-2 text-white duration-150 font-medium bg-indigo-600 rounded-lg hover:bg-indigo-500 active:bg-indigo-700 md:text-sm"
                   >
-                    + Add
-                  </button>
-                </a>
-              </div>
-            </div>
-            <div className="flex justify-center">
+                  <button
+                   id="dropdownRadioButton"
+                   data-dropdown-toggle="dropdownRadio"
+                   className=""
+                   type="button"
+                    >
+                        + Add
+                    </button>
+                    </a>
 
-            <table className="table-auto">
-              <thead>
-                <tr>
-                  <th scope="col" className="px-4 py-2">ID</th>
-                  <th scope="col" className="px-4 py-2">Name</th>
-                  <th scope="col" className="px-4 py-2">Description</th>
-                  <th scope="col" className="px-4 py-2">Image</th>
-                  <th scope="col" className="px-4 py-2">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {loading? ( <tr>
-                    <td colSpan="11">Loading...</td>
-                  </tr>): error ? (
-                      <tr>
-                    <td colSpan="11">Error: {error.message}</td>
-                  </tr>
-                  ) :meals && meals.length > 0 ? (
-                      meals.map((meal) => (
-                  <tr key={meal.id}>
-                    <td className="border px-4 py-2">{meal.id}</td>
-                    <td className="border px-4 py-2">{meal.name}</td>
-                    <td className="border px-4 py-2">{meal.description}</td>
-                    <td className="border px-4 py-2">
-                      <img
-                        src={meal.image}
-                        alt="Meal"
-                        className="mt-2 w-24 h-24 object-fit rounded-lg"
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <button
-                        onClick={() => handleEdit(meal.id)}
-                        className="bg-blue-500 text-white px-2 py-1 rounded-md mr-2"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(meal.id)}
-                        className="bg-red-500 text-white px-2 py-1 rounded-md"
-                        >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))
-                ): (
-                    <tr>
-                    <td colSpan="11">No meals found</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-                      </div>
+                </div>
           </div>
-        </section>
+          <div className="mt-12 relative h-max overflow-auto">
+          <table className="w-full table-auto text-sm text-left">
+                <thead className="text-gray-600 font-medium border-b">
+                        <tr>
+                            <th className="py-3 pr-6">Id</th>
+                            <th className="py-3 pr-6">Name</th>
+                            <th className="py-3 pr-6">Description</th>
+                            <th className="py-3 pr-6">Image</th>
+                            <th className="py-3 pr-6">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody className="text-gray-600 divide-y">
+                        {loading? ( <tr>
+                          <td colSpan="11">Loading...</td>
+                        </tr>): error ? (
+                          <tr>
+                          <td colSpan="11">Error: {error.message}</td>
+                        </tr>
+                        ) :meals && meals.length > 0 ? (
+                          meals.map((meal) => (
+                          <tr key={meal.id}>
+                            <td className="pr-6 py-4 whitespace-nowrap">{meal.id}</td>
+                            <td className="pr-6 py-4 whitespace-nowrap">{meal.name}</td>
+                            <td className="pr-6 py-4 whitespace-nowrap">{meal.description}</td>
+                            <td className="pr-6 py-4 whitespace-nowrap">
+                              <img
+                                src={meal.image}
+                                alt="Dish"
+                                className="mt-2 w-24 h-24 object-fit rounded-lg"
+                              />                             
+                            </td>
+                            <td className="pr-6 py-4 whitespace-nowrap">
+                              <button
+                              onClick={() => handleEdit(meal.id)}
+                              className="bg-blue-500 text-white px-2 py-1 rounded-md mr-2"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              onClick={() => handleDelete(meal.id)}
+                              className="bg-red-500 text-white px-2 py-1 rounded-md"
+                            >
+                              Delete
+                            </button>
+                           
+                            </td>
+
+
+                          </tr>
+                          ))
+                        ): (
+                          <tr>
+                            <td colSpan="11">No dishes found</td>
+                          </tr>
+                        )}
+                    </tbody>
+          </table>
+
+          </div>
+        </div>
+      </section>
+
       </div>
     </>
   );

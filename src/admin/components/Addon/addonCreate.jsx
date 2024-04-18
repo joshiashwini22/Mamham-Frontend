@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import Sidebar from "../../sidebar";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from 'react-router-dom';
 import "react-toastify/dist/ReactToastify.css";
 
 const AddonCreate = ({ onAddonCreated }) => {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
+  const navigate = useNavigate();
 
 
   const handleCreateAddon = async () => {
@@ -35,12 +37,19 @@ const AddonCreate = ({ onAddonCreated }) => {
       // Reset the form
       setName("");
       setPrice("");
+      setTimeout(() => {
+        navigate("/addons");
+      },1000); // Adjust the delay as needed
+      // Show toast
+      toast.success("Addon  created successfully!");
     } catch (error) {
       console.error("Error creating addon:", error);
       toast.error("Error creating addon. Please provide all values.");
     }
   };
-
+  const handleCancel = () => {
+    navigate(-1);
+  };
   return (
     <>
       <Sidebar />
@@ -91,10 +100,17 @@ const AddonCreate = ({ onAddonCreated }) => {
             <button
               type="button"
               onClick={handleCreateAddon}
-              className="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center border border-gray-300 text-blue bg-red-700 rounded-lg focus:ring-2 focus:ring-primary-600 hover:bg-primary-800"
+              className="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center border border-gray-300 text-blue bg-red-700 rounded-lg focus:ring-2 focus:ring-primary-600 hover:bg-primary-800 text-white"
             >
               Add
             </button>
+            <button
+                type="button"
+                onClick={handleCancel}
+                className="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center border border-gray-300 text-blue bg-gray-300 rounded-lg focus:ring-4 focus:ring-primary-200 hover:bg-gray-400"
+              >
+                Back
+              </button>
           </form>
         </div>
         <ToastContainer />

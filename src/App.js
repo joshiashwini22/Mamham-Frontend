@@ -37,6 +37,7 @@ import MySubscriptions from "./customer/mySubscriptions";
 import AdminNotification from "./admin/components/adminNotification";
 import SubscriptionDelivery from "./admin/components/Subscription/subscriptionDelivery";
 import ModifyDelivery from "./customer/modifyDelivery";
+import PaymentCompletion from "./common/paymentCompletion";
 
 
 const App = () => {
@@ -58,6 +59,7 @@ const App = () => {
           <Route path="/ourmenu" element={<OurMenu />} />
           <Route path="/ourplans" element={<OurPlans />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/payment-completion" element={<PaymentCompletion />} />
           <Route path="/dishes" element={<Dishes />} />
           <Route path="/dishes-create" element={<DishCreate />} />
           <Route path="/dishes-update/:id" element={<DishEdit />} />

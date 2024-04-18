@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Sidebar from "../../sidebar";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
@@ -10,6 +11,7 @@ const DishCreate = ({ onDishCreated }) => {
   const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("");
+  const navigate = useNavigate();
 
   // Define dish options
   const dishOptions = ["Base", "Lentil", "Veggie", "Protein", "Pickle"];
@@ -37,8 +39,7 @@ const DishCreate = ({ onDishCreated }) => {
         }
       );
 
-      // Show toast
-      toast.success("Dish created successfully!");
+      
 
       if (onDishCreated) {
         onDishCreated(response.data);
@@ -50,6 +51,13 @@ const DishCreate = ({ onDishCreated }) => {
       setDescription("");
       setImage(null);
       setSelectedCategory("");
+
+      // Navigate after a short delay
+      setTimeout(() => {
+        navigate("/dishes");
+      },1000); // Adjust the delay as needed
+      // Show toast
+      toast.success("Dish created successfully!");
     } catch (error) {
       console.error("Error creating dish:", error);
       toast.error("Error creating dish. Please provide all values.");
@@ -159,7 +167,7 @@ const DishCreate = ({ onDishCreated }) => {
             <button
               type="button"
               onClick={handleCreateDish}
-              className="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center border border-gray-300 text-blue bg-red-700 rounded-lg focus:ring-2 focus:ring-primary-600 hover:bg-primary-800"
+              className="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center border border-gray-300 text-blue bg-red-700 rounded-lg focus:ring-2 focus:ring-primary-600 hover:bg-primary-800 text-white"
             >
               Add
             </button>

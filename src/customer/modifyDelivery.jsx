@@ -23,7 +23,6 @@ const ModifyDelivery = ({ onEdit }) => {
     `http://127.0.0.1:8000/api/subscription/customer-deliveries/${customerId}/${id}`
   );
 
-
   const [editedDelivery, setEditedDelivery] = useState(null);
   const [showPopup, setShowPopup] = useState(false); // State for controlling the popup
 
@@ -149,32 +148,37 @@ const ModifyDelivery = ({ onEdit }) => {
 
   const isDeliveryWithin24Hours = (deliveryDate) => {
     const today = new Date();
-  const deliveryDateTime = new Date(deliveryDate);
-  const timeDifference = deliveryDateTime.getTime() - today.getTime();
-  const hoursDifference = Math.floor(timeDifference / (1000 * 60 * 60));
-  return hoursDifference > 24;
+    const deliveryDateTime = new Date(deliveryDate);
+    const timeDifference = deliveryDateTime.getTime() - today.getTime();
+    const hoursDifference = Math.floor(timeDifference / (1000 * 60 * 60));
+    return hoursDifference > 24;
   };
-  
 
   return (
     <>
       <Navbar />
-      <section className="bg-white">
-        <div className="flex justify-center items-center">
-          <h2 className="mb-4 text-xl font-bold text-red-700">
-            Update Delivery Details
-          </h2>
-          {/* Button to toggle popup */}
-          <button
-            className="bg-green-500 text-white px-2 py-1 rounded-md ml-2"
-            onClick={() => setShowPopup(true)}
-          >
-            Add Address
-          </button>
+      <div className="max-w-screen-xl mx-auto px-4 md:px-8 pt-10">
+        <div className="items-start justify-between md:flex">
+          <div className="max-w-lg">
+            <h3 className="text-gray-800 text-xl font-bold sm:text-2xl">
+              Update Delivery Details
+            </h3>
+            <p className="text-gray-600 mt-2">
+              You can modify delivery address or location if required 24 hours before delivery. Please reach out if you have any queries.
+            </p>
+          </div>
+          <div className="mt-3 md:mt-0">
+            <button
+              className="bg-green-500 text-white px-2 py-1 rounded-md ml-2"
+              onClick={() => setShowPopup(true)}
+            >
+              Add Address
+            </button>
+          </div>
         </div>
-        <div className="flex justify-center items-center py-8 px-4 max-w-2xl lg:py-16">
-          <table className="table-auto">
-            <thead>
+        <div className="mt-12 relative h-max overflow-auto">
+          <table className="w-full table-auto text-sm text-left">
+            <thead className="text-gray-600 font-medium border-b">
               <tr>
                 <th className="px-4 py-2">Day</th>
                 <th className="px-4 py-2">Delivery Date</th>
@@ -199,14 +203,13 @@ const ModifyDelivery = ({ onEdit }) => {
                 deliverySubscription.length > 0 ? (
                 deliverySubscription.map((delivery, index) => (
                   <tr key={delivery.id}>
-                    <td className="border px-4 py-2">{index + 1}</td>{" "}
-                    {/* Index column */}
-                    <td className="border px-4 py-2">
+                    <td className="pr-6 py-4 whitespace-nowrap">{index + 1}</td>{" "}
+                    <td className="pr-6 py-4 whitespace-nowrap">
                       {editedDelivery && editedDelivery.id === delivery.id
                         ? delivery.delivery_date
                         : delivery.delivery_date}
                     </td>
-                    <td className="border px-4 py-2">
+                    <td className="pr-6 py-4 whitespace-nowrap">
                       {editedDelivery && editedDelivery.id === delivery.id ? (
                         <input
                           type="time"
@@ -221,7 +224,7 @@ const ModifyDelivery = ({ onEdit }) => {
                         delivery.delivery_time
                       )}
                     </td>
-                    <td className="border px-4 py-2">
+                    <td className="pr-6 py-4 whitespace-nowrap">
                       {editedDelivery && editedDelivery.id === delivery.id ? (
                         <select
                           name="deliveryAddress"
@@ -248,7 +251,7 @@ const ModifyDelivery = ({ onEdit }) => {
                         "N/A"
                       )}
                     </td>
-                    <td className="border px-4 py-2">
+                    <td className="pr-6 py-4 whitespace-nowrap">
                       {editedDelivery && editedDelivery.id === delivery.id ? (
                         <select
                           name="status"
@@ -263,7 +266,7 @@ const ModifyDelivery = ({ onEdit }) => {
                         delivery.status
                       )}
                     </td>
-                    <td className="border px-4 py-2">
+                    <td className="text-right whitespace-nowrap">
                       {editedDelivery && editedDelivery.id === delivery.id ? (
                         <>
                           <button
@@ -281,14 +284,18 @@ const ModifyDelivery = ({ onEdit }) => {
                         </>
                       ) : (
                         <button
-                        className={`bg-blue-500 text-white px-2 py-1 rounded-md mr-2 ${
-                          isDeliveryWithin24Hours(delivery.delivery_date) ? "" : "disabled:opacity-50 cursor-not-allowed"
-                        }`}
-                        onClick={() => handleEditClick(delivery)}
-                        disabled={!isDeliveryWithin24Hours(delivery.delivery_date)}
-                      >
-                        Edit
-                      </button>
+                          className={`bg-blue-500 text-white px-2 py-1 rounded-md mr-2 ${
+                            isDeliveryWithin24Hours(delivery.delivery_date)
+                              ? ""
+                              : "disabled:opacity-50 cursor-not-allowed"
+                          }`}
+                          onClick={() => handleEditClick(delivery)}
+                          disabled={
+                            !isDeliveryWithin24Hours(delivery.delivery_date)
+                          }
+                        >
+                          Edit
+                        </button>
                       )}
                     </td>
                   </tr>
@@ -300,16 +307,18 @@ const ModifyDelivery = ({ onEdit }) => {
               )}
             </tbody>
           </table>
-          {/* Popup component */}
-          {showPopup && (
-            <Popup
-              onClose={() => setShowPopup(false)}
-              content={<DeliveryAddress onSave={handleSaveAddress} />}
-            />
-          )}
         </div>
-        <ToastContainer />
-      </section>
+
+        {/* Popup component */}
+        {showPopup && (
+          <Popup
+            onClose={() => setShowPopup(false)}
+            content={<DeliveryAddress onSave={handleSaveAddress} />}
+          />
+        )}
+      </div>
+
+      <ToastContainer />
     </>
   );
 };

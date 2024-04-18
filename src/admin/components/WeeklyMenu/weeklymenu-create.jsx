@@ -3,6 +3,7 @@ import Sidebar from "../../sidebar";
 import axios from "axios";
 import useFetch from "../../../common/useFetch";
 import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from 'react-router-dom';
 import "react-toastify/dist/ReactToastify.css";
 
 const WeeklymenuCreate = ({ onMenuCreated }) => {
@@ -12,6 +13,7 @@ const WeeklymenuCreate = ({ onMenuCreated }) => {
   const [menuItems, setMenuItems] = useState([]);
   const [selectedMeals, setSelectedMeals] = useState([]);
   const [endDate, setEndDate] = useState(""); // State for end date
+  const navigate = useNavigate();
 
   // Fetch plans and meals
   const {
@@ -81,7 +83,9 @@ const WeeklymenuCreate = ({ onMenuCreated }) => {
     setSelectedStartDate(sundayOfSameWeek.toISOString().split("T")[0]); // Update the state with the Sunday of the same week
     calculateEndDate(sundayOfSameWeek); // Calculate the end date based on the Sunday of the same week
   };
-  
+  const handleCancel = () => {
+    navigate(-1);
+  };
   return (
     <>
       <Sidebar />
@@ -161,10 +165,17 @@ const WeeklymenuCreate = ({ onMenuCreated }) => {
             <button
               type="button"
               onClick={handleCreateMenu}
-              className="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm "
+              className="inline-flex items-center mr-4 px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center border border-gray-300 text-blue bg-red-700 rounded-lg focus:ring-2 focus:ring-primary-600 hover:bg-primary-800 text-white"
             >
               Add
             </button>
+            <button
+                type="button"
+                onClick={handleCancel}
+                className="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center border border-gray-300 text-blue bg-gray-300 rounded-lg focus:ring-4 focus:ring-primary-200 hover:bg-gray-400"
+              >
+                Back
+              </button>
           </form>
         </div>
         <ToastContainer />

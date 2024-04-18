@@ -8,12 +8,12 @@ const DeliverySubscription = ({ onAddressValidChange }) => {
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState("");
   const [showPopup, setShowPopup] = useState(false);
-  const [isAddressValid, setIsAddressValid] = useState(false);
   const { userData, setUserData } = useContext(StepperContext);
 
   // useEffect to save userData to localStorage
   useEffect(() => {
     localStorage.setItem("userData", JSON.stringify(userData));
+    
   }, [userData]);
 
   // useEffect to initialize state with localStorage data
@@ -40,6 +40,7 @@ const DeliverySubscription = ({ onAddressValidChange }) => {
         if (addresses && addresses.length > 0) {
           setAddresses(addresses);
         }
+        
         console.log(addresses);
       }
     }
@@ -85,22 +86,6 @@ const DeliverySubscription = ({ onAddressValidChange }) => {
       userData.numberOfDays !== ""
     );
   };
-  // const storingValidity = isDataValid()
-  // console.log(storingValidity);
-  // console.log(typeof storingValidity); // Should log "function"
-  // console.log(typeof isDataValid()); // Should log "function"
-  // console.log(typeof isDataValid); // Should log "function"
-
-  // // Notify the parent component of the validation status change
-  // if (typeof onAddressValidChange === 'function') {
-  //   try {
-  //     onAddressValidChange(isDataValid);
-  //   } catch (error) {
-  //     console.error("Error in useEffect:", error);
-  //   }
-  // } else {
-  //   console.error("onAddressValidChange is not a function");
-  // }
 
   useEffect(() => {
     console.log(onAddressValidChange);
@@ -116,9 +101,10 @@ const DeliverySubscription = ({ onAddressValidChange }) => {
     }
   }, [userData, onAddressValidChange, isDataValid]);
 
+  
+
   return (
     <>
-      DeliverySubscription
       {/* Delivery Address */}
       <div className="card mb-8 shadow-md border border-gray-300">
         <div className="card-header bg-gray-50 py-4 px-6">DELIVERY ADDRESS</div>

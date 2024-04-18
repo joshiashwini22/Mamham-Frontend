@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "../sidebar";
 import useFetch from "../../common/useFetch"; // Import useFetch hook
-import { getCustomerIdFromStorage, getUserIdFromStorage } from "../../utils/utils";
-import axios from 'axios';
+import {
+  getCustomerIdFromStorage,
+  getUserIdFromStorage,
+} from "../../utils/utils";
+import axios from "axios";
 
 const AdminNotification = () => {
   const [adminNotifications, setAdminNotifications] = useState([]);
@@ -10,7 +13,11 @@ const AdminNotification = () => {
   const [error, setError] = useState(null);
 
   // Use useFetch hook to fetch notifications
-  const { data: adminNotificationsData, loading: fetchLoading, error: fetchError } = useFetch(`http://127.0.0.1:8000/api/authentication/notification-user/`);
+  const {
+    data: adminNotificationsData,
+    loading: fetchLoading,
+    error: fetchError,
+  } = useFetch(`http://127.0.0.1:8000/api/authentication/notification-user/`);
 
   useEffect(() => {
     if (adminNotificationsData) {
@@ -25,17 +32,22 @@ const AdminNotification = () => {
 
   const markAsRead = async (id) => {
     try {
-        await axios.patch(`http://127.0.0.1:8000/api/authentication/notification-inbox/${id}/`, { is_read: true });
-        // Update the notification locally
-        setAdminNotifications(prevNotifications => prevNotifications.map(notification => {
+      await axios.patch(
+        `http://127.0.0.1:8000/api/authentication/notification-inbox/${id}/`,
+        { is_read: true }
+      );
+      // Update the notification locally
+      setAdminNotifications((prevNotifications) =>
+        prevNotifications.map((notification) => {
           if (notification.id === id) {
             return { ...notification, is_read: true };
           }
           return notification;
-        }));
-      } catch (error) {
-        console.error("Error marking notification as read:", error);
-      }
+        })
+      );
+    } catch (error) {
+      console.error("Error marking notification as read:", error);
+    }
   };
 
   return (
@@ -55,16 +67,26 @@ const AdminNotification = () => {
             ) : error ? (
               <p>Error: {error}</p>
             ) : (
-              adminNotifications.map(adminnotification => (
-                <div key={adminnotification.id} className={` flex justify-between bg-gray-100 p-4 rounded-lg mb-4 ${adminnotification.is_read ? 'border border-blue-500' : 'border border-green-500'}`}>
-                    <div>
-                        <p className="text-gray-800">{adminnotification.message}</p>
-                    </div>
-                    <div>
-                        
-                        <span className="cursor-pointer" onClick={() => markAsRead(adminnotification.id)}>Mark As Read</span>
-                        
-                    </div>
+              adminNotifications.map((adminnotification) => (
+                <div
+                  key={adminnotification.id}
+                  className={` flex justify-between bg-gray-100 p-4 rounded-lg mb-4 ${
+                    adminnotification.is_read
+                      ? "border border-blue-500"
+                      : "border border-green-500"
+                  }`}
+                >
+                  <div>
+                    <p className="text-gray-800">{adminnotification.message}</p>
+                  </div>
+                  <div>
+                    <span
+                      className="cursor-pointer"
+                      onClick={() => markAsRead(adminnotification.id)}
+                    >
+                      Mark As Read
+                    </span>
+                  </div>
                 </div>
               ))
             )}
