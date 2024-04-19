@@ -3,7 +3,7 @@ import axios from "axios";
 import { Bar } from "react-chartjs-2";
 
 const TopDishes = () => {
-  const [topDishes, setTopDishes] = useState({
+  const [topDishesData, setTopDishesData] = useState({
     labels: [],
     datasets: [
       {
@@ -22,20 +22,18 @@ const TopDishes = () => {
 
   const fetchData = async () => {
     try {
-      
       const response = await axios.get("http://127.0.0.1:8000/api/customization/dashboard/order");
-      console.log(response)
-      const topDish = response.data.top_dishes_data;
+      const topDishes = response.data.top_dishes_data;
 
-      const labels = topDish.map(dish => dish.dish__name);
-      const quantities = topDish.map(dish => dish.quantity);
+      const labels = topDishes.map(dish => dish.dish__name);
+      const quantities = topDishes.map(dish => dish.quantity);
 
-      setTopDishes({
-        ...topDishes,
+      setTopDishesData({
+        ...topDishesData,
         labels: labels,
         datasets: [
           {
-            ...topDishes.datasets[0],
+            ...topDishesData.datasets[0],
             data: quantities
           }
         ]
@@ -47,8 +45,24 @@ const TopDishes = () => {
 
   return (
     <div>
-      <h2>Top 5 Ordered Dishes</h2>
-      
+            <h3 className="text-red-700 text-4xl font-bold sm:text-2xl text-center">
+Top 5 Ordered Dishes</h3>
+<br/>
+
+      <Bar
+        data={topDishesData}
+        options={{
+          title: {
+            display: true,
+            text: "Quantity of Each Dish Ordered",
+            fontSize: 20
+          },
+          legend: {
+            display: true,
+            position: "right"
+          }
+        }}
+      />
     </div>
   );
 };

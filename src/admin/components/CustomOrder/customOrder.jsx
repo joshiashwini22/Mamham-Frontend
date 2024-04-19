@@ -149,8 +149,7 @@ const CustomOrder = () => {
                 Custom Orders
               </h3>
               <p className="text-gray-600 mt-2">
-                Lorem Ipsum is simply dummy text of the printing and
-                typesetting industry.
+                Here are the order details of custom orders.
               </p>
             </div>
             <div className="flex justify-end mb-4 mx-4 space-x-4">
@@ -345,13 +344,7 @@ const CustomOrder = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         {editedOrder && editedOrder.id === order.id ? (
-                          <input
-                            type="text"
-                            name="total"
-                            value={editedOrder.total}
-                            onChange={(e) => handleInputChange(e, "total")}
-                            className="border rounded-md px-2 py-1 w-full"
-                          />
+                          order.total
                         ) : (
                           order.total
                         )}
@@ -407,6 +400,19 @@ const CustomOrder = () => {
                           "Yes"
                         ) : (
                           "No"
+                        )}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {editedOrder && editedOrder.id === order.id ? (
+                          <input
+                            type="text"
+                            name="remarks"
+                            value={editedOrder.remarks}
+                            onChange={(e) => handleInputChange(e, "remarks")}
+                            className="border rounded-md px-2 py-1 w-full"
+                          />
+                        ) : (
+                          order.remarks
                         )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">

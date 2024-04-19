@@ -13,6 +13,8 @@ const Login = ({ onLogin, context }) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [showOtpInput, setShowOtpInput] = useState(false); // State to control OTP form visibility
+  const [showForgotPassword, setShowForgotPassword] = useState(false); 
+  const [showResetPassword, setShowResetPassword] = useState(false);
   const navigate = useNavigate();
   const [otp, setOtp] = useState("");
 
@@ -110,6 +112,9 @@ const Login = ({ onLogin, context }) => {
         toast.error("Failed to resend OTP. Please try again.");
       });
   };
+  const handleForgotPassword = () => {
+  };
+
 
   // Render regular login form if showOtpForm is false
   return (
@@ -222,7 +227,13 @@ const Login = ({ onLogin, context }) => {
                       Sign up
                     </a>
                   </p>
+                  <button
+                    onClick={handleForgotPassword}
+                    className=" text-blue font-medium text-sm mt-4"
+                  >
+Forgot Password?                  </button>
                 </form>
+                
               )}
             </div>
           </div>

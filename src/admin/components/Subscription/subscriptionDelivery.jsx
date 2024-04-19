@@ -244,6 +244,7 @@ const SubscriptionDelivery = () => {
                   <th className="py-3 px-6">Delivery Time</th>
                   <th className="py-3 px-6">Delivery Address</th>
                   <th className="py-3 px-6">Plan</th>
+                  <th className="py-3 px-6">Remarks</th>
                   <th className="py-3 px-6">Status</th>
                   <th className="py-3 px-6">Actions</th>
                 </tr>
@@ -331,6 +332,11 @@ const SubscriptionDelivery = () => {
                         {editedDelivery && editedDelivery.id === delivery.id
                           ? delivery.subscription.plan.name
                           : delivery.subscription.plan.name}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {editedDelivery && editedDelivery.id === delivery.id
+                          ? delivery.subscription.remarks
+                          : delivery.subscription.remarks}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         {editedDelivery && editedDelivery.id === delivery.id ? (

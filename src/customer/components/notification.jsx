@@ -27,7 +27,7 @@ const NotificationDropdown = () => {
   useEffect(() => {
 
       fetchNotifications();
-  })
+  }, [])
   // setInterval(() => {
   //   console.log("here");
   // }, 2000);
