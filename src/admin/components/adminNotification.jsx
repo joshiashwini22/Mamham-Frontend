@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "../sidebar";
 import useFetch from "../../common/useFetch"; // Import useFetch hook
-import {
-  getCustomerIdFromStorage,
-  getUserIdFromStorage,
-} from "../../utils/utils";
 import axios from "axios";
 
 const AdminNotification = () => {
@@ -17,7 +13,7 @@ const AdminNotification = () => {
     data: adminNotificationsData,
     loading: fetchLoading,
     error: fetchError,
-  } = useFetch(`http://127.0.0.1:8000/api/authentication/notification-user/`);
+  } = useFetch(`http://127.0.0.1:8000/api/authentication/notification-admin/`);
 
   useEffect(() => {
     if (adminNotificationsData) {
@@ -57,9 +53,26 @@ const AdminNotification = () => {
         <section className="bg-white min-h-screen py-12 lg:mx-[10px]">
           <div className="relative overflow-x-auto container">
             <div className="flex flex-col items-center mx-44 py-5">
-              <span className="text-red-700 text-4xl font-bold block mb-4">
-                Notifications
-              </span>
+              <div>
+                <span className="text-red-700 text-4xl font-bold block mb-4">
+                  Notifications
+                </span>
+              </div>
+              <div className="mt-3 md:mt-0">
+              <a
+                  href="/create-notification"
+                  className="inline-block px-4 py-2 text-white duration-150 font-medium bg-indigo-600 rounded-lg hover:bg-indigo-500 active:bg-indigo-700 md:text-sm"
+                >
+                  <button
+                    id="dropdownRadioButton"
+                    data-dropdown-toggle="dropdownRadio"
+                    className=""
+                    type="button"
+                  >
+                    + Add
+                  </button>
+                </a>
+              </div>
             </div>
             <div className="flex justify-center mb-4 mx-10"></div>
             {loading ? (

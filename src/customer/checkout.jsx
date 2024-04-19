@@ -237,11 +237,6 @@ const CheckoutPage = () => {
       };
 
       console.log(orderData);
-      // Place order to backend only if payment is successful
-      // if (paymentStatus === "Khalti" && !paidStatus) {
-      //   alert("Payment not completed. Please complete the payment.");
-      //   return;
-      // }
 
       const accessToken = localStorage.getItem("access_token");
 
@@ -477,7 +472,7 @@ const CheckoutPage = () => {
                     {/* Special Instructions Input */}
                     <textarea
                       className="form-control h-24 p-2 border border-gray-300 rounded-md w-full"
-                      placeholder="Please mention if there are special instructions for the delivery person. (e.g., Beware of Dogs)"
+                      placeholder="Please mention if there are any allergies or special instructions for the delivery person. (e.g., Beware of Dogs)"
                       value={remark}
                       onChange={(e) => setRemark(e.target.value)}
                     ></textarea>

@@ -29,6 +29,7 @@ const Payment = () => {
         startDate,
         startTime,
         planTotal,
+        remarks
       } = userData;
 
       // Format scheduled date
@@ -82,6 +83,7 @@ const Payment = () => {
         plan: selectedPlan,
         addons: selectedAddons,
         total: planTotal,
+        remarks: remarks,
         delivery_details: [deliverDetailsData], // Use deliverDetailsData here
       };
 

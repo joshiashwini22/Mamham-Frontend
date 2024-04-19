@@ -9,6 +9,7 @@ import NotificationDropdown from "./components/notification";
 
 function Navbar() {
   const [isAuth, setIsAuth] = useState(false);
+  const [username, setUsername] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
   const { logout } = useAuth();
@@ -33,8 +34,14 @@ function Navbar() {
   useEffect(() => {
     if (localStorage.getItem("access_token") !== null) {
       setIsAuth(true);
+      
     }
-  }, [isAuth]);
+    if (localStorage.getItem("token") !== null) {
+      const token = JSON.parse(localStorage.getItem("token"));
+      setUsername(token.username)
+      console.log(token)
+    }
+  }, [isAuth, username]);
 
 
   return (
@@ -110,6 +117,7 @@ function Navbar() {
             {isAuth ? (
               <>
                 <ul className="flex flex-row">
+                <li><p>Hi {username}!</p></li>
                   <li>
                     <NotificationDropdown />
                   </li>

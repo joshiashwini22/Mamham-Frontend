@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import useFetch from "../../../common/useFetch";
 import Sidebar from "../../sidebar";
-import { useAccessToken } from "../../../context/AuthContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
