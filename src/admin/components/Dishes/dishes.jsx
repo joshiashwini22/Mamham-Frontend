@@ -14,6 +14,7 @@ const Dishes = () => {
     deleteItem,
   } = useFetch("http://127.0.0.1:8000/api/customization/dishes");
 
+  console.log(dishes)
   const handleDelete = async (dishId) => {
     try {
       await deleteItem(dishId);
@@ -42,9 +43,7 @@ const Dishes = () => {
                     <h3 className="text-gray-800 text-xl font-bold sm:text-2xl">
                     Dishes                    
                     </h3>
-                    <p className="text-gray-600 mt-2">
-                        Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                    </p>
+                    <p className="text-gray-600 mt-2">The following dishes are present for custom orders.</p>
                 </div>
                 <div className="mt-3 md:mt-0">
                 <a
@@ -57,7 +56,7 @@ const Dishes = () => {
                    className=""
                    type="button"
                     >
-                        Add product
+                        Add Dish
                     </button>
                     </a>
 
@@ -73,6 +72,7 @@ const Dishes = () => {
                             <th className="py-3 pr-6">Category</th>
                             <th className="py-3 pr-6">Description</th>
                             <th className="py-3 pr-6">Image</th>
+                            <th className="py-3 pr-6">Availability</th>
                             <th className="py-3 pr-6">Action</th>
                         </tr>
                     </thead>
@@ -98,6 +98,8 @@ const Dishes = () => {
                                 className="mt-2 w-24 h-24 object-fit rounded-lg"
                               />                             
                             </td>
+                            <td className="pr-6 py-4 whitespace-nowrap">{dish.isAvailable ? "Yes" : "No"}</td>
+
                             <td className="pr-6 py-4 whitespace-nowrap">
                               <button
                               onClick={() => handleEdit(dish.id)}

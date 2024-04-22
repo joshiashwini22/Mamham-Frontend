@@ -92,8 +92,8 @@ const OurMenu = () => {
                       key={index}
                       className={`px-4 py-2 mr-4 rounded-md cursor-pointer ${
                         selectedWeek === index
-                          ? "bg-red-500 text-white"
-                          : "bg-white text-gray-700"
+                          ? "bg-red-500 text-white border"
+                          : "bg-white text-red-700"
                       } `}
                       onClick={() => handleWeekChange(index)}
                     >

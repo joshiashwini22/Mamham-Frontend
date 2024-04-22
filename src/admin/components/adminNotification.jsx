@@ -2,8 +2,23 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "../sidebar";
 import useFetch from "../../common/useFetch"; // Import useFetch hook
 import axios from "axios";
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+
 
 const AdminNotification = () => {
+  const { isAdmin } = useAuth();
+  const navigate = useNavigate();
+
+  const isAdminUser = isAdmin();
+
+  useEffect(() => {
+    if (!isAdmin()) {
+      navigate("/login");
+    }
+  }, [isAdmin, navigate]);
+
+  
   const [adminNotifications, setAdminNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

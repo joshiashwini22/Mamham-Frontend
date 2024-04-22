@@ -3,9 +3,22 @@ import useFetch from "../../../common/useFetch";
 import Sidebar from "../../sidebar";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useAuth } from "../../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 
 const SubscriptionDelivery = () => {
+  const { isAdmin } = useAuth();
+  const navigate = useNavigate();
+
+  const isAdminUser = isAdmin();
+
+  useEffect(() => {
+    if (!isAdmin()) {
+      navigate("/login");
+    }
+  }, [isAdmin, navigate]);
+  
   const [filters, setFilters] = useState({
     deliveryDate: "",
     deliveryTime: "",
@@ -166,8 +179,7 @@ const SubscriptionDelivery = () => {
                 Subscription Delivery
               </h3>
               <p className="text-gray-600 mt-2">
-                Lorem Ipsum is simply dummy text of the printing and
-                typesetting industry.
+                Deliveries for subscription are listed here. You can use filter to see the deliveries by date.
               </p>
             </div>
             <div className="flex justify-end mb-4 mx-4 space-x-4">
@@ -183,14 +195,6 @@ const SubscriptionDelivery = () => {
                 name="deliveryId"
                 placeholder="Search By Subscription Id"
                 value={filters.deliveryId}
-                onChange={handleFilterChange}
-                className="border rounded-md px-2 py-1"
-              />
-              <input
-                type="text"
-                name="planId"
-                placeholder="Search By Plan Id"
-                value={filters.planId}
                 onChange={handleFilterChange}
                 className="border rounded-md px-2 py-1"
               />

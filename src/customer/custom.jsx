@@ -84,7 +84,7 @@ function Custom() {
       <Navbar />
       <div className="bg-white-200 ">
 
-      <div className="bg-white lg:mx-[180px] mt-22 mb-8 shadow-xl rounded-2xl p-4">
+      <div className="bg-white lg:mx-[180px] mt-25 mb-8 shadow-xl rounded-2xl p-4">
         <div className="grid gap-4">
           <div className="flex flex-col items-center mx-44 py-5">
             <span className="text-red-600 text-4xl font-bold bl ock mb-4">Build your Meal</span>
@@ -120,14 +120,16 @@ function Custom() {
 }
 
 const Cart = ({ selectedDishes, onRemoveSelectedDish, calculateTotal, address, paymentOption, onAddressChange, onPaymentChange, onProceedToCheckout }) => {
+  const total = calculateTotal();
+
   return (
     <div className="p-5">
       <span className="text-red-600 text-xl font-bold block mb-4">Your Cart</span>
       {selectedDishes.length > 0 ? (
         <span className="text-green-600 text-lg block mb-4">Here is your list</span>
-        ) : (
-          <span className="text-red-600 text-lg block mb-4">No items in the cart</span>
-          )}
+      ) : (
+        <span className="text-red-600 text-lg block mb-4">No items in the cart</span>
+      )}
       {selectedDishes.length > 0 && (
         <div className="flex items-center justify-between border-b border-gray-400 py-2">
           <span className="font-semibold text-xs">Image</span>
@@ -155,17 +157,20 @@ const Cart = ({ selectedDishes, onRemoveSelectedDish, calculateTotal, address, p
       {selectedDishes.length > 0 && (
         <div className="flex items-center justify-between mt-4">
           <span className="font-medium text-xs">Total:</span>
-          <span className="text-xs">${calculateTotal().toFixed(2)}</span>
+          <span className="text-xs">${total.toFixed(2)}</span>
         </div>
       )}
-      {selectedDishes.length > 0 && (
-        <button onClick={() => onProceedToCheckout()} className="mt-4 bg-red-700 hover:bg-red-500 text-white font-bold py-2 px-4 rounded">
+      {total > 50 ? (
+        <button onClick={onProceedToCheckout} className="mt-4 bg-red-700 hover:bg-red-500 text-white font-bold py-2 px-4 rounded">
           Proceed To Checkout
         </button>
+      ) : (
+        <span className="text-blue-600 text-sm mt-4">Minimum order total must be Rs 50.</span>
       )}
       <ToastContainer/>
     </div>
   );
 };
+
 
 export default Custom;

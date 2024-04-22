@@ -108,70 +108,16 @@ const DishSelection = ({ category, onAddSelectedDish }) => {
           type="number"
           min="1"
           max={maxPortions} // Limit the max value based on remaining portions
-          className="mb-3 py-2 mr-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+          className="mb-3 py-2 mr-3 border w-32 text-center border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
           placeholder="Enter portion"
           onChange={handleSelectPortion}
         />
       </div>
 
-      {/* <DishImagePreview dishId={selectedDishId} defaultImage={defaultImage} />
-      <div className="mt-4">
-        <h2 className="font-semibold text-lg">Cart</h2>
-        <ul>
-          {cartItems.map((item) => (
-            <li key={item.id}>
-              {item.name} - Portion: {item.portion}
-            </li>
-          ))}
-        </ul>
-      </div> */}
-      {/* <ToastContainer/> */}
+  
     </div>
   );
 };
 
-const DishImagePreview = ({ dishId, defaultImage }) => {
-  const [selectedDish, setSelectedDish] = useState(null);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchDish = async () => {
-      try {
-        if (dishId) {
-          const response = await axios.get(
-            `http://127.0.0.1:8000/api/customization/dishes/${dishId}/`
-          );
-          setSelectedDish(response.data);
-        } else {
-          setSelectedDish(null); // Set selectedDish to null if dishId is null
-        }
-        setError(null); // Clear any previous errors
-      } catch (error) {
-        console.error("Error fetching dish:", error);
-        setError("Error fetching dish image");
-      }
-    };
-
-    fetchDish();
-  }, [dishId]);
-
-  return (
-    <div className="flex justify-center mt-4">
-      {error ? (
-        <img
-          src={defaultImage}
-          alt="Default Dish"
-          className="w-48 h-48 object-cover rounded-lg"
-        />
-      ) : (
-        <img
-          src={selectedDish ? selectedDish.image : defaultImage}
-          alt={selectedDish ? selectedDish.name : "Default Dish"}
-          className="w-48 h-48 object-cover rounded-lg"
-        />
-      )}
-    </div>
-  );
-};
 
 export default DishSelection;

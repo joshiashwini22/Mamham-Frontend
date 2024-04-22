@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Bar } from "react-chartjs-2";
+import {Chart as ChartJS, BarElement, CategoryScale, LinearScale, ArcElement } from "chart.js";
+
+ChartJS.register(
+  CategoryScale, LinearScale,
+  BarElement, ArcElement
+)
 
 const TopDishes = () => {
   const [topDishesData, setTopDishesData] = useState({

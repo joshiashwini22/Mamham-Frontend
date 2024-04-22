@@ -12,6 +12,7 @@ const DishEdit = ({onEdit }) => {
   const [description, setDescription] = useState('');
   const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState('');
+  const [isAvailable, setIsAvailable] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("");
   const navigate = useNavigate();
 
@@ -24,12 +25,13 @@ const DishEdit = ({onEdit }) => {
       try {
         let url = `http://127.0.0.1:8000/api/customization/dishes/${id}` ;
         const response = await axios.get(url);
-        const { name, price, description, image } = response.data;
+        const { name, price, description, image, isAvailable } = response.data;
         setName(name);
         setPrice(price);
         setDescription(description);
         setImageUrl(image);
         setSelectedCategory(selectedCategory);
+        setIsAvailable(isAvailable); 
       } catch (error) {
         console.error('Error fetching dish data:', error);
       }
@@ -50,6 +52,7 @@ const DishEdit = ({onEdit }) => {
       formData.append('price', price);
       formData.append('description', description);
       formData.append("category", selectedCategory);
+      formData.append('isAvailable', isAvailable); 
 
       if(image) {
         formData.append('image', image);
@@ -130,10 +133,7 @@ const DishEdit = ({onEdit }) => {
                 ></textarea>
               </div>
               <div className="w-full">
-                <label
-                  htmlFor="category"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
+              <label htmlFor="category" className="block mb-2 text-sm font-medium text-gray-900">
                   Category
                 </label>
                 <select
@@ -149,6 +149,21 @@ const DishEdit = ({onEdit }) => {
                       {option}
                     </option>
                   ))}
+                </select>
+              </div>
+              <div className="w-full">
+                <label htmlFor="isAvailable" className="block mb-2 text-sm font-medium text-gray-900">
+                  Availability
+                </label>
+                <select
+                  id="isAvailable"
+                  name="isAvailable"
+                  value={isAvailable}
+                  onChange={(e) => setIsAvailable(e.target.value)}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 "
+                >
+                  <option value={false}>No</option>
+                  <option value={true}>Yes</option>
                 </select>
               </div>
               <div className="sm:col-span-2">
@@ -170,7 +185,7 @@ const DishEdit = ({onEdit }) => {
             <button
               type="submit"
               onClick={handleEditDish}
-              className="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center border border-gray-300 text-blue bg-red-700 text-white rounded-lg focus:ring-4 focus:ring-primary-200 hover:bg-primary-800"
+              className="inline-flex items-center px-5 py-2.5 m-4 sm:m-6 text-sm font-medium text-center border border-gray-300 text-blue bg-red-700 text-white rounded-lg focus:ring-4 focus:ring-primary-200 hover:bg-primary-800"
             >
               Update 
             </button>

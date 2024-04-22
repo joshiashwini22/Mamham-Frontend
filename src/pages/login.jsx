@@ -13,8 +13,6 @@ const Login = ({ onLogin, context }) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [showOtpInput, setShowOtpInput] = useState(false); // State to control OTP form visibility
-  const [showForgotPassword, setShowForgotPassword] = useState(false); 
-  const [showResetPassword, setShowResetPassword] = useState(false);
   const navigate = useNavigate();
   const [otp, setOtp] = useState("");
 
@@ -113,6 +111,7 @@ const Login = ({ onLogin, context }) => {
       });
   };
   const handleForgotPassword = () => {
+    navigate("/forgotPassword")
   };
 
 
@@ -187,7 +186,7 @@ const Login = ({ onLogin, context }) => {
                         handleInputChange();
                       }}
                       className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                      placeholder="Woooo"
+                      placeholder="abc@gmail.com"
                       required=""
                     />
                   </div>
@@ -207,7 +206,7 @@ const Login = ({ onLogin, context }) => {
                         setPassword(e.target.value);
                         handleInputChange();
                       }}
-                      placeholder="••••••••"
+                      placeholder="•••••••"
                       className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-red-600 focus:border-red-600 block w-full p-2.5"
                       required=""
                     />
@@ -227,11 +226,15 @@ const Login = ({ onLogin, context }) => {
                       Sign up
                     </a>
                   </p>
+                  <div className="flex justify-end">
+
                   <button
                     onClick={handleForgotPassword}
-                    className=" text-blue font-medium text-sm mt-4"
-                  >
-Forgot Password?                  </button>
+                    className="text-blue-700 font-medium text-sm ml-auto mr-4 focus:outline-none hover:text-blue-800"
+                    >
+                    Forgot Password?
+                  </button>
+                    </div>
                 </form>
                 
               )}

@@ -3,11 +3,11 @@ import Sidebar from "./sidebar";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import TopDishes from "./components/Dashboard/TopDishes";
-import TableComponent from "./components/Dashboard/TableComponent";
 import OrderStatus from "./components/Dashboard/OrderStatus";
 import SubscriptionStatus from "./components/Dashboard/SubscriptionStatus";
 import SubscriptionTotal from "./components/Dashboard/SubscriptionTotal";
 import OrderTotal from "./components/Dashboard/OrderTotal";
+
 
 const Dashboard = () => {
   const { isAdmin } = useAuth();

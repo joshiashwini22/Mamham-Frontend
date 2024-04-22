@@ -1,82 +1,105 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Logo from "../assets/images/Mamham.png";
 import Button from "../common/button";
 import { useAuth } from "../context/AuthContext";
-import {getCustomerIdFromStorage} from "../utils/utils";
-import axios from "axios";
+import { getCustomerIdFromStorage } from "../utils/utils";
+
 import NotificationDropdown from "./components/notification";
 
 function Navbar() {
   const [isAuth, setIsAuth] = useState(false);
   const [username, setUsername] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { logout } = useAuth();
 
   const [showDropdown, setShowDropdown] = useState(false);
 
+
   const handleLoginClick = () => {
     navigate("/login");
   };
 
   const handleLogoutClick = () => {
-    logout(); // Call the logout function
-    setIsAuth(false); // Update local state to reflect the user's authentication status
+    logout();
+    setIsAuth(false);
   };
 
-  const isActive = (href) => {
-    return location.pathname === href
-      ? "text-black rounded md:bg-transparent md:p-0 md:dark:text-red-500"
-      : "";
+  const toggleMenu = () => {
+    setMenuOpen((prev) => !prev);
+  };
+
+  const isActive = (path) => {
+    return location.pathname === path ? "text-red-500" : "";
   };
 
   useEffect(() => {
-    if (localStorage.getItem("access_token") !== null) {
-      setIsAuth(true);
-      
-    }
-    if (localStorage.getItem("token") !== null) {
-      const token = JSON.parse(localStorage.getItem("token"));
-      setUsername(token.username)
-      console.log(token)
-    }
-  }, [isAuth, username]);
+    const accessToken = localStorage.getItem("access_token");
+    const token = localStorage.getItem("token");
 
+    if (accessToken) {
+      setIsAuth(true);
+    }
+
+    if (token) {
+      const parsedToken = JSON.parse(token);
+      setUsername(parsedToken.username);
+    }
+  }, []);
 
   return (
-    <div className="z-1">
-      <nav className="bg-white w-full top-0 start-0 border-b border-gray-200 dark:border-gray-600">
+    <div className="z-10">
+      <nav className="bg-white w-full top-0 border-b border-gray-200">
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-          <a
-            href="/"
-            className="flex items-center space-x-3"
-          >
+          {/* Logo */}
+          <a href="/" className="flex items-center">
             <img src={Logo} className="h-12" alt="Mamham Logo" />
           </a>
-          <div
-            className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
-            id="navbar-sticky"
-          >
-            <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white">
+
+          {/* Mobile Hamburger Menu */}
+          <div className="md:hidden flex items-center justify-end">
+            {isAuth && (
+              <NotificationDropdown />
+            )}
+            <button
+              className="p-2"
+              onClick={toggleMenu}
+              aria-label="Toggle Menu"
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Navigation Links for Larger Screens */}
+          <div className={`hidden md:flex md:w-auto md:items-center md:space-x-8`}>
+            <ul className="flex md:space-x-8">
               <li>
                 <a
                   href="/"
-                  className={`block py-2 px-3 hover:bg-gray-100 md:hover:bg-transparent md:p-0 md:dark:hover:text-red-500 dark:text-black dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700  ${isActive(
-                    "/"
-                  )}`}
-                  aria-current="page"
+                  className={`block py-2 px-3 hover:bg-gray-100 ${isActive("/")}`}
                 >
                   Home
                 </a>
               </li>
-              
               <li>
                 <a
                   href="/ourplans"
-                  className={`block py-2 px-3 hover:bg-gray-100 md:hover:bg-transparent md:p-0 md:dark:hover:text-red-500 dark:text-black dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 ${isActive(
-                    "/ourplans"
-                  )}`}
+                  class={`block py-2 px-3 hover:bg-gray-100 ${isActive("/ourplans")}`}
                 >
                   Our Plans
                 </a>
@@ -84,9 +107,7 @@ function Navbar() {
               <li>
                 <a
                   href="/custom"
-                  className={`block py-2 px-3 hover:bg-gray-100 md:hover:bg-transparent md:p-0 md:dark:hover:text-red-500 dark:text-black dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 ${isActive(
-                    "/custom"
-                  )}`}
+                  class={`block py-2 px-3 hover:bg-gray-100 ${isActive("/custom")}`}
                 >
                   Custom
                 </a>
@@ -94,9 +115,7 @@ function Navbar() {
               <li>
                 <a
                   href="/ourmenu"
-                  className={`block py-2 px-3 hover:bg-gray-100 md:hover:bg-transparent md:p-0 md:dark:hover:text-red-500 dark:text-black dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 ${isActive(
-                    "/ourmenu"
-                  )}`}
+                  class={`block py-2 px-3 hover-bg-gray-100 ${isActive("/ourmenu")}`}
                 >
                   Our Menu
                 </a>
@@ -104,20 +123,21 @@ function Navbar() {
               <li>
                 <a
                   href="#"
-                  className={`block py-2 px-3 hover:bg-gray-100 md:hover:bg-transparent md:p-0 md:dark:hover:text-red-500 dark:text-black dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 ${isActive(
-                    "/howitworks"
-                  )}`}
+                  class={`block py-2 px-3 hover-bg-gray-100 ${isActive("/howitworks")}`}
                 >
-                  How it Works
+                  How It Works
                 </a>
               </li>
             </ul>
+
           </div>
           <div className="flex flex-row md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
             {isAuth ? (
               <>
-                <ul className="flex flex-row">
-                <li><p>Hi {username}!</p></li>
+                <ul className="flex flex-row items-center justify-center">
+                  <li>
+                    <p>Hi {username}!</p>
+                  </li>
                   <li>
                     <NotificationDropdown />
                   </li>
@@ -125,9 +145,21 @@ function Navbar() {
                     <div>
                       <button
                         onClick={() => setShowDropdown(!showDropdown)}
-                        className="relative inline-flex items-center justify-center ml-5 w-8 h-8 hover:text-gray-800 focus:outline-none text-base"
+                        className="relative inline-flex items-center justify-center w-8 h-8 hover:text-gray-800 focus:outline-none text-base"
                       >
-                        Profile
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          stroke="#212b36"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          fill="none"
+                        >
+                          <circle cx="12" cy="8" r="5" />
+                          <path d="M3,21 h18 C 21,12 3,12 3,21" />
+                        </svg>
                       </button>
                     </div>
                   </li>
@@ -140,10 +172,16 @@ function Navbar() {
                       aria-orientation="vertical"
                       aria-labelledby="options-menu"
                     >
-                      <a href={`/myorders/${getCustomerIdFromStorage()}`} className="text-black block pb-2 hover:bg-gray-100">
+                      <a
+                        href={`/myorders/${getCustomerIdFromStorage()}`}
+                        className="text-black block pb-2 hover:bg-gray-100"
+                      >
                         My Orders
                       </a>
-                      <a href={`/mysubscriptions/${getCustomerIdFromStorage()}`} className="text-black block pb-4 hover:bg-gray-100">
+                      <a
+                        href={`/mysubscriptions/${getCustomerIdFromStorage()}`}
+                        className="text-black block pb-4 hover:bg-gray-100"
+                      >
                         My Subscriptions
                       </a>
                       <Button purpose="Logout" onClick={handleLogoutClick} />
@@ -155,6 +193,64 @@ function Navbar() {
               <Button purpose="Login" onClick={handleLoginClick} />
             )}
           </div>
+        </div>
+
+        {/* Mobile Menu (Visible when menuOpen is true) */}
+        <div className={`md:hidden ${menuOpen ? "block" : "hidden"}`}>
+          <ul className="flex flex-col p-4 bg-gray-50 border-b border-gray-200 space-y-4">
+            <li>
+              <a
+                  href="/"
+                  class={`block py-2 px-3 hover-bg-gray-100 ${isActive("/")}`}
+                >
+                  Home
+              </a>
+            </li>
+            <li>
+              <a
+                  href="/ourplans"
+                  class={`block py-2 px-3 hover-bg-gray-100 ${isActive("/ourplans")}`}
+                >
+                  Our Plans
+              </a>
+            </li>
+            <li>
+              <a
+                  href="/custom"
+                  class={`block py-2 px-3 hover-bg-gray-100 ${isActive("/custom")}`}
+                >
+                  Custom
+              </a>
+            </li>
+            <li>
+              <a
+                  href="/ourmenu"
+                  class={`block py-2 px-3 hover-bg-gray-100 ${isActive("/ourmenu")}`}
+                >
+                  Our Menu
+              </a>
+            </li>
+              <li>
+                <a
+                  href="#"
+                  class={`block py-2 px-3 hover-bg-gray-100 ${isActive("/howitworks")}`}
+                >
+                  How It Works
+              </a>
+            </li>
+             {isAuth && (
+                <li>
+                  <a
+                    href="#"
+                    onClick={handleLogoutClick}
+                    className={`block py-2 px-3 bg-maroon text-white-500 hover:bg-gray-100`}
+                  >
+                    Logout
+                  </a>
+                </li>
+              )}
+          </ul>
+          
         </div>
       </nav>
     </div>

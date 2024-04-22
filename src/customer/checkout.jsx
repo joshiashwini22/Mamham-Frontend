@@ -130,47 +130,45 @@ const CheckoutPage = () => {
 
     // If selected date is today
     if (selectedDate.toDateString() === currentDate.toDateString()) {
-      // Filter time options based on current time
-      const currentHour = currentDate.getHours();
-      const currentMinute = currentDate.getMinutes();
+        const currentHour = currentDate.getHours();
+        const currentMinute = currentDate.getMinutes();
 
-      let startHour = currentHour;
-      let startMinute = Math.ceil(currentMinute / 30) * 30;
-      if (startMinute === 60) {
-        startHour += 1;
-        startMinute = 0;
-      }
+        // Calculate the start time 1 hour from now
+        let startHour = currentHour + 1;
+        let startMinute = Math.ceil(currentMinute / 30) * 30;
 
-      const options = [];
-      for (let hour = startHour; hour <= 19; hour++) {
-        for (let minute = 0; minute < 60; minute += 30) {
-          if (
-            (hour > currentHour ||
-              (hour === currentHour && minute >= startMinute)) &&
-            hour < 20
-          ) {
-            const time = `${hour < 10 ? "0" + hour : hour}:${
-              minute < 10 ? "0" + minute : minute
-            }`;
-            options.push(time);
-          }
+        if (startMinute === 60) {
+            startHour += 1;
+            startMinute = 0;
         }
-      }
-      setTimeOptions(options);
+
+        // Ensure the start hour is not before 10 AM
+        if (startHour < 10) {
+            startHour = 10;
+            startMinute = 0;
+        }
+
+        const options = [];
+        for (let hour = startHour; hour <= 19; hour++) {
+            for (let minute = 0; minute < 60; minute += 30) {
+                const time = `${hour < 10 ? "0" + hour : hour}:${minute < 10 ? "0" + minute : minute}`;
+                options.push(time);
+            }
+        }
+        setTimeOptions(options);
     } else {
-      // If selected date is not today, provide full time options
-      const options = [];
-      for (let hour = 10; hour <= 19; hour++) {
-        for (let minute = 0; minute < 60; minute += 30) {
-          const time = `${hour < 10 ? "0" + hour : hour}:${
-            minute < 10 ? "0" + minute : minute
-          }`;
-          options.push(time);
+        // If selected date is not today, provide full time options starting from 10 AM
+        const options = [];
+        for (let hour = 10; hour <= 19; hour++) {
+            for (let minute = 0; minute < 60; minute += 30) {
+                const time = `${hour < 10 ? "0" + hour : hour}:${minute < 10 ? "0" + minute : minute}`;
+                options.push(time);
+            }
         }
-      }
-      setTimeOptions(options);
+        setTimeOptions(options);
     }
-  }, [scheduledDate]);
+}, [scheduledDate]);
+
 
   const handleSaveAddress = (address) => {
     // Logic to save address

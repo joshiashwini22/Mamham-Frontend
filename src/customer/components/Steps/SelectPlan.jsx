@@ -324,7 +324,7 @@ const SelectPlan = ({ onDataValidChange }) => {
               <input
                 type="text"
                 name="remarks"
-                placeholder="Please mention if there are any allergies or special instructions for the delivery person. (e.g., Beware of Dogs)"
+                placeholder="Please mention if there are any allergies."
                 value={userData.remarks || ""}
                 onChange={handleInputChange}
                 className="w-full mb-2 p-2 border rounded"

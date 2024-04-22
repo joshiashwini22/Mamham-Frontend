@@ -39,6 +39,7 @@ import SubscriptionDelivery from "./admin/components/Subscription/subscriptionDe
 import ModifyDelivery from "./customer/modifyDelivery";
 import PaymentCompletion from "./common/paymentCompletion";
 import NotificationCreate from "./admin/components/createNotification";
+import ForgotPassword from "./pages/forgotPassword";
 
 
 const App = () => {
@@ -87,6 +88,7 @@ const App = () => {
           <Route path={mysubscriptionsUrl} element={<MySubscriptions/>} />
           <Route path="/admin-notification" element={<AdminNotification/>}/>
           <Route path="/create-notification" element={<NotificationCreate/>}/>
+          <Route path="/forgotPassword" element={<ForgotPassword/>}/>
         </Routes>
       </AuthProvider>
     </Router>

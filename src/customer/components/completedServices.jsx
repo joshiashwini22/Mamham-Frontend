@@ -26,7 +26,7 @@ const CompletedServices = () => {
   };
   return (
     <div>
-        <h2 className="text-red-600 text-xl font-bold block mb-4">Completed Orders</h2>
+        <h2 className="text-red-600 text-xl font-bold block mb-4 text-center">Completed Orders</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mx-4">
             {/* Orders */}
             <div className="col-span-3">
@@ -34,7 +34,7 @@ const CompletedServices = () => {
               {customcomplete.map(order => (
                   <div key={order.id} className="card mb-8 shadow-md border border-gray-300">
                 <div className="card-header bg-gray-50 py-4 px-6">
-                <h3>Order #{order.id} | Rs. {order.total} | {order.status}</h3>
+                <h3>Order #C{order.id} | Rs. {order.total} | {order.status}</h3>
           <p>{order.delivery_time} | {order.delivery_date}</p>
            </div>
                 <div className="card-block p-4">
@@ -48,9 +48,6 @@ const CompletedServices = () => {
             style={{ width: '100%', color: 'red' }}
           />
           <div className='grid grid-cols-2 my-3'>
-            <div className='mr-3'>
-            <Button purpose={"View More"} />
-            </div>
             <div>
             <Button purpose={"Type: Cutomization"} />
             </div>

@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useAuth } from "../../context/AuthContext";
 import Sidebar from "../sidebar";
 import axios from "axios";
 import useFetch from "../../common/useFetch";
@@ -7,10 +8,20 @@ import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 
 const NotificationCreate = ({ onNotificationCreated }) => {
+  const { isAdmin } = useAuth();
+  const navigate = useNavigate();
+
+  const isAdminUser = isAdmin();
+
+  useEffect(() => {
+    if (!isAdmin()) {
+      navigate("/login");
+    }
+  }, [isAdmin, navigate]);
+
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [message, setMessage] = useState("");
   const [title, setTitle] = useState("");
-  const navigate = useNavigate();
 
   const {
     data: users,

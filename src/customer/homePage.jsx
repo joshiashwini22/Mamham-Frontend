@@ -1,6 +1,9 @@
 import React from "react";
 import Navbar from "./navbar";
 import MainImg from "../../src/assets/images/main.png";
+import ChickenTikkaMasalaImage from '../../src/assets/images/chicken-tikka-masala.jpg';
+import VegetableBiryaniImage from '../../src/assets/images/vegetable-biryani.jpg';
+import PaneerButterMasalaImage from '../../src/assets/images/paneer-butter-masala.jpg';
 import { useNavigate } from "react-router-dom";
 import Footer from "./components/footer";
 
@@ -97,55 +100,60 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Featured Menu Section */}
-      <section className="bg-gray-100 py-16">
-        <div className="container mx-auto">
-          <h2 className="text-3xl font-semibold text-gray-800 mb-8 text-center">
-            Featured Menu
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Featured Dish 1 */}
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                Chicken Tikka Masala
-              </h3>
-              <p className="text-gray-600">
-                Tender pieces of chicken cooked in a rich tomato-based sauce,
-                served with basmati rice.
-              </p>
-            </div>
-            {/* Featured Dish 2 */}
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                Vegetable Biryani
-              </h3>
-              <p className="text-gray-600">
-                Aromatic basmati rice cooked with assorted vegetables and
-                spices, served with raita.
-              </p>
-            </div>
-            {/* Featured Dish 3 */}
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                Paneer Butter Masala
-              </h3>
-              <p className="text-gray-600">
-                Chunks of paneer cooked in a creamy and mildly spiced
-                tomato-based gravy.
-              </p>
-            </div>
-          </div>
-          <div className="flex justify-center mt-8 mx-8">
-            <button
-              className="bg-red-700 hover:bg-red-700 px-8 py-4 mx-8 hover:scale-105 transition-all duration-300 transform rounded-lg font-semibold"
-              style={{ color: "#E7E0D2" }}
-              onClick={() => navigate("/ourplans")}
-            >
-              Subscription Plans
-            </button>
-          </div>
-        </div>
-      </section>
+<section className="bg-gray-100 py-16">
+  <div className="container mx-auto">
+    <h2 className="text-3xl font-semibold text-gray-800 mb-8 text-center">Featured Menu</h2>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {/* Featured Dish 1 */}
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <img
+          src={ChickenTikkaMasalaImage}
+          alt="Chicken Tikka Masala"
+          className="w-full h-48 object-cover rounded-md mb-4"
+        />
+        <h3 className="text-xl font-semibold text-gray-800 mb-2">Chicken Tikka Masala</h3>
+        <p className="text-gray-600">
+          Tender pieces of chicken cooked in a rich tomato-based sauce, served with basmati rice.
+        </p>
+      </div>
+      {/* Featured Dish 2 */}
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <img
+          src={VegetableBiryaniImage}
+          alt="Vegetable Biryani"
+          className="w-full h-48 object-cover rounded-md mb-4"
+        />
+        <h3 className="text-xl font-semibold text-gray-800 mb-2">Vegetable Biryani</h3>
+        <p className="text-gray-600">
+          Aromatic basmati rice cooked with assorted vegetables and spices, served with raita.
+        </p>
+      </div>
+      {/* Featured Dish 3 */}
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <img
+          src={PaneerButterMasalaImage}
+          alt="Paneer Butter Masala"
+          className="w-full h-48 object-cover rounded-md mb-4"
+        />
+        <h3 className="text-xl font-semibold text-gray-800 mb-2">Paneer Butter Masala</h3>
+        <p className="text-gray-600">
+          Chunks of paneer cooked in a creamy and mildly spiced tomato-based gravy.
+        </p>
+      </div>
+    </div>
+    <div className="flex justify-center mt-8 mx-8">
+      <button
+        className="bg-red-700 hover:bg-red-700 px-8 py-4 mx-8 hover:scale-105 transition-all duration-300 transform rounded-lg font-semibold"
+        style={{ color: "#E7E0D2" }}
+        onClick={() => navigate("/ourplans")}
+      >
+        Subscription Plans
+      </button>
+    </div>
+  </div>
+</section>
+
+
       <section className="bg-white py-16">
         <div className="container mx-auto text-center">
           <h3 className="text-xl font-semibold mb-2">Customized Meals</h3>

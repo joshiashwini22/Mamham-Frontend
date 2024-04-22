@@ -1,74 +1,82 @@
-import React from 'react'
-import useFetch from '../../common/useFetch'
+import React from "react";
+import useFetch from "../../common/useFetch";
 import { useNavigate } from "react-router-dom";
-import { getCustomerIdFromStorage } from '../../utils/utils';
-import Button from '../../common/button';
+import { getCustomerIdFromStorage } from "../../utils/utils";
+import Button from "../../common/button";
 
 const OngoingSubscriptions = () => {
-    const { data: subsOngoing, loading: subsLoading, error: subsError } = useFetch(`http://127.0.0.1:8000/api/subscription/ongoing-subscriptions/${getCustomerIdFromStorage()}/ongoing/`);
-    const navigate = useNavigate();
+  const {
+    data: subsOngoing,
+    loading: subsLoading,
+    error: subsError,
+  } = useFetch(
+    `http://127.0.0.1:8000/api/subscription/ongoing-subscriptions/${getCustomerIdFromStorage()}/ongoing/`
+  );
+  console.log(subsOngoing);
+  const navigate = useNavigate();
 
-    // Function to determine the position of order status on the slider
-    const getStatusPosition = (status) => {
-        // Map statuses to their corresponding positions
-        switch (status) {
-            case 'OnGoing':
-                return 0;
-            case 'Completed':
-                return 100;
-            case 'Cancelled':
-                return 50;
-            default:
-                return 0;
-        }
-    };
-    const handleEdit = (subscriptionId) => {
-        navigate(`/modify-delivery/${subscriptionId}`);
-      };
+  const handleEdit = (subscriptionId) => {
+    navigate(`/modify-delivery/${subscriptionId}`);
+  };
 
-    return (
-        <div>
-            <h2 className="text-red-600 text-xl font-bold block mb-4">Ongoing Subscriptions</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mx-4">
-                {/* Orders */}
-                <div className="col-span-3">
-                    {/* Orders */}
-                    {subsOngoing.map(order => (
-                        <div key={order.id} className="card mb-8 shadow-md border border-gray-300">
-                            <div className="card-header bg-gray-50 py-4 px-6">
-                                <h3>Order #{order.id} | Rs. {order.total} | {order.status}</h3>
-                                <p>{order.delivery_time} | {order.delivery_date}</p>
-                            </div>
-                            <div className="card-block p-4">
-                                {/* Order status */}
-                                <input
-                                    type="range"
-                                    min="0"
-                                    max="100"
-                                    value={getStatusPosition(order.status)}
-                                    readOnly
-                                    style={{ width: '100%' }}
-                                />
-                                <p>{order.status} </p>
-
-                                <div className='grid grid-cols-3 my-3'>
-                                    <div className='mr-3'>
-                                        <Button purpose={"View More"} />
-                                    </div>
-                                    <div>
-                                        <Button purpose={"Modify"} onClick={() => handleEdit(order.id)}/>
-                                    </div>
-                                    <div>
-                                        <Button purpose={"Type: Subscription"} />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
+  return (
+    <div>
+      <h2 className="text-red-600 text-xl font-bold block mb-4 text-center">
+        Ongoing Subscriptions
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mx-4">
+        <div className="col-span-3">
+          {subsOngoing.map((order) => (
+            <div
+              key={order.id}
+              className="card mb-8 shadow-md border border-gray-300"
+            >
+              <div className="bg-gray-50 border-b border-gray-200 p-6">
+                <h3 className="text-lg font-semibold">
+                  Order #{order.id} | {order.status}
+                </h3>
+              </div>
+              <div className="card-block p-4 ">
+                <div className="grid grid-cols-2 my-3 ml-5">
+                  <div className="text-gray-700">
+                    <p className="font-semibold">Start Date:</p>
+                    <p className="font-semibold">Plan Name:</p>
+                    <p className="font-semibold">Number of Days:</p>
+                    <p className="font-semibold">Delivery Details:</p>
+                    <p className="font-semibold">Delivery Time:</p>
+                    <p className="font-semibold">Total:</p>
+                  </div>
+                  <div className="text-gray-900">
+                    <p>{order.start_date}</p>
+                    <p>{order.plan.name}</p>
+                    <p>{order.duration}</p>
+                    <p>
+                      {order.delivery_address.label}{" "}
+                      {order.delivery_address.address_line1}
+                    </p>
+                    <p>{order.delivery_time}</p>
+                    <p>Rs. {order.total}</p>
+                  </div>
                 </div>
+
+                <div className="grid grid-cols-2 my-3">
+                  <div className="mr-3">
+                    <Button purpose={"Type: Subscription"} />
+                  </div>
+                  <div>
+                    <Button
+                      purpose={"Modify"}
+                      onClick={() => handleEdit(order.id)}
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
+          ))}
         </div>
-    )
-}
+      </div>
+    </div>
+  );
+};
 
 export default OngoingSubscriptions;

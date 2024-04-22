@@ -5,6 +5,7 @@ import axios from "axios";
 const Payment = () => {
   const [customerId, setCustomerId] = useState("");
   const [deliveryDetailsData, setDeliveryDetailsData] = useState(null); // Change initial state to null
+  const [subscriptionTotal, setSubscriptionTotal] = useState(0); 
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -15,7 +16,14 @@ const Payment = () => {
         setCustomerId(profile.id);
       }
     }
-  }, []);
+    const planDetails = JSON.parse(localStorage.getItem("userData"));
+    console.log(planDetails)
+    if (planDetails) {
+      const planTotal  = planDetails.planTotal;
+      console.log(planTotal)
+      setSubscriptionTotal(planTotal); 
+    }
+  }, [subscriptionTotal]);
 
   const handlePlaceOrder = async () => {
     try {
@@ -113,11 +121,11 @@ const Payment = () => {
   return (
     <div className="flex flex-col items-center">
       <div className="text-center">
-        <span className="text-red-600 text-4xl font-bold block mb-4">
-          Payment
+        <span className="text-gray-700 text-2xl font-bold block mb-4">
+        Almost there! Please proceed to confirm your subscription.
         </span>
-        <span className="text-gray-700 text-2xl font-bold block">
-          Almost there! Please proceed to confirm your subscription.
+        <span className="text-red-700 text-xl font-bold block">
+          Your total for subscription is Rs. {subscriptionTotal} 
         </span>
       </div>
       <img src={KhaltiImg} alt="Khalti Logo" />

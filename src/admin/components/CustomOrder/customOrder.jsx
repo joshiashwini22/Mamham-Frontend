@@ -3,8 +3,21 @@ import useFetch from "../../../common/useFetch";
 import Sidebar from "../../sidebar";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useAuth } from "../../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const CustomOrder = () => {
+  const { isAdmin } = useAuth();
+  const navigate = useNavigate();
+
+  const isAdminUser = isAdmin();
+
+  useEffect(() => {
+    if (!isAdmin()) {
+      navigate("/login");
+    }
+  }, [isAdmin, navigate]);
+
   const accessToken = localStorage.getItem("access_token");
   const [filters, setFilters] = useState({
     deliveryDate: "",
