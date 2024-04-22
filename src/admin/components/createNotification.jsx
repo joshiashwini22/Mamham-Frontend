@@ -14,10 +14,10 @@ const NotificationCreate = ({ onNotificationCreated }) => {
   const isAdminUser = isAdmin();
 
   useEffect(() => {
-    if (!isAdmin()) {
+    if (!isAdminUser) {
       navigate("/login");
     }
-  }, [isAdmin, navigate]);
+  }, [isAdminUser, navigate]);
 
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [message, setMessage] = useState("");
@@ -35,16 +35,18 @@ const NotificationCreate = ({ onNotificationCreated }) => {
         "http://127.0.0.1:8000/api/authentication/notification-create/",
         {
           users: selectedUsers,
-          message: message,
-          title: title
+          message,
+          title,
         }
       );
       toast.success("Notification sent successfully!");
+      setSelectedUsers([]);
+      setMessage("");
+      setTitle("");
       if (onNotificationCreated) {
         onNotificationCreated(response.data);
       }
     } catch (error) {
-      console.error("Error creating notification:", error);
       toast.error("Error creating notification. Please try again.");
     }
   };
@@ -53,14 +55,11 @@ const NotificationCreate = ({ onNotificationCreated }) => {
     navigate(-1);
   };
 
-  const handleUserCheckboxChange = (userId) => {
-    setSelectedUsers((prevSelectedUsers) => {
-      if (prevSelectedUsers.includes(userId)) {
-        return prevSelectedUsers.filter((id) => id !== userId);
-      } else {
-        return [...prevSelectedUsers, userId];
-      }
-    });
+  const handleUserSelectChange = (e) => {
+    const selectedValues = Array.from(e.target.selectedOptions).map(
+      (option) => option.value
+    );
+    setSelectedUsers(selectedValues);
   };
 
   return (
@@ -81,12 +80,12 @@ const NotificationCreate = ({ onNotificationCreated }) => {
                 onChange={(e) => setTitle(e.target.value)}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:border-primary-600 block w-full p-2.5"
                 rows="1"
-                placeholder="Enter your mail title here..."
+                placeholder="Enter your email title here..."
               ></textarea>
             </div>
             <div className="my-4">
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                 Message
+                Message
               </h3>
               <textarea
                 value={message}
@@ -98,30 +97,26 @@ const NotificationCreate = ({ onNotificationCreated }) => {
             </div>
             <div className="my-4">
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Select Users
+                Select User
               </h3>
-              <div>
-                {usersLoading ? (
-                  <p>Loading users...</p>
-                ) : usersError ? (
-                  <p>Error fetching users. Please try again.</p>
-                ) : (
-                  users.map((user) => (
-                    <div key={user.id} className="flex items-center">
-                      <input
-                        type="checkbox"
-                        id={`user-${user.id}`}
-                        checked={selectedUsers.includes(user.id)}
-                        onChange={() => handleUserCheckboxChange(user.id)}
-                        className="mr-2"
-                      />
-                      <label htmlFor={`user-${user.id}`}>{user.email}</label>
-                    </div>
-                  ))
-                )}
-              </div>
+              {usersLoading ? (
+                <p>Loading users...</p>
+              ) : usersError ? (
+                <p>Error fetching users. Please try again.</p>
+              ) : (
+                <select
+                  multiple
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:border-primary-600 block w-full p-2.5"
+                  onChange={handleUserSelectChange}
+                >
+                  {users.map((user) => (
+                    <option key={user.id} value={user.id}>
+                      {user.email}
+                    </option>
+                  ))}
+                </select>
+              )}
             </div>
-
             <div className="flex justify-between">
               <button
                 type="button"

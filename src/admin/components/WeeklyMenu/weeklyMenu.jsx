@@ -71,6 +71,10 @@ const WeeklyMenu = () => {
     return selectedPlan ? selectedPlan.name : "";
   };
 
+  const handleEdit = (menuId) => {
+    navigate(`/weeklymenu-update/${menuId}`); // Navigate to the edit page
+  };
+
   return (
     <>
       <Sidebar />
@@ -83,8 +87,7 @@ const WeeklyMenu = () => {
                   Weekly Menu
                 </h3>
                 <p className="text-gray-600 mt-2">
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry.
+                  Following are the weekly menus.
                 </p>
               </div>
               <div className="flex justify-center mb-6">
@@ -117,6 +120,12 @@ const WeeklyMenu = () => {
                   )}
                 </select>
               </div>
+                              <button
+                              onClick={() => clearFilters()}
+                              className="bg-blue-500 text-white px-2 py-1 rounded-md mr-2"
+                            >
+                              Rest Filter
+                            </button>
               <div className="mt-3 md:mt-0">
                 <a
                   href="/weeklymenu-create"
@@ -128,7 +137,7 @@ const WeeklyMenu = () => {
                     className=""
                     type="button"
                   >
-                    + Add
+                  Add Weekly Menu
                   </button>
                 </a>
               </div>
@@ -141,6 +150,8 @@ const WeeklyMenu = () => {
                     <th className="py-3 pr-6">End Date</th>
                     <th className="py-3 pr-6">Plan Name</th>
                     <th className="py-3 pr-6">Selected Meals</th>
+                    <th className="py-3 pr-6">Action</th>
+
                   </tr>
                 </thead>
                 <tbody className="text-gray-600 divide-y">
@@ -175,6 +186,13 @@ const WeeklyMenu = () => {
                             </div>
                           ))}
                         </td>
+                        <td className="pr-6 py-4 whitespace-nowrap">
+                              <button
+                              onClick={() => handleEdit(menuItem.id)}
+                              className="bg-blue-500 text-white px-2 py-1 rounded-md mr-2"
+                            >
+                              Edit
+                            </button></td>
                       </tr>
                     ))
                   )}

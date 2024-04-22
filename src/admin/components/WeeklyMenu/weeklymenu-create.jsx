@@ -45,13 +45,34 @@ const WeeklymenuCreate = ({ onMenuCreated }) => {
       // Show success message
       toast.success("Menu created successfully!");
 
+      // Reset fields to initial state
+      setSelectedStartDate(new Date()); // Set to nearest Sunday
+      setSelectedPlan("");
+      setSelectedMeals([]);
+      setEndDate("");
+
       // Call the callback function if provided
       if (onMenuCreated) {
         onMenuCreated(response.data);
       }
+
+
     } catch (error) {
       console.error("Error creating menu:", error);
-      toast.error("Error creating menu. Please try again.");
+
+      let errorMessage = "Error creating menu.";
+  
+      // Check if there is an error response from the server
+      if (error.response) {
+        // Check for specific error messages in the server response
+        const data = error.response.data;
+        if (data.detail) {
+          errorMessage = data.detail; // Custom error message from the server
+        } 
+      }
+  
+      // Show detailed error message
+      toast.error(errorMessage);
     }
   };
 
@@ -83,9 +104,12 @@ const WeeklymenuCreate = ({ onMenuCreated }) => {
     setSelectedStartDate(sundayOfSameWeek.toISOString().split("T")[0]); // Update the state with the Sunday of the same week
     calculateEndDate(sundayOfSameWeek); // Calculate the end date based on the Sunday of the same week
   };
+
+
   const handleCancel = () => {
     navigate(-1);
   };
+  
   return (
     <>
       <Sidebar />

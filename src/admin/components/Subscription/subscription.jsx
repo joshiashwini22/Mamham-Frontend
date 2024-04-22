@@ -171,8 +171,9 @@ const Subscription = () => {
                 All Subscriptions
               </h3>
               <p className="text-gray-600 mt-2">
-                Lorem Ipsum is simply dummy text of the printing and
-                typesetting industry.
+              Here are the order details of subscriptions.
+
+
               </p>
             </div>
             <div className="flex justify-end mb-4 mx-4 space-x-4">

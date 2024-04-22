@@ -44,11 +44,8 @@ const MealCreate = ({ onMealCreated }) => {
       setName("");
       setDescription("");
       setImage(null);
-      setTimeout(() => {
-        navigate("/meals");
-      },1000); // Adjust the delay as needed
-      // Show toast
-      toast.success("Meal  created successfully!");
+      
+      
     } catch (error) {
       console.error("Error creating meal:", error);
       toast.error("Error creating meal. Please provide all values.");
@@ -102,6 +99,15 @@ const MealCreate = ({ onMealCreated }) => {
                 />
               </div>
               <div className="sm:col-span-2">
+                {image && (
+                  <img
+                    src={URL.createObjectURL(image)}
+                    alt="Plan"
+                    className="mt-2 max-w-full h-auto"
+                  />
+                )}
+              </div>
+              <div className="sm:col-span-2">
                 <label
                   htmlFor="description"
                   className="block mb-2 text-sm font-medium text-gray-900"
@@ -121,7 +127,7 @@ const MealCreate = ({ onMealCreated }) => {
             <button
               type="button"
               onClick={handleCreateMeal}
-              className="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center border border-gray-300 text-blue bg-red-700 rounded-lg focus:ring-2 focus:ring-primary-600 hover:bg-primary-800 text-white"
+              className="inline-flex items-center mr-4 px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center border border-gray-300 text-blue bg-red-700 rounded-lg focus:ring-2 focus:ring-primary-600 hover:bg-primary-800 text-white"
             >
             Add
             </button>

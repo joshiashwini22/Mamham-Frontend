@@ -21,8 +21,9 @@ const DishSelection = ({ category, onAddSelectedDish }) => {
         const response = await axios.get(
           `http://127.0.0.1:8000/api/customization/dishes/category/${category}/`
         );
-        setDishes(response.data);
-      } catch (error) {
+// Filter to include only dishes where isAvailable is true
+const availableDishes = response.data.filter((dish) => dish.isAvailable);
+setDishes(availableDishes);      } catch (error) {
         console.error("Error fetching data:", error);
       }
     };

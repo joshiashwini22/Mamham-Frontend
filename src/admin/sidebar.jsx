@@ -1,9 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
-import Logo from "../assets/images/Mamham_logo.png";
+import Logo from "../assets/images/Logo2.png";
 import useFetch from "../common/useFetch";
+import { useNavigate } from "react-router-dom";
+
 
 const Sidebar = () => {
+  const { isAdmin } = useAuth();
+  const navigate = useNavigate();
+
+  const isAdminUser = isAdmin();
+
+  useEffect(() => {
+    if (!isAdmin()) {
+      navigate("/login");
+    }
+  }, [isAdmin, navigate]);
+
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State to manage sidebar visibility
   const [adminNotificationCount, setAdminNotificationCount] = useState([]);
   const [countLoading, setCountLoading] = useState(true);
@@ -90,8 +104,8 @@ const Sidebar = () => {
         aria-label="Sidebar"
       >
         <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
-          <div className="flex items-center space-x-2 mb-4">
-            <img src={Logo} alt="Company Logo" className="h-12 w-auto" />
+          <div className="flex justify-center items-center mb-4">
+            <img src={Logo} alt="Company Logo" className="h-12 w-auto mr-4" />
             <span className="text-xl font-semibold text-gray-900 dark:text-white">
               MamHam
             </span>

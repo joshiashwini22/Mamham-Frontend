@@ -86,7 +86,7 @@ const OurMenu = () => {
                 Explore Our Menu
               </h2>
               <div className="flex justify-center mb-6">
-                <div className="mx-4 flex">
+      <div className="mx-4 flex flex-wrap md:flex-nowrap overflow-x-auto">
                   {weekList.map((week, index) => (
                     <div
                       key={index}

@@ -35,6 +35,18 @@ const PlanEdit = ({ onEdit }) => {
   const handleImageChange = (e) => {
     setImage(e.target.files[0]);
   };
+  const handlePriceChange = (e) => {
+    const pricing = parseInt(e.target.value);
+    if (pricing < 1 || pricing > 500) {
+      toast.error(`Please enter a price value between 1 and 500.`);
+      return;
+    }
+    if (pricing > 500) {
+      toast.error(`Maximum price of 500 exceeded.`);
+      return;
+    }
+    setPrice(e.target.value);
+  };
 
   const handleEditPlan = async (e) => {
     e.preventDefault();
@@ -43,6 +55,14 @@ const PlanEdit = ({ onEdit }) => {
       formData.append('name', name);
       formData.append('price', price);
       formData.append('description', description);
+      if (price < 1 || price > 500) {
+        toast.error(`Please enter a price value between 1 and 500.`);
+        return;
+      }
+      if (price > 500) {
+        toast.error(`Maximum price of 500 exceeded.`);
+        return;
+      }
 
       if (image) {
         formData.append('image', image);
@@ -54,14 +74,14 @@ const PlanEdit = ({ onEdit }) => {
         },
       });
       if (response) {
-        navigate(-1);
         toast.success("Plan has been Updated");
+        navigate(-1);
       }
       if (onEdit) {
         onEdit(response.data);
       }
     } catch (error) {
-      toast.error('Error updating plan:', error);
+      toast.error('Error updating plan', error);
     }
   };
 
@@ -103,9 +123,11 @@ const PlanEdit = ({ onEdit }) => {
                   name="price"
                   id="price"
                   value={price}
-                  onChange={(e) => setPrice(e.target.value)}
+                  min={1}
+                  max={500}
+                  onChange={handlePriceChange}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:border-primary-600 block w-full p-2.5 placeholder-gray-400"
-                  placeholder="$2999"
+                  placeholder="100"
                   required=""
                 />
               </div>

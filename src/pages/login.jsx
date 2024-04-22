@@ -117,8 +117,8 @@ const Login = ({ onLogin, context }) => {
 
   // Render regular login form if showOtpForm is false
   return (
-    <div className="grid grid-cols-2 ">
-      {/* Image section */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    {/* Image section */}
       <section className="mx-auto md:h-screen flex justify-center items-center">
         <img src={LoginImg} alt="Login" className="w-full object-cover" />
       </section>

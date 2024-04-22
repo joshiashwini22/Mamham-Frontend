@@ -19,15 +19,32 @@ const DishCreate = ({ onDishCreated }) => {
   const handleImageChange = (e) => {
     setImage(e.target.files[0]);
   };
+  const handlePriceChange = (e) => {
+    const pricing = parseInt(e.target.value);
+    if (pricing < 1 || pricing > 500) {
+      toast.error(`Please enter a price value between 1 and 500.`);
+      return;
+    }
+    if (pricing > 500) {
+      toast.error(`Maximum price of 500 exceeded.`);
+      return;
+    }
+    setPrice(e.target.value);
+  };
 
   const handleCreateDish = async () => {
     try {
+      if (price < 1 || price > 100) {
+        toast.error("Price must be between 1 and 100.");
+        return;
+      }
       const formData = new FormData();
       formData.append("name", name);
       formData.append("price", price);
       formData.append("description", description);
       formData.append("image", image);
       formData.append("category", selectedCategory);
+      formData.append("isAvailable", true);
 
       const response = await axios.post(
         "http://127.0.0.1:8000/api/customization/dishes/",
@@ -38,8 +55,6 @@ const DishCreate = ({ onDishCreated }) => {
           },
         }
       );
-
-      
 
       if (onDishCreated) {
         onDishCreated(response.data);
@@ -52,16 +67,15 @@ const DishCreate = ({ onDishCreated }) => {
       setImage(null);
       setSelectedCategory("");
 
-      // Navigate after a short delay
-      setTimeout(() => {
-        navigate("/dishes");
-      },1000); // Adjust the delay as needed
       // Show toast
       toast.success("Dish created successfully!");
     } catch (error) {
       console.error("Error creating dish:", error);
       toast.error("Error creating dish. Please provide all values.");
     }
+  };
+  const handleCancel = () => {
+    navigate(-1);
   };
 
   return (
@@ -104,7 +118,9 @@ const DishCreate = ({ onDishCreated }) => {
                   name="price"
                   id="price"
                   value={price}
-                  onChange={(e) => setPrice(e.target.value)}
+                  min={1}
+                  max={500}
+                  onChange={handlePriceChange}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:border-primary-600 block w-full p-2.5"
                   placeholder="Price"
                   required
@@ -148,6 +164,15 @@ const DishCreate = ({ onDishCreated }) => {
                 />
               </div>
               <div className="sm:col-span-2">
+                {image && (
+                  <img
+                    src={URL.createObjectURL(image)}
+                    alt="Plan"
+                    className="mt-2 max-w-full h-auto"
+                  />
+                )}
+              </div>
+              <div className="sm:col-span-2">
                 <label
                   htmlFor="description"
                   className="block mb-2 text-sm font-medium text-gray-900"
@@ -167,9 +192,16 @@ const DishCreate = ({ onDishCreated }) => {
             <button
               type="button"
               onClick={handleCreateDish}
-              className="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center border border-gray-300 text-blue bg-red-700 rounded-lg focus:ring-2 focus:ring-primary-600 hover:bg-primary-800 text-white"
+              className="inline-flex items-center mr-4 px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center border border-gray-300 text-blue bg-red-700 rounded-lg focus:ring-2 focus:ring-primary-600 hover:bg-primary-800 text-white"
             >
               Add
+            </button>
+            <button
+              type="button"
+              onClick={handleCancel}
+              className="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center border border-gray-300 text-blue bg-gray-300 rounded-lg focus:ring-4 focus:ring-primary-200 hover:bg-gray-400"
+            >
+              Back
             </button>
           </form>
         </div>

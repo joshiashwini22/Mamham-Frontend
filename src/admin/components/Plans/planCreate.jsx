@@ -19,8 +19,27 @@ const PlanCreate = ({ onPlanCreated }) => {
     setImage(e.target.files[0]);
   };
 
+  const handlePriceChange = (e) => {
+    const pricing = parseInt(e.target.value);
+    if (pricing < 1 || pricing > 500) {
+      toast.error(`Please enter a price value between 1 and 500.`);
+      return;
+    }
+    if (pricing > 500) {
+      toast.error(`Maximum price of 500 exceeded.`);
+      return;
+    }
+    setPrice(e.target.value);
+  };
+
+
   const handleCreatePlan = async () => {
     try {
+      if (price < 1 || price > 100) {
+        toast.error("Price must be between 1 and 100.");
+        return;
+      }
+      
       const formData = new FormData();
       formData.append("name", name);
       formData.append("price", price);
@@ -50,9 +69,7 @@ const PlanCreate = ({ onPlanCreated }) => {
       setImage(null);
 
 
-      setTimeout(() => {
-        navigate("/plans");
-      },1000); // Adjust the delay as needed
+  
       // Show toast
       toast.success("Plan  created successfully!");
     } catch (error) {
@@ -103,7 +120,9 @@ const PlanCreate = ({ onPlanCreated }) => {
                   name="price"
                   id="price"
                   value={price}
-                  onChange={(e) => setPrice(e.target.value)}
+                  min={1}
+                  max={500}
+                  onChange={handlePriceChange}                  
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:border-primary-600 block w-full p-2.5"
                   placeholder="Price"
                   required
@@ -123,6 +142,9 @@ const PlanCreate = ({ onPlanCreated }) => {
                   onChange={handleImageChange}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:border-primary-600 block w-full p-2.5"
                 />
+                {image && (
+                  <img src={URL.createObjectURL(image)} alt="Plan" className="mt-2 max-w-full h-auto" />
+                )}
               </div>
               <div className="sm:col-span-2">
                 <label
@@ -144,7 +166,7 @@ const PlanCreate = ({ onPlanCreated }) => {
             <button
               type="button"
               onClick={handleCreatePlan}
-              className="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center border border-gray-300 text-blue bg-red-700 rounded-lg focus:ring-2 focus:ring-primary-600 hover:bg-primary-800 text-white"
+              className="inline-flex items-center mr-4 px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center border border-gray-300 text-blue bg-red-700 rounded-lg focus:ring-2 focus:ring-primary-600 hover:bg-primary-800 text-white"
             >
             Add
             </button>

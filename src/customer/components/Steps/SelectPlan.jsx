@@ -66,7 +66,6 @@ const SelectPlan = ({ onDataValidChange }) => {
     "7:00 PM",
     "8:00 PM",
   ];
-  
 
   const handleSelectPlan = (planId) => {
     const selectedPlan = plans.find((plan) => plan.id === planId);
@@ -105,7 +104,7 @@ const SelectPlan = ({ onDataValidChange }) => {
     setMinDate(minDateValue);
   }, []);
 
-  // Inside the component
+
   const [mealPricing, setMealPricing] = useState(0);
   const [addonPricing, setAddonPricing] = useState(0);
   // useEffect to update mealPricing and addonPricing when selections are made
@@ -184,41 +183,41 @@ const SelectPlan = ({ onDataValidChange }) => {
   return (
     <>
       <div className="m-2 p-2 border ">
-        <div className="grid grid-cols-2 ">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Plans Section */}
           <div className="p-4">
             <div className="flex flex-col">
               <span className="text-red-700 text-xl text-center font-bold mb-4">
                 1. Select your Plan
-            </span>
-            <div className="flex flex-wrap">
-              {plans &&
-                plans.map((plan) => (
-                  <button
-                    key={plan.id}
-                    role="radio"
-                    aria-checked={userData.selectedPlan === plan.id}
-                    className="flex flex-col items-center p-4 border rounded-lg bg-white relative m-5"
-                    onClick={() => handleSelectPlan(plan.id)}
-                  >
-                    <input
-                      type="radio"
-                      name="selectedPlan"
-                      value={plan.id}
-                      checked={userData.selectedPlan === plan.id}
-                      onChange={() => handleSelectPlan(plan.id)}
-                      className="absolute top-2 left-2 appearance-none checked:bg-green-500 h-6 w-6 rounded-full border border-gray-300 focus:outline-none"
-                    />
-                    {userData.selectedPlan === plan.id && (
-                      <span className="absolute top-2 left-2 ml-2 mt-1">
-                        &#10003;
-                      </span>
-                    )}
-                    <img src={plan.image} alt={plan.name} className="" />
-                    <h2 className="text-l">{plan.name}</h2>
-                  </button>
-                ))}
-            </div>
+              </span>
+              <div className="flex flex-wrap">
+                {plans &&
+                  plans.map((plan) => (
+                    <button
+                      key={plan.id}
+                      role="radio"
+                      aria-checked={userData.selectedPlan === plan.id}
+                      className="flex flex-col items-center p-4 border rounded-lg bg-white relative m-5"
+                      onClick={() => handleSelectPlan(plan.id)}
+                    >
+                      <input
+                        type="radio"
+                        name="selectedPlan"
+                        value={plan.id}
+                        checked={userData.selectedPlan === plan.id}
+                        onChange={() => handleSelectPlan(plan.id)}
+                        className="absolute top-2 left-2 appearance-none checked:bg-green-500 h-6 w-6 rounded-full border border-gray-300 focus:outline-none"
+                      />
+                      {userData.selectedPlan === plan.id && (
+                        <span className="absolute top-2 left-2 ml-2 mt-1">
+                          &#10003;
+                        </span>
+                      )}
+                      <img src={plan.image} alt={plan.name} className="" />
+                      <h2 className="text-l">{plan.name}</h2>
+                    </button>
+                  ))}
+              </div>
             </div>
           </div>
           {/* Other Section */}

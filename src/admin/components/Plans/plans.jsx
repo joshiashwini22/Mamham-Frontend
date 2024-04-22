@@ -37,7 +37,7 @@ const Plans = () => {
                     Plans                    
                     </h3>
                     <p className="text-gray-600 mt-2">
-                        Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                        These are the following plans which can be susbcribed by customers
                     </p>
                 </div>
                 <div className="mt-3 md:mt-0">
@@ -51,7 +51,7 @@ const Plans = () => {
                    className=""
                    type="button"
                     >
-                    + Add
+                    Add Plan
                     </button>
                     </a>
 

@@ -43,7 +43,7 @@ const Addon = () => {
                     Addons                    
                     </h3>
                     <p className="text-gray-600 mt-2">
-                        Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                        Following addons are in the system.
                     </p>
                 </div>
                 <div className="mt-3 md:mt-0">
@@ -57,7 +57,7 @@ const Addon = () => {
                    className=""
                    type="button"
                     >
-                        + Add
+                      Add Addons
                     </button>
                     </a>
 
