@@ -122,12 +122,13 @@ function Navbar() {
               </li>
               <li>
                 <a
-                  href="#"
-                  class={`block py-2 px-3 hover-bg-gray-100 ${isActive("/howitworks")}`}
+                  href="/how-it-works"
+                  class={`block py-2 px-3 hover-bg-gray-100 ${isActive("/how-it-works")}`}
                 >
-                  How It Works
+                  How it Work
                 </a>
               </li>
+             
             </ul>
 
           </div>

@@ -60,6 +60,7 @@ const CheckoutPage = () => {
     }
   }, []);
 
+  
   useEffect(() => {
     // Generate time options
     const options = [];

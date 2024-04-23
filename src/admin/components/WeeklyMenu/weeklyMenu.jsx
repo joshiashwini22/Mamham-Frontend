@@ -124,7 +124,7 @@ const WeeklyMenu = () => {
                               onClick={() => clearFilters()}
                               className="bg-blue-500 text-white px-2 py-1 rounded-md mr-2"
                             >
-                              Rest Filter
+                              Reset Filter
                             </button>
               <div className="mt-3 md:mt-0">
                 <a

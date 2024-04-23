@@ -100,7 +100,7 @@ const SubscriptionDelivery = () => {
     setEditedDelivery({ ...delivery,       delivery_address: delivery.subscription.delivery_address.id,       subscription: delivery.subscription.id
     });
     if (delivery.subscription.customer) {
-      // console.log(delivery.subscription.customer.id)
+      console.log(delivery.subscription.customer.id)
       fetchAddressesForCustomer(delivery.subscription.customer.id);
     }
   };
@@ -140,6 +140,8 @@ const SubscriptionDelivery = () => {
       console.log("Delivery successfully updated:", updatedDelivery);
 
       setEditedDelivery(null);
+window.location.reload()
+
     } catch (error) {
       console.error("Error saving delivery:", error);
     }

@@ -134,6 +134,8 @@ const Subscription = () => {
       console.log("Subscription successfully updated:", updatedSubscription);
 
       setEditedSubscription(null);
+window.location.reload()
+
     } catch (error) {
       console.error("Error saving subscription:", error);
     }

@@ -40,6 +40,7 @@ import ModifyDelivery from "./customer/modifyDelivery";
 import PaymentCompletion from "./common/paymentCompletion";
 import NotificationCreate from "./admin/components/createNotification";
 import ForgotPassword from "./pages/forgotPassword";
+import HowItWorks from "./customer/HowItWorks";
 
 
 const App = () => {
@@ -79,6 +80,7 @@ const App = () => {
           <Route path="/meals" element={<Meal />} />
           <Route path="/meals-create" element={<MealCreate/>} />
           <Route path="/meals-update/:id" element={<MealEdit/>} />
+          <Route path="/how-it-works" element={<HowItWorks />} />
           <Route path="/weeklyMenu" element={<WeeklyMenu />} />
           <Route path="/weeklymenu-create" element={<WeeklymenuCreate/>} />
           <Route path="/weeklymenu-update/:id" element={<WeeklymenuEdit/>} />

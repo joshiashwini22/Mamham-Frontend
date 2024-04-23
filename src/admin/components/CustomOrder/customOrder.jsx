@@ -97,7 +97,7 @@ const CustomOrder = () => {
   const handleSaveClick = async () => {
     if (!isTimeInRange(editedOrder.delivery_time)) {
       // Handle out of range time selection
-      toast.error("Please select a time between 10:00 AM and 7:30 PM.");
+      toast.error("Please select a time between 10:00 AM and 7:30 PM.")
       return;
     }
     if (editedOrder.customer) {
@@ -123,8 +123,7 @@ const CustomOrder = () => {
 
       const updatedOrder = await response.json();
 
-      console.log("Order successfully updated:", updatedOrder);
-
+window.location.reload()
       setEditedOrder(null);
     } catch (error) {
       console.error("Error saving order:", error);

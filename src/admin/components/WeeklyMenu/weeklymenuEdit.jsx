@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Sidebar from '../../sidebar';
 
 const WeeklyMenuEdit = () => {
   const { id } = useParams();
@@ -79,9 +80,16 @@ const WeeklyMenuEdit = () => {
       </div>
     );
   }
+  const handleCancel = () => {
+    navigate(-1);
+  };
+
 
   return (
-    <div className="bg-white p-8 rounded-lg shadow-lg">
+    <div>
+    <Sidebar/>
+    <section className="bg-white">
+        <div className="py-8 px-4 mx-auto max-w-2xl lg:py-16">
       <h2 className="text-2xl font-semibold text-gray-800 mb-4">
         Edit Weekly Menu
       </h2>
@@ -120,7 +128,7 @@ const WeeklyMenuEdit = () => {
       <div className="mb-4">
         <label className="block text-gray-700">Meals:</label>
         {allMeals.map((meal) => (
-          <div key={meal.id} className="flex items-center">
+          <div key={meal.id} className="flex items-center pb-2">
             <input
               type="checkbox"
               checked={menuData.meals.includes(meal.id)}
@@ -138,10 +146,19 @@ const WeeklyMenuEdit = () => {
       </div>
       <button
         onClick={handleUpdate}
-        className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+        className="px-6 py-2 mr-4 bg-red-700 text-white rounded-lg hover:bg-blue-600"
       >
         Update
       </button>
+      <button
+                type="button"
+                onClick={handleCancel}
+                className="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center border border-gray-300 text-blue bg-gray-300 rounded-lg focus:ring-4 focus:ring-primary-200 hover:bg-gray-400"
+              >
+                Cancel
+              </button>
+    </div>
+    </section>
     </div>
   );
 };

@@ -129,7 +129,7 @@ const AddonEdit = ({ onEdit }) => {
             <button
               type="submit"
               onClick={handleEditAddon}
-              className="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center border border-gray-300 text-blue bg-red-700 text-white rounded-lg focus:ring-4 focus:ring-primary-200 hover:bg-primary-800"
+              className="inline-flex items-center mr-4 px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center border border-gray-300 text-blue bg-red-700 text-white rounded-lg focus:ring-4 focus:ring-primary-200 hover:bg-primary-800"
             >
               Update
             </button>

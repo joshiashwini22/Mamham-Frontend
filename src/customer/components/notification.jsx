@@ -23,6 +23,15 @@ const NotificationDropdown = () => {
     }
   };
 
+  
+  useEffect(() => {
+    setInterval(() => {
+  console.log("here");
+  fetchNotifications();
+}, 2000);
+}, [])
+
+
   useEffect(() => {
     fetchNotifications(); // Fetch notifications on component mount
   }, []); // Empty dependency array to ensure it runs once on mount

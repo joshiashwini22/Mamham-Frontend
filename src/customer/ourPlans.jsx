@@ -108,7 +108,7 @@ const OurPlans = () => {
       />
     )}
   </div>
-</div>
+    </div>
 
     </>
   );
